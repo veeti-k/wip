@@ -1,0 +1,52 @@
+{
+	"name": "frontend",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "yarn dotenv -e ../../.env \"vite --port 3000\"",
+		"build": "tsc && vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@gym/api": "*",
+		"@gym/db": "*",
+		"@gym/validation": "*",
+		"@headlessui/react": "^1.7.4",
+		"@hookform/resolvers": "^2.9.10",
+		"@radix-ui/react-collapsible": "^1.0.1",
+		"@tanstack/react-query": "^4.18.0",
+		"@tanstack/react-query-devtools": "^4.20.4",
+		"@trpc/client": "^10.4.1",
+		"@trpc/react-query": "^10.4.1",
+		"@trpc/server": "^10.4.1",
+		"class-variance-authority": "^0.3.0",
+		"date-fns": "^2.29.3",
+		"framer-motion": "^7.6.17",
+		"match-sorter": "^6.3.1",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-hook-form": "^7.40.0",
+		"react-hot-toast": "^2.4.0",
+		"react-router-dom": "^6.4.3",
+		"react-use-measure": "^2.1.1",
+		"sort-by": "^1.2.0",
+		"string-similarity": "^4.0.4",
+		"superjson": "^1.11.0",
+		"tabler-icons-react": "^1.55.0",
+		"zod": "^3.18.0"
+	},
+	"devDependencies": {
+		"@gym/tsconfig": "*",
+		"@types/react": "^18.0.24",
+		"@types/react-dom": "^18.0.8",
+		"@types/string-similarity": "^4.0.0",
+		"@vitejs/plugin-react": "^2.2.0",
+		"autoprefixer": "^10.4.13",
+		"postcss": "^8.4.19",
+		"tailwindcss": "^3.2.4",
+		"typescript": "^4.6.4",
+		"vite": "^3.2.3",
+		"vite-tsconfig-paths": "^3.6.0"
+	}
+}

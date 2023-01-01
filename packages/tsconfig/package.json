@@ -1,0 +1,12 @@
+{
+	"name": "@gym/tsconfig",
+	"version": "0.0.0",
+	"private": true,
+	"license": "MIT",
+	"main": "base.json",
+	"files": [
+		"base.json",
+		"node16.json",
+        "vite.json"
+	]
+}

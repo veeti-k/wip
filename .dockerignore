@@ -1,0 +1,7 @@
+**/DATA
+**/dist
+**/node_modules
+**/.turbo
+**/.env
+**/.env.local
+**/k8s

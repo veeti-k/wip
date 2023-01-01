@@ -1,0 +1,36 @@
+{
+	"name": "2tasks",
+	"version": "0.0.0",
+	"private": true,
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"scripts": {
+		"build": "turbo build",
+		"clean": "rm -rf ./node_modules ./**/**/node_modules ./**/**/dist ./**/**/build ./**/**/.turbo",
+		"db-generate": "turbo db-generate",
+		"db-push": "yarn dotenv -e ./.env -- turbo db-push",
+		"db-studio": "yarn dotenv -e ./.env -- turbo db-studio",
+		"db-reset": "yarn dotenv -e ./.env -- turbo db-reset",
+		"db": "docker run -d --name gym-psql -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=gym -p 5432:5432 postgres",
+		"dev": "yarn dotenv -e ./.env -- turbo dev --parallel",
+		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
+		"type-check": "turbo type-check"
+	},
+	"engines": {
+		"node": ">=16.0.0"
+	},
+	"dependencies": {
+		"@trivago/prettier-plugin-sort-imports": "^4.0.0",
+		"@typescript-eslint/eslint-plugin": "^5.45.0",
+		"@typescript-eslint/parser": "^5.45.0",
+		"dotenv-cli": "^6.0.0",
+		"eslint": "^8.28.0",
+		"prettier": "^2.8.0",
+		"prettier-plugin-tailwindcss": "^0.2.0",
+		"turbo": "^1.4.4",
+		"typescript": "^4.9.3"
+	},
+	"packageManager": "yarn@1.22.19"
+}

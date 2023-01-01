@@ -1,0 +1,174 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id        String   @id @default(cuid())
+    username  String?  @unique
+    email     String   @unique
+    isAdmin   Boolean  @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    workouts Workout[]
+
+    exercises Exercise[]
+
+    sets Set[]
+
+    modelExercises ModelExercise[]
+
+    sessions Session[]
+
+    categories Category[]
+}
+
+model Verification {
+    id         String    @id @default(cuid())
+    expiresAt  DateTime
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
+    verifiedAt DateTime?
+}
+
+model Session {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    expiresAt DateTime
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+    id        String   @id @default(cuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ownerId String
+    owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+    modelExercises ModelExercise[]
+}
+
+model ModelExercise {
+    id            String   @id @default(cuid())
+    name          String
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+    enabledFields BigInt   @default(0)
+
+    ownerId String
+    owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+    category   Category @relation(fields: [categoryId], references: [id])
+    categoryId String
+
+    exercises Exercise[]
+}
+
+model Workout {
+    id         String    @id @default(cuid())
+    name       String
+    notes      String?
+    bodyWeight Float?
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
+    stoppedAt  DateTime?
+
+    ownerId String
+    owner   User   @relation(fields: [ownerId], references: [id])
+
+    exercises Exercise[]
+    sets      Set[]
+}
+
+model Exercise {
+    id        String   @id @default(cuid())
+    notes     String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    ownerId String
+    owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+    workoutId String
+    workout   Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+
+    modelExerciseId String
+    modelExercise   ModelExercise @relation(fields: [modelExerciseId], references: [id], onDelete: Cascade)
+
+    sets Set[]
+}
+
+enum SetType {
+    SuperSet
+    DropSet
+    WarmUp
+    Normal
+}
+
+model Set {
+    id         String   @id @default(cuid())
+    duplicates Int      @default(1)
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    type       SetType  @default(Normal)
+
+    weight   Float?
+    reps     Float?
+    time     Float?
+    distance Float?
+    kcal     Float?
+
+    exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+    exerciseId String
+
+    workoutId String
+    workout   Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+
+    ownerId String
+    owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+}
+
+enum LogAction {
+    Create
+    Update
+    Delete
+}
+
+enum LogActorType {
+    User
+    Workout
+    Exercise
+    Set
+}
+
+enum LogActorSequenceType {
+    Executor
+    Target
+    TargetOwner
+}
+
+model LogActor {
+    id           String               @id @default(cuid())
+    actorId      String
+    actorType    LogActorType
+    sequenceType LogActorSequenceType
+    log          Log                  @relation(fields: [logId], references: [id], onDelete: Cascade)
+    logId        String
+}
+
+model Log {
+    id        String     @id @default(cuid())
+    createdAt DateTime   @default(now())
+    logAction LogAction
+    actors    LogActor[]
+}
