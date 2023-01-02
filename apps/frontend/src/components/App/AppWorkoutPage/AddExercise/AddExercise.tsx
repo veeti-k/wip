@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { toast } from "react-hot-toast";
 
 import type { createExercise } from "@gym/validation";
@@ -11,7 +11,7 @@ import { Modal, useModal } from "~components/_ui/Modal";
 import { trpc } from "~trpcReact/trpcReact";
 import { animateOpacityProps } from "~utils/animations";
 
-import { CreateExerciseModal } from "./CreateExercise";
+import { CreateExercise, CreateExerciseModal } from "./CreateExercise";
 import { ExerciseCategory } from "./ExerciseCategory";
 
 type Props = {
@@ -19,12 +19,8 @@ type Props = {
 };
 
 export const AddExercise = ({ workoutId }: Props) => {
+	// const [slides, setSlides] = useState<ReactNode[] | null>([<CreateExercise />, <CreateCategory />]);
 	const { closeModal, isModalOpen, openModal } = useModal();
-	const {
-		closeModal: createExercisecloseModal,
-		isModalOpen: createExerciseisModalOpen,
-		openModal: createExerciseopenModal,
-	} = useModal();
 
 	const {
 		data: exerciseCategories,
@@ -46,13 +42,6 @@ export const AddExercise = ({ workoutId }: Props) => {
 			.catch((err) => toast.error(`Error adding exercise ${err}`));
 	};
 
-	const createExerciseAndAdd = (values: createExercise.FormType) => {
-		createModelExerciseMutation
-			.mutateAsync(values)
-			.then((modelExercise) => addExercise(modelExercise.id))
-			.catch((err) => toast.error(`Error creating model exercise ${err}`));
-	};
-
 	return (
 		<>
 			<Button onClick={openModal}>Add an exercise</Button>
@@ -63,9 +52,9 @@ export const AddExercise = ({ workoutId }: Props) => {
 						placeholder="Search"
 						value={searchQuery}
 						onChange={({ target: { value } }) => setSearchQuery(value)}
-						onKeyDown={(e) =>
-							e.code === "Enter" && noCategoriesAndQuery && createExerciseopenModal()
-						}
+						// onKeyDown={(e) =>
+						// 	e.code === "Enter" && noCategoriesAndQuery && // next slide (create exercise)
+						// }
 					/>
 
 					<div className="mt-4 flex max-h-[300px] flex-col gap-2 overflow-auto">
@@ -84,7 +73,7 @@ export const AddExercise = ({ workoutId }: Props) => {
 								variant={2}
 								className="flex items-center justify-center p-3"
 								{...animateOpacityProps}
-								onClick={() => createExerciseopenModal()}
+								// onClick={() => // next slide (create exercise)}
 							>
 								Create "{searchQuery}"
 							</Card>

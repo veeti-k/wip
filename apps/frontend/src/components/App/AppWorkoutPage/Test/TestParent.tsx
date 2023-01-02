@@ -40,24 +40,6 @@ export const TestParent = () => {
 							{slides?.[openSlideIndex]}
 							<Button onClick={() => nextSlide()}>Next</Button>
 						</motion.div>
-
-						{/* {openSlideIndex === 1 ? (
-							<motion.div {...animProps} ref={ref} key={1} className="p-4">
-								<TestChild1 />
-								<Button onClick={() => setOpenSlideIndex(2)}>Next</Button>
-							</motion.div>
-						) : openSlideIndex === 2 ? (
-							<motion.div {...animProps} ref={ref} key={2} className="p-4">
-								<TestChild2 />
-								<Button onClick={() => setOpenSlideIndex(1)}>Prev</Button>
-								<Button onClick={() => setOpenSlideIndex(3)}>Next</Button>
-							</motion.div>
-						) : openSlideIndex === 3 ? (
-							<motion.div {...animProps} ref={ref} key={3} className="p-4">
-								<h1>Tets 3</h1>
-								<Button onClick={() => setOpenSlideIndex(1)}>Next</Button>
-							</motion.div>
-						) : null} */}
 					</AnimatePresence>
 				</motion.div>
 			</Modal>
