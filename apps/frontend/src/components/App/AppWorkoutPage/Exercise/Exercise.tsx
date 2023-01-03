@@ -35,7 +35,6 @@ export const Exercise = ({ exercise }: Props) => {
 	return (
 		<Card
 			as={motion.div}
-			key={exercise.id}
 			className="flex flex-col gap-2 rounded-xl p-3"
 			{...animateHeightProps}
 		>

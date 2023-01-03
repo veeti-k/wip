@@ -26,7 +26,7 @@ export const DeleteWorkout = ({ workout }: Props) => {
 			.mutateAsync({ workoutId: workout.id })
 			.then(() => {
 				closeModal();
-				toast.success("Session deleted");
+				toast.success("Workout deleted");
 				navigate("/app");
 			})
 			.catch((err) => toast.error(err?.message ?? "Unknown error"));
@@ -56,7 +56,7 @@ export const DeleteWorkout = ({ workout }: Props) => {
 							onClick={onSubmit}
 							disabled={mutation.isLoading}
 						>
-							{mutation.isLoading ? "Deleting workout..." : "Delete workout"}
+							{mutation.isLoading ? "Deleting..." : "Yes, delete"}
 						</Button>
 					</div>
 				</div>

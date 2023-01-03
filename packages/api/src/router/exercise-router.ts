@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { createExercise } from "@gym/validation";
+import { createCategory, createExercise } from "@gym/validation";
 
 import { protectedProcedure } from "../trpc.js";
 import { router } from "../trpc.js";
@@ -33,6 +33,36 @@ export const exerciseRouter = router({
 			});
 
 			return createdExercise;
+		}),
+
+	createCategory: protectedProcedure
+		.input(createCategory.input)
+		.mutation(async ({ ctx, input }) => {
+			const existingCategory = await ctx.prisma.category.findFirst({
+				where: {
+					ownerId: ctx.auth.userId,
+					name: input.name,
+				},
+			});
+
+			if (existingCategory) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "Category already exists",
+				});
+			}
+
+			const createdCategory = await ctx.prisma.category.create({
+				data: {
+					name: input.name,
+					owner: { connect: { id: ctx.auth.userId } },
+				},
+			});
+
+			return {
+				...createdCategory,
+				modelExercises: [],
+			};
 		}),
 
 	getModelExercises: protectedProcedure.query(async ({ ctx }) => {

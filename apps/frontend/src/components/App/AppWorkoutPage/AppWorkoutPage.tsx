@@ -8,11 +8,11 @@ import { trpc } from "~trpcReact/trpcReact";
 import { animateOpacityProps } from "~utils/animations";
 
 import { AppPageWrapper } from "../App";
-import { AddExercise } from "./AddExercise/AddExercise";
+import { AddExerciseModal } from "./AddExercise/AddExercise";
+import { AddExerciseProvider } from "./AddExercise/AddExerciseContext";
 import { DeleteWorkout } from "./DeleteWorkout";
 import { Exercise } from "./Exercise/Exercise";
 import { FinishWorkout } from "./FinishWorkout";
-import { TestParent } from "./Test/TestParent";
 import { Times } from "./Times/Times";
 import { WorkoutInputs } from "./WorkoutInputs";
 
@@ -63,13 +63,14 @@ export const AppWorkoutPage = () => {
 						<div className="flex flex-col gap-2">
 							<h1 className="text-xl font-light">Exercises</h1>
 
-							<AnimatePresence initial={false}>
+							<AnimatePresence initial={false} mode="popLayout">
 								{hasExercises ? (
 									workout?.exercises?.map((exercise) => (
 										<Exercise key={exercise.id} exercise={exercise} />
 									))
 								) : (
 									<Card
+										key="no-exercises"
 										className="flex items-center justify-center px-3 py-5 font-light"
 										{...animateOpacityProps}
 									>
@@ -78,8 +79,9 @@ export const AppWorkoutPage = () => {
 								)}
 							</AnimatePresence>
 
-							<AddExercise workoutId={workout.id} />
-							<TestParent />
+							<AddExerciseProvider workoutId={workout.id}>
+								<AddExerciseModal />
+							</AddExerciseProvider>
 						</div>
 					</div>
 				</>

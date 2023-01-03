@@ -1,5 +1,6 @@
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 import type { RouterOutputs } from "@gym/api";
 
@@ -12,16 +13,32 @@ type Props = {
 	category: RouterOutputs["exercise"]["getModelExercises"][number];
 	openCategoryId: string | null;
 	setOpenCategoryId: (category: string | null) => void;
+	allOpen: boolean;
+	onClick: (modelExerciseId: string) => void;
 };
 
-export const ExerciseCategory = ({ category, openCategoryId, setOpenCategoryId }: Props) => {
-	const isOpen = openCategoryId === category.id;
+export const ExerciseCategory = ({
+	category,
+	openCategoryId,
+	setOpenCategoryId,
+	allOpen,
+	onClick,
+}: Props) => {
+	const [isOpen, setIsOpen] = useState(openCategoryId === category.id || allOpen);
+
+	useEffect(() => {
+		setIsOpen(openCategoryId === category.id || allOpen);
+	}, [openCategoryId, allOpen]);
 
 	return (
 		<Collapsible.Root
 			asChild
 			open={isOpen}
-			onClick={() => setOpenCategoryId(openCategoryId === category.id ? null : category.id)}
+			onClick={() =>
+				allOpen
+					? setIsOpen(!isOpen)
+					: setOpenCategoryId(openCategoryId === category.id ? null : category.id)
+			}
 		>
 			<Card variant={2} className="flex flex-col rounded-md p-3">
 				<div className="flex items-center justify-between gap-2">
@@ -39,9 +56,12 @@ export const ExerciseCategory = ({ category, openCategoryId, setOpenCategoryId }
 						{isOpen && (
 							<motion.div {...animateHeightProps} className="flex flex-col space-y-2">
 								<div className="mt-1" />
-								{category.modelExercises.map((modelExercises) => (
-									<Button className="!justify-start">
-										<h4>{modelExercises.name}</h4>
+								{category.modelExercises.map((modelExercise) => (
+									<Button
+										onClick={() => onClick(modelExercise.id)}
+										className="!justify-start"
+									>
+										<h4>{modelExercise.name}</h4>
 									</Button>
 								))}
 							</motion.div>

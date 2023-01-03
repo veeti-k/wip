@@ -1,101 +1,28 @@
-import { ReactNode, useState } from "react";
-import { toast } from "react-hot-toast";
-
-import type { createExercise } from "@gym/validation";
-
 import { Button } from "~components/_ui/Button";
-import { Card } from "~components/_ui/Card";
-import { ErrorCard } from "~components/_ui/ErrorCard";
-import { Input } from "~components/_ui/Input";
-import { Modal, useModal } from "~components/_ui/Modal";
-import { trpc } from "~trpcReact/trpcReact";
-import { animateOpacityProps } from "~utils/animations";
+import { Modal } from "~components/_ui/Modal";
 
-import { CreateExercise, CreateExerciseModal } from "./CreateExercise";
-import { ExerciseCategory } from "./ExerciseCategory";
+import { useAddExerciseContext } from "./AddExerciseContext";
 
-type Props = {
-	workoutId: string;
-};
+export const AddExerciseModal = () => {
+	const { getOpenSlide, setSlide, closeModal, isModalOpen, openModal } = useAddExerciseContext();
 
-export const AddExercise = ({ workoutId }: Props) => {
-	// const [slides, setSlides] = useState<ReactNode[] | null>([<CreateExercise />, <CreateCategory />]);
-	const { closeModal, isModalOpen, openModal } = useModal();
+	const slide = getOpenSlide();
 
-	const {
-		data: exerciseCategories,
-		isLoading,
-		error,
-	} = trpc.exercise.getModelExercises.useQuery();
-	const addExerciseMutation = trpc.workout.addExercise.useMutation();
-	const createModelExerciseMutation = trpc.exercise.createExercise.useMutation();
-
-	const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
-	const [searchQuery, setSearchQuery] = useState<string>("");
-
-	const noCategoriesAndQuery = !isLoading && !error && !exerciseCategories?.length && searchQuery;
-
-	const addExercise = (modelExerciseId: string) => {
-		addExerciseMutation
-			.mutateAsync({ workoutId, modelExerciseId })
-			.then(() => closeModal())
-			.catch((err) => toast.error(`Error adding exercise ${err}`));
-	};
+	if (!slide) return null;
 
 	return (
 		<>
-			<Button onClick={openModal}>Add an exercise</Button>
+			<Button
+				onClick={() => {
+					setSlide("addExercise");
+					openModal();
+				}}
+			>
+				Add exercise
+			</Button>
 
-			<Modal title="Add exercise" closeModal={closeModal} isOpen={isModalOpen}>
-				<div className="flex flex-col p-4">
-					<Input
-						placeholder="Search"
-						value={searchQuery}
-						onChange={({ target: { value } }) => setSearchQuery(value)}
-						// onKeyDown={(e) =>
-						// 	e.code === "Enter" && noCategoriesAndQuery && // next slide (create exercise)
-						// }
-					/>
-
-					<div className="mt-4 flex max-h-[300px] flex-col gap-2 overflow-auto">
-						{isLoading ? (
-							<Card
-								variant={2}
-								className="flex items-center justify-center p-3"
-								{...animateOpacityProps}
-							>
-								Loading...
-							</Card>
-						) : error ? (
-							<ErrorCard message="Error loading exercises" />
-						) : noCategoriesAndQuery ? (
-							<Card
-								variant={2}
-								className="flex items-center justify-center p-3"
-								{...animateOpacityProps}
-								// onClick={() => // next slide (create exercise)}
-							>
-								Create "{searchQuery}"
-							</Card>
-						) : exerciseCategories?.length ? (
-							exerciseCategories?.map((category) => (
-								<ExerciseCategory
-									category={category}
-									openCategoryId={openCategoryId}
-									setOpenCategoryId={setOpenCategoryId}
-								/>
-							))
-						) : (
-							<Card
-								variant={2}
-								className="flex items-center justify-center px-3 py-5 font-light"
-								{...animateOpacityProps}
-							>
-								No exercises
-							</Card>
-						)}
-					</div>
-				</div>
+			<Modal closeModal={closeModal} isOpen={isModalOpen} title={slide.modalTitle}>
+				{slide.component}
 			</Modal>
 		</>
 	);

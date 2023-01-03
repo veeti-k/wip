@@ -22,20 +22,15 @@ export const RemoveExercise = ({ exercise }: Props) => {
 	});
 
 	const onSubmit = () =>
-		toast
-			.promise(
-				mutation.mutateAsync({
-					exerciseId: exercise.id,
-					workoutId: exercise.workoutId,
-				}),
-				{
-					loading: "Removing exercise",
-					success: "Exercise removed",
-					error: "Failed to remove exercise",
-				}
-			)
+		mutation
+			.mutateAsync({
+				exerciseId: exercise.id,
+				workoutId: exercise.workoutId,
+			})
 			.then(() => closeModal())
-			.catch((err) => toast.error(err?.message ?? "Unknown error"));
+			.catch((err) =>
+				toast.error(`Failed to remove exercise: ${err?.message || "Unknown error"}`)
+			);
 
 	return (
 		<>

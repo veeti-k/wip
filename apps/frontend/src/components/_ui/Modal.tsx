@@ -13,13 +13,13 @@ type Props = {
 
 export const Modal = ({ title, children, closeModal, isOpen }: Props) => {
 	return (
-		<AnimatePresence initial={false}>
+		<AnimatePresence>
 			{isOpen && (
 				<Dialog
 					static
 					as={motion.div}
 					initial={{ opacity: 0 }}
-					animate={{ opacity: 1, height: "auto", transition: { duration: 0.15 } }}
+					animate={{ opacity: 1, transition: { duration: 0.15 } }}
 					exit={{ opacity: 0, transition: { duration: 0.075 } }}
 					open={isOpen}
 					className="relative z-10"
@@ -35,8 +35,10 @@ export const Modal = ({ title, children, closeModal, isOpen }: Props) => {
 								animate={{
 									opacity: 1,
 									scale: 1,
+									height: "auto",
 									transition: { duration: 0.15 },
 								}}
+								key={title}
 								exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.075 } }}
 								className="relative top-[15rem] w-full max-w-sm"
 							>
