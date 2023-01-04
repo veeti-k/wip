@@ -41,7 +41,7 @@ export const Set = ({ set, exercise }: Props) => {
 	const removeSet = () =>
 		removeMutation
 			.mutateAsync({ setId: set.id })
-			.catch((e) => toast.error(`Failed to delete set! ${e}`));
+			.catch((e) => toast.error(`Failed to delete set ${e}`));
 
 	const leftDrag = () => {
 		if (duplicates > 1) {
@@ -95,23 +95,63 @@ export const Set = ({ set, exercise }: Props) => {
 						)}
 					</AnimatePresence>
 
-					<div className="flex gap-2">
-						<Input
-							type="number"
-							step=".01"
-							label="Reps"
-							defaultValue={reps ?? ""}
-							onChange={(e) => setReps(parseInt(e.target.value))}
-						/>
+					{(repsEnabled || weightEnabled) && (
+						<div className="flex gap-2">
+							{repsEnabled && (
+								<Input
+									type="number"
+									step=".01"
+									label="Reps"
+									defaultValue={reps ?? ""}
+									onChange={(e) => setReps(parseInt(e.target.value))}
+								/>
+							)}
 
+							{weightEnabled && (
+								<Input
+									type="number"
+									step=".01"
+									label="(kg) Weight"
+									defaultValue={weight ?? ""}
+									onChange={(e) => setWeight(parseInt(e.target.value))}
+								/>
+							)}
+						</div>
+					)}
+
+					{(timeEnabled || distanceEnabled) && (
+						<div className="flex gap-2">
+							{timeEnabled && (
+								<Input
+									type="number"
+									step=".01"
+									label="Time"
+									defaultValue={time ?? ""}
+									onChange={(e) => setTime(parseInt(e.target.value))}
+								/>
+							)}
+
+							{distanceEnabled && (
+								<Input
+									type="number"
+									step=".01"
+									label="(m) Distance"
+									defaultValue={distance ?? ""}
+									onChange={(e) => setDistance(parseInt(e.target.value))}
+								/>
+							)}
+						</div>
+					)}
+
+					{kcalEnabled && (
 						<Input
 							type="number"
 							step=".01"
-							label="(kg) Weight"
-							defaultValue={weight ?? ""}
-							onChange={(e) => setWeight(parseInt(e.target.value))}
+							label="Kcal"
+							defaultValue={kcal ?? ""}
+							onChange={(e) => setKcal(parseInt(e.target.value))}
 						/>
-					</div>
+					)}
 				</div>
 			</Card>
 		</motion.div>
