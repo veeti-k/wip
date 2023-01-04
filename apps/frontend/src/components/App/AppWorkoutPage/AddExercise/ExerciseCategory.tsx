@@ -42,7 +42,7 @@ export const ExerciseCategory = ({
 		>
 			<Card variant={2} className="flex flex-col rounded-md p-3">
 				<div className="flex items-center justify-between gap-2">
-					<h3 className="text-lg font-semibold">{category.id}</h3>
+					<h3 className="text-lg font-semibold">{category.name}</h3>
 
 					<Collapsible.Trigger asChild>
 						<Button className="!p-1">
