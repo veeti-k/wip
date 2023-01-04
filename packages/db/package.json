@@ -8,6 +8,17 @@
 		"dist/**"
 	],
 	"type": "module",
+	"exports": {
+		".": "./dist/index.js",
+		"./modelExerciseFields": "./dist/modelExerciseFields.js"
+	},
+	"typesVersions": {
+		"*": {
+			"modelExerciseFields": [
+				"dist/modelExerciseFields.d.ts"
+			]
+		}
+	},
 	"scripts": {
 		"build": "prisma generate && tsc",
 		"dev": "tsc --watch --preserveWatchOutput",
