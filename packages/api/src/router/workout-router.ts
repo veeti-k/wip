@@ -271,8 +271,11 @@ export const workoutRouter = router({
 		.input(
 			z.object({
 				setId: z.string(),
-				weight: z.number().nullable(),
 				reps: z.number().nullable(),
+				weight: z.number().nullable(),
+				time: z.number().nullable(),
+				distance: z.number().nullable(),
+				kcal: z.number().nullable(),
 				duplicates: z.number(),
 			})
 		)
