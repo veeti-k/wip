@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 import { Card } from "~components/_ui/Card";
 import { ErrorCard } from "~components/_ui/ErrorCard";
@@ -82,6 +83,11 @@ export const AddExerciseSlide = () => {
 								mutation
 									.mutateAsync({ modelExerciseId, workoutId })
 									.then(() => closeModal())
+									.catch((err) =>
+										toast.error(
+											`Error adding exercise to workout ${err?.message}`
+										)
+									)
 							}
 						/>
 					))
