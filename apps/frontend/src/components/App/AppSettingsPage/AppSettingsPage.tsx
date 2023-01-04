@@ -1,10 +1,12 @@
 import { useAuth } from "~Auth/Auth";
 import { Button } from "~components/_ui/Button";
 import { Card } from "~components/_ui/Card";
+import { useTitle } from "~utils/useTitle";
 
 import { AppPageWrapper } from "../App";
 
 export const AppSettingsPage = () => {
+	useTitle("Settings");
 	const { info, logout } = useAuth();
 
 	return (

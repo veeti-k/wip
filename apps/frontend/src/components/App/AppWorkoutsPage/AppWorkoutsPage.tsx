@@ -3,11 +3,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Card } from "~components/_ui/Card";
 import { trpc } from "~trpcReact/trpcReact";
 import { animateOpacityProps, errorCardStuff } from "~utils/animations";
+import { useTitle } from "~utils/useTitle";
 
 import { AppPageWrapper } from "../App";
 import { Workout } from "./Workout";
 
 export const AppWorkoutsPage = () => {
+	useTitle("Workouts");
 	const { data, isLoading, error } = trpc.workout.getAllPerMonth.useQuery();
 
 	return (

@@ -6,6 +6,7 @@ import { Card } from "~components/_ui/Card";
 import { ErrorCard } from "~components/_ui/ErrorCard";
 import { trpc } from "~trpcReact/trpcReact";
 import { animateOpacityProps } from "~utils/animations";
+import { useTitle } from "~utils/useTitle";
 
 import { AppPageWrapper } from "../App";
 import { AddExerciseModal } from "./AddExercise/AddExercise";
@@ -29,6 +30,8 @@ export const AppWorkoutPage = () => {
 
 	const inProgress = !!!workout?.stoppedAt;
 	const hasExercises = !!workout?.exercises.length;
+
+	useTitle(workout?.name ?? "Workout");
 
 	return (
 		<AppPageWrapper>
