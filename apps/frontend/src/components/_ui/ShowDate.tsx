@@ -9,7 +9,7 @@ export const ShowDate = ({ date }: { date: Date }) => {
 		format: "extended",
 		representation: "complete",
 	});
-	const formattedForHumans = format(date, "yyyy-MM-dd HH:mm:ss");
+	const formattedForHumans = format(date, "eeee, MMMM do, yyyy h:mm a");
 
 	return (
 		<time
