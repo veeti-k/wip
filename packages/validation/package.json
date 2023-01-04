@@ -14,7 +14,8 @@
 		"lint": "TIMING=1 eslint \"src/**/*.ts\""
 	},
 	"dependencies": {
-		"zod": "^3.18.0"
+		"zod": "^3.18.0",
+		"@gym/db": "*"
 	},
 	"devDependencies": {
 		"@gym/tsconfig": "*",

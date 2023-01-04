@@ -1,14 +1,8 @@
 import { z } from "zod";
 
-const fields = {
-	weight: BigInt(1),
-	reps: BigInt(2),
-	time: BigInt(4),
-	distance: BigInt(8),
-	kcal: BigInt(16),
-};
+import { modelExerciseFields } from "@gym/db/modelExerciseFields";
 
-const fieldArray = Object.keys(fields);
+const fieldArray = Object.keys(modelExerciseFields);
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const acceptedFields = z.enum([fieldArray.at(0)!, ...fieldArray.slice(1)]);
 
@@ -29,7 +23,10 @@ export const input = z.object({
 		.min(1, { message: "Required" })
 		.max(fieldArray.length, { message: "Too many fields" })
 		.transform((arr) =>
-			arr.reduce((acc, curr) => acc | fields[curr as keyof typeof fields], BigInt(0))
+			arr.reduce(
+				(acc, curr) => acc | modelExerciseFields[curr as keyof typeof modelExerciseFields],
+				BigInt(0)
+			)
 		),
 });
 
