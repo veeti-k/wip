@@ -54,7 +54,7 @@ export const Exercise = ({ exercise }: Props) => {
 					<div className="flex flex-col">
 						<AnimatePresence initial={false}>
 							{exercise.sets?.map((set, index) => (
-								<Set key={index} set={set} />
+								<Set key={index} exercise={exercise} set={set} />
 							))}
 						</AnimatePresence>
 					</div>
