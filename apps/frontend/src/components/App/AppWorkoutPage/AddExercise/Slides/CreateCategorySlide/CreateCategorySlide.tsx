@@ -1,7 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
-import type { createCategory } from "@gym/validation";
+import { createCategory } from "@gym/validation";
 
 import { Button } from "~components/_ui/Button";
 import { Input } from "~components/_ui/Input";
@@ -14,7 +15,9 @@ export const CreateCategorySlide = () => {
 
 	const mutation = useCreateCategoryMutation();
 
-	const form = useForm<createCategory.FormType>({});
+	const form = useForm<createCategory.FormType>({
+		resolver: zodResolver(createCategory.form),
+	});
 
 	const onSubmit = (values: createCategory.FormType) =>
 		mutation
