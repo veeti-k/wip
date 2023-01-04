@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 import type { RouterOutputs } from "@gym/api";
+import { hasExerciseField } from "@gym/db/modelExerciseFields";
 
 import { Card } from "~components/_ui/Card";
 import { Input } from "~components/_ui/Input";
@@ -16,9 +17,10 @@ import { useUpdateSetMutation } from "./updateSetMutation";
 
 type Props = {
 	set: NonNullable<RouterOutputs["workout"]["getOne"]>["exercises"][number]["sets"][number];
+	exercise: NonNullable<RouterOutputs["workout"]["getOne"]>["exercises"][number];
 };
 
-export const Set = ({ set }: Props) => {
+export const Set = ({ set, exercise }: Props) => {
 	const updateMutation = useUpdateSetMutation({
 		exerciseId: set.exerciseId,
 		workoutId: set.workoutId,
@@ -30,6 +32,9 @@ export const Set = ({ set }: Props) => {
 
 	const [reps, setReps] = useDebouncedValue(set.reps, 250);
 	const [weight, setWeight] = useDebouncedValue(set.weight, 250);
+	const [time, setTime] = useDebouncedValue(set.time, 250);
+	const [distance, setDistance] = useDebouncedValue(set.distance, 250);
+	const [kcal, setKcal] = useDebouncedValue(set.kcal, 250);
 	const [duplicates, setDuplicates] = useState(set.duplicates);
 	const mounted = useIsMounted();
 
@@ -53,8 +58,22 @@ export const Set = ({ set }: Props) => {
 	useEffect(() => {
 		if (!mounted) return;
 
-		updateMutation.mutateAsync({ setId: set.id, reps, weight, duplicates });
-	}, [reps, weight, duplicates]);
+		updateMutation.mutateAsync({
+			setId: set.id,
+			reps,
+			weight,
+			time,
+			distance,
+			kcal,
+			duplicates,
+		});
+	}, [reps, weight, time, distance, kcal, duplicates]);
+
+	const repsEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "reps");
+	const weightEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "weight");
+	const timeEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "time");
+	const distanceEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "distance");
+	const kcalEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "kcal");
 
 	return (
 		<motion.div
@@ -84,6 +103,7 @@ export const Set = ({ set }: Props) => {
 							defaultValue={reps ?? ""}
 							onChange={(e) => setReps(parseInt(e.target.value))}
 						/>
+
 						<Input
 							type="number"
 							step=".01"
