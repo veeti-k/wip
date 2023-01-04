@@ -17,7 +17,6 @@ export const AppWorkoutsPage = () => {
 			<AnimatePresence initial={false}>
 				{isLoading ? (
 					<Card
-						as={motion.div}
 						{...animateOpacityProps}
 						className="flex items-center justify-center rounded-xl p-3"
 					>
