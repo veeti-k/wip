@@ -10,12 +10,20 @@ type InputProps = Omit<ComponentProps<"input">, "ref" | "className">;
 
 type Props = InputProps & {
 	label?: string;
-	error?: string | ReactNode;
 	required?: boolean;
-};
+} & (
+		| {
+				error?: string | ReactNode;
+				invalid?: never;
+		  }
+		| {
+				invalid?: boolean;
+				error?: never;
+		  }
+	);
 
 export const Input = forwardRef<HTMLInputElement, Props>(
-	({ label, required, id, error, ...rest }, ref) => {
+	({ label, required, id, error, invalid, ...rest }, ref) => {
 		const innerId = useId();
 		const hasError = !!error;
 
@@ -23,7 +31,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
 			return (
 				<div className="flex flex-col">
 					<InnerInput
-						invalid={hasError}
+						invalid={invalid || hasError}
 						ref={ref}
 						required={required}
 						id={id ?? innerId}
@@ -42,7 +50,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
 					</Label>
 
 					<InnerInput
-						invalid={hasError}
+						invalid={invalid || hasError}
 						ref={ref}
 						required={required}
 						id={id ?? innerId}
