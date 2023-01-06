@@ -7,13 +7,19 @@ type Props = {
 export const useAddExerciseMutation = ({ workoutId }: Props) => {
 	const trpcCtx = trpc.useContext();
 	return trpc.workout.addExercise.useMutation({
-		onSuccess: (updatedSession) => {
+		onSuccess: (createdExercise) => {
 			trpcCtx.workout.getOne.setData({ id: workoutId }, (oldData) => {
 				if (!oldData) return null;
 
 				return {
 					...oldData,
-					exercises: updatedSession?.exercises || [],
+					exercises: [
+						...oldData.exercises,
+						{
+							...createdExercise,
+							sets: [],
+						},
+					],
 				};
 			});
 		},

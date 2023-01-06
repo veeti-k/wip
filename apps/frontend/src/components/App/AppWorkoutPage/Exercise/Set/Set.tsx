@@ -53,10 +53,7 @@ export const Set = ({ set, exercise }: Props) => {
 	const updateData = () =>
 		form.handleSubmit((values) => updateMutation.mutateAsync({ setId: set.id, ...values }))();
 
-	const debouncedUpdateData = useCallback(
-		debounce(() => updateData(), 300),
-		[]
-	);
+	const debouncedUpdateData = useCallback(debounce(updateData, 300), []);
 
 	const leftDrag = () => {
 		if (duplicates > 1) {

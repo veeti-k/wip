@@ -1,28 +1,24 @@
-import { toast } from "react-hot-toast";
-
 import type { RouterOutputs } from "@gym/api";
 
 import { Button } from "~components/_ui/Button";
 import { Modal, useModal } from "~components/_ui/Modal";
-import { trpc } from "~trpcReact/trpcReact";
+import { errorMsg } from "~utils/errorMsg";
+
+import { useFinishWorkoutMutation } from "./useFinishWorkoutMutation";
 
 type Props = {
 	workout: NonNullable<RouterOutputs["workout"]["getOne"]>;
 };
 
 export const FinishWorkout = ({ workout }: Props) => {
-	const trpcCtx = trpc.useContext();
-	const mutation = trpc.workout.finishWorkout.useMutation({
-		onSuccess: (updatedWorkout) =>
-			trpcCtx.workout.getOne.setData({ id: workout.id }, updatedWorkout),
-	});
+	const mutation = useFinishWorkoutMutation();
 	const { closeModal, isModalOpen, openModal } = useModal();
 
 	const onSubmit = () =>
 		mutation
 			.mutateAsync({ workoutId: workout.id })
 			.then(() => closeModal())
-			.catch((err) => toast.error(err?.message ?? "Unknown error"));
+			.catch(errorMsg("Error finishing workout"));
 
 	return (
 		<>

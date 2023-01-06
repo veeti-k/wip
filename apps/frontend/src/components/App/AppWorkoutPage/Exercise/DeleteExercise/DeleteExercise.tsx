@@ -5,21 +5,16 @@ import type { RouterOutputs } from "@gym/api";
 import { Button } from "~components/_ui/Button";
 import { RemoveIcon } from "~components/_ui/Icons/RemoveIcon";
 import { Modal, useModal } from "~components/_ui/Modal";
-import { trpc } from "~trpcReact/trpcReact";
+
+import { useDeleteExerciseMutation } from "./useDeleteExerciseMutation";
 
 type Props = {
 	exercise: NonNullable<RouterOutputs["workout"]["getOne"]>["exercises"][number];
 };
 
-export const RemoveExercise = ({ exercise }: Props) => {
-	const trpcCtx = trpc.useContext();
+export const DeleteExercise = ({ exercise }: Props) => {
 	const { closeModal, isModalOpen, openModal } = useModal();
-	const mutation = trpc.workout.removeExercise.useMutation({
-		onSuccess: (updatedSession) => {
-			trpcCtx.workout.getOne.setData({ id: exercise.workoutId }, updatedSession);
-			trpcCtx.workout.getOne.invalidate({ id: exercise.workoutId });
-		},
-	});
+	const mutation = useDeleteExerciseMutation();
 
 	const onSubmit = () =>
 		mutation
@@ -29,7 +24,7 @@ export const RemoveExercise = ({ exercise }: Props) => {
 			})
 			.then(() => closeModal())
 			.catch((err) =>
-				toast.error(`Failed to remove exercise: ${err?.message || "Unknown error"}`)
+				toast.error(`Failed to delete exercise: ${err?.message || "Unknown error"}`)
 			);
 
 	return (
@@ -38,10 +33,10 @@ export const RemoveExercise = ({ exercise }: Props) => {
 				<RemoveIcon className="text-red-400" />
 			</Button>
 
-			<Modal isOpen={isModalOpen} closeModal={closeModal} title="Remove exercise">
+			<Modal isOpen={isModalOpen} closeModal={closeModal} title="Delete exercise">
 				<div className="flex flex-col gap-4 p-4">
 					<p>
-						Are you sure you want to remove {exercise.modelExercise.name} from this
+						Are you sure you want to delete {exercise.modelExercise.name} from this
 						workout?
 					</p>
 

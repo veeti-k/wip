@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { updateExerciseSet } from "@gym/validation";
+import { updateExercise, updateExerciseSet, updateWorkout } from "@gym/validation";
 
 import { protectedProcedure, router } from "../trpc.js";
 
@@ -21,12 +21,8 @@ export const workoutRouter = router({
 
 	getAllPerMonth: protectedProcedure.query(async ({ ctx }) => {
 		const workouts = await ctx.prisma.workout.findMany({
-			where: {
-				ownerId: ctx.auth.userId,
-			},
-			orderBy: {
-				createdAt: "desc",
-			},
+			where: { ownerId: ctx.auth.userId },
+			orderBy: { createdAt: "desc" },
 			include: { exercises: { include: { sets: true, modelExercise: true } } },
 		});
 
@@ -68,14 +64,16 @@ export const workoutRouter = router({
 					name: input.name,
 					owner: { connect: { id: ctx.auth.userId } },
 				},
-				include: { exercises: { include: { sets: true, modelExercise: true } } },
 			});
 
-			return workout;
+			return {
+				...workout,
+				exercises: [],
+			};
 		}),
 
 	updateWorkout: protectedProcedure
-		.input(z.object({ workoutId: z.string(), notes: z.string().nullable() }))
+		.input(updateWorkout.input)
 		.mutation(async ({ ctx, input }) => {
 			const workout = await ctx.prisma.workout.findFirst({
 				where: {
@@ -91,10 +89,15 @@ export const workoutRouter = router({
 				});
 			}
 
-			await ctx.prisma.workout.update({
+			const updatedWorkout = await ctx.prisma.workout.update({
 				where: { id: workout.id },
-				data: { notes: input.notes },
+				data: {
+					notes: input.notes,
+					bodyWeight: input.bodyWeight,
+				},
 			});
+
+			return updatedWorkout;
 		}),
 
 	finishWorkout: protectedProcedure
@@ -117,7 +120,6 @@ export const workoutRouter = router({
 			const updatedWorkout = await ctx.prisma.workout.update({
 				where: { id: workout.id },
 				data: { stoppedAt: new Date() },
-				include: { exercises: { include: { sets: true, modelExercise: true } } },
 			});
 
 			return updatedWorkout;
@@ -126,14 +128,14 @@ export const workoutRouter = router({
 	deleteWorkout: protectedProcedure
 		.input(z.object({ workoutId: z.string() }))
 		.mutation(async ({ ctx, input }) => {
-			const workout = await ctx.prisma.workout.findFirst({
+			const existingWorkout = await ctx.prisma.workout.findFirst({
 				where: {
 					id: input.workoutId,
 					ownerId: ctx.auth.userId,
 				},
 			});
 
-			if (!workout) {
+			if (!existingWorkout) {
 				throw new TRPCError({
 					code: "BAD_REQUEST",
 					message: "Workout not found",
@@ -141,7 +143,7 @@ export const workoutRouter = router({
 			}
 
 			await ctx.prisma.workout.delete({
-				where: { id: workout.id },
+				where: { id: existingWorkout.id },
 			});
 		}),
 
@@ -172,27 +174,49 @@ export const workoutRouter = router({
 			if (!existingModelExercise) {
 				throw new TRPCError({
 					code: "BAD_REQUEST",
+					message: "Model exercise not found",
+				});
+			}
+
+			const createdExercise = await ctx.prisma.exercise.create({
+				data: {
+					modelExercise: { connect: { id: existingModelExercise.id } },
+					owner: { connect: { id: ctx.auth.userId } },
+					workout: { connect: { id: workout.id } },
+				},
+			});
+
+			return {
+				...createdExercise,
+				modelExercise: existingModelExercise,
+			};
+		}),
+
+	updateExercise: protectedProcedure
+		.input(updateExercise.input)
+		.mutation(async ({ ctx, input }) => {
+			const existingExercise = await ctx.prisma.exercise.findFirst({
+				where: {
+					id: input.exerciseId,
+					workoutId: input.workoutId,
+					ownerId: ctx.auth.userId,
+				},
+			});
+
+			if (!existingExercise) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
 					message: "Exercise not found",
 				});
 			}
 
-			const updatedWorkout = await ctx.prisma.workout.update({
-				where: { id: workout.id },
-				data: {
-					exercises: {
-						create: {
-							modelExercise: { connect: { id: existingModelExercise.id } },
-							owner: { connect: { id: ctx.auth.userId } },
-						},
-					},
-				},
-				include: { exercises: { include: { sets: true, modelExercise: true } } },
+			await ctx.prisma.exercise.update({
+				where: { id: existingExercise.id },
+				data: { notes: input.notes },
 			});
-
-			return updatedWorkout;
 		}),
 
-	removeExercise: protectedProcedure
+	deleteExercise: protectedProcedure
 		.input(z.object({ workoutId: z.string(), exerciseId: z.string() }))
 		.mutation(async ({ ctx, input }) => {
 			const existingExercise = await ctx.prisma.exercise.findFirst({
@@ -210,13 +234,11 @@ export const workoutRouter = router({
 				});
 			}
 
-			const updatedWorkout = await ctx.prisma.workout.update({
-				where: { id: input.workoutId },
-				data: { exercises: { delete: { id: existingExercise.id } } },
-				include: { exercises: { include: { sets: true, modelExercise: true } } },
+			await ctx.prisma.exercise.delete({
+				where: { id: existingExercise.id },
 			});
 
-			return updatedWorkout;
+			return existingExercise;
 		}),
 
 	addExerciseSet: protectedProcedure
@@ -246,27 +268,15 @@ export const workoutRouter = router({
 				});
 			}
 
-			const updatedWorkout = await ctx.prisma.workout.update({
-				where: { id: workout.id },
+			const createdSet = await ctx.prisma.set.create({
 				data: {
-					exercises: {
-						update: {
-							where: { id: exercise.id },
-							data: {
-								sets: {
-									create: {
-										owner: { connect: { id: ctx.auth.userId } },
-										workout: { connect: { id: workout.id } },
-									},
-								},
-							},
-						},
-					},
+					owner: { connect: { id: ctx.auth.userId } },
+					workout: { connect: { id: workout.id } },
+					exercise: { connect: { id: exercise.id } },
 				},
-				include: { exercises: { include: { sets: true, modelExercise: true } } },
 			});
 
-			return updatedWorkout;
+			return createdSet;
 		}),
 
 	updateExerciseSet: protectedProcedure

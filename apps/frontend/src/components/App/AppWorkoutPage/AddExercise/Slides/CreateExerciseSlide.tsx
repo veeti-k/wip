@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { toast } from "react-hot-toast";
 
 import type { createExercise } from "@gym/validation";
 
@@ -7,6 +6,7 @@ import { Button } from "~components/_ui/Button";
 import { Input } from "~components/_ui/Input";
 import { Select } from "~components/_ui/Select";
 import { trpc } from "~trpcReact/trpcReact";
+import { errorMsg } from "~utils/errorMsg";
 
 import { useAddExerciseContext } from "../AddExerciseContext";
 import { useAddExerciseMutation } from "./AddExerciseSlide/useAddExerciseMutation";
@@ -40,17 +40,9 @@ export const CreateExerciseSlide = () => {
 						closeModal();
 						form.reset();
 					})
-					.catch((err) =>
-						toast.error(
-							`Failed to add created exercise to workout: ${
-								err?.message || "Unknown error"
-							}`
-						)
-					)
+					.catch(errorMsg("Failed to add created exercise to workout"))
 			)
-			.catch((err) =>
-				toast.error(`Failed to create exercise: ${err?.message || "Unknown error"}`)
-			);
+			.catch(errorMsg("Failed to create exercise"));
 
 	useEffect(() => {
 		form.setValue("name", addExerciseSearchQuery);

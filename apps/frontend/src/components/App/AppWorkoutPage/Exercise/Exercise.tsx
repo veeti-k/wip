@@ -1,16 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { forwardRef } from "react";
-import { toast } from "react-hot-toast";
 
 import type { RouterOutputs } from "@gym/api";
 
-import { Button } from "~components/_ui/Button";
 import { Card } from "~components/_ui/Card";
-import { Input } from "~components/_ui/Input";
-import { trpc } from "~trpcReact/trpcReact";
 import { animateHeightProps } from "~utils/animations";
 
-import { RemoveExercise } from "./RemoveExercise";
+import { AddExerciseSet } from "./AddExerciseSet/AddExerciseSet";
+import { DeleteExercise } from "./DeleteExercise/DeleteExercise";
+import { ExerciseNotes } from "./ExerciseNotes/ExerciseNotes";
 import { Set } from "./Set/Set";
 
 type Props = {
@@ -18,20 +16,8 @@ type Props = {
 };
 
 export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) => {
-	const addSetMutation = trpc.workout.addExerciseSet.useMutation();
-	const trpcCtx = trpc.useContext();
-
 	const amountOfSets = exercise.sets.reduce((acc, set) => acc + set.duplicates, 0);
 	const setsPlural = amountOfSets === 1 ? "" : "s";
-
-	const addSet = () =>
-		addSetMutation
-			.mutateAsync({
-				exerciseId: exercise.id,
-				workoutId: exercise.workoutId,
-			})
-			.then((s) => trpcCtx.workout.getOne.setData({ id: exercise.workoutId }, s))
-			.catch((err) => toast.error(err?.message || "Failed to add set"));
 
 	return (
 		<Card
@@ -42,10 +28,10 @@ export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) =>
 		>
 			<div className="flex items-center justify-between gap-2">
 				<h2 className="text-lg font-medium">{exercise.modelExercise.name}</h2>
-				<RemoveExercise exercise={exercise} />
+				<DeleteExercise exercise={exercise} />
 			</div>
 
-			<Input label="Notes" />
+			<ExerciseNotes exercise={exercise} />
 
 			<div className="flex flex-col">
 				<div className="flex flex-col">
@@ -63,9 +49,7 @@ export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) =>
 				</div>
 
 				<div className="mt-3 flex gap-2">
-					<Button className="w-full" onClick={addSet} disabled={addSetMutation.isLoading}>
-						{addSetMutation.isLoading ? "Adding..." : "Add a set"}
-					</Button>
+					<AddExerciseSet exercise={exercise} />
 
 					{/* <Dropdown>
 						<div>

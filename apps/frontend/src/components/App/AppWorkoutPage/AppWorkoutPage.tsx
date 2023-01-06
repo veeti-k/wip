@@ -13,9 +13,9 @@ import { AddExerciseModal } from "./AddExercise/AddExercise";
 import { AddExerciseProvider } from "./AddExercise/AddExerciseContext";
 import { DeleteWorkout } from "./DeleteWorkout";
 import { Exercise } from "./Exercise/Exercise";
-import { FinishWorkout } from "./FinishWorkout";
+import { FinishWorkout } from "./FinishWorkout/FinishWorkout";
 import { Times } from "./Times/Times";
-import { WorkoutInputs } from "./WorkoutInputs";
+import { WorkoutInputs } from "./WorkoutInputs/WorkoutInputs";
 
 export const AppWorkoutPage = () => {
 	const { workoutId } = useParams();
