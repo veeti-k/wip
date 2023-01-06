@@ -2,8 +2,6 @@ FROM node:18-bullseye-slim as base
 
 WORKDIR /app
 
-RUN apk update && apk --no-cache add curl libc6-compat
-
 FROM base as pruner
 
 ARG APP
