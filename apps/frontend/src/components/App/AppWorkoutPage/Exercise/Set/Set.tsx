@@ -1,16 +1,18 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import debounce from "lodash.debounce";
+import { useCallback } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
 import type { RouterOutputs } from "@gym/api";
 import { hasExerciseField } from "@gym/db/modelExerciseFields";
+import { updateExerciseSet } from "@gym/validation";
 
 import { Card } from "~components/_ui/Card";
 import { Input } from "~components/_ui/Input";
 import { animateHeightProps, dragStuff } from "~utils/animations";
 import { dragActions } from "~utils/dragActions";
-import { useDebouncedValue } from "~utils/useDebouncedValue";
-import { useIsMounted } from "~utils/useIsMounted";
 
 import { useRemoveSetMutation } from "./removeSetMutation";
 import { useUpdateSetMutation } from "./updateSetMutation";
@@ -30,50 +32,63 @@ export const Set = ({ set, exercise }: Props) => {
 		workoutId: set.workoutId,
 	});
 
-	const [reps, setReps] = useDebouncedValue(set.reps, 250);
-	const [weight, setWeight] = useDebouncedValue(set.weight, 250);
-	const [time, setTime] = useDebouncedValue(set.time, 250);
-	const [distance, setDistance] = useDebouncedValue(set.distance, 250);
-	const [kcal, setKcal] = useDebouncedValue(set.kcal, 250);
-	const [duplicates, setDuplicates] = useState(set.duplicates);
-	const mounted = useIsMounted();
-
 	const removeSet = () =>
 		removeMutation
 			.mutateAsync({ setId: set.id })
 			.catch((e) => toast.error(`Failed to delete set ${e}`));
 
+	const form = useForm<updateExerciseSet.FormType>({
+		resolver: zodResolver(updateExerciseSet.form),
+		defaultValues: {
+			reps: set.reps,
+			weight: set.weight,
+			time: set.time,
+			distance: set.distance,
+			kcal: set.kcal,
+			duplicates: set.duplicates,
+		},
+	});
+	const duplicates = form.watch("duplicates");
+
+	const updateData = () =>
+		form.handleSubmit((values) => updateMutation.mutateAsync({ setId: set.id, ...values }))();
+
+	const debouncedUpdateData = useCallback(
+		debounce(() => updateData(), 300),
+		[]
+	);
+
 	const leftDrag = () => {
 		if (duplicates > 1) {
-			setDuplicates((prev) => prev - 1);
+			form.setValue("duplicates", duplicates - 1);
+			updateData();
 		} else {
 			removeSet();
 		}
 	};
 
 	const rightDrag = () => {
-		setDuplicates((prev) => prev + 1);
+		form.setValue("duplicates", duplicates + 1);
+		updateData();
 	};
-
-	useEffect(() => {
-		if (!mounted) return;
-
-		updateMutation.mutateAsync({
-			setId: set.id,
-			reps,
-			weight,
-			time,
-			distance,
-			kcal,
-			duplicates,
-		});
-	}, [reps, weight, time, distance, kcal, duplicates]);
 
 	const repsEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "reps");
 	const weightEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "weight");
 	const timeEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "time");
 	const distanceEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "distance");
 	const kcalEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "kcal");
+
+	const formHasErrors =
+		form.formState.errors.distance?.message ||
+		form.formState.errors.kcal?.message ||
+		form.formState.errors.reps?.message ||
+		form.formState.errors.time?.message ||
+		form.formState.errors.weight?.message;
+
+	const inputProps = {
+		onChange: debouncedUpdateData,
+		valueAsNumber: true,
+	};
 
 	return (
 		<motion.div
@@ -87,10 +102,16 @@ export const Set = ({ set, exercise }: Props) => {
 				className="border-primary-800 mt-2 flex flex-col items-center gap-2 rounded-md p-2 py-2"
 			>
 				<div className="flex flex-col">
-					<AnimatePresence initial={false}>
-						{duplicates > 1 && (
-							<motion.div {...animateHeightProps}>
-								<h3 className="mb-2">{duplicates}x</h3>
+					<AnimatePresence initial={false} mode="wait">
+						{(duplicates > 1 || formHasErrors) && (
+							<motion.div
+								{...animateHeightProps}
+								className="flex justify-between gap-2"
+							>
+								{duplicates > 1 && <h3 className="mb-2">{duplicates}x</h3>}
+								{formHasErrors && (
+									<h3 className="mb-2 text-sm text-red-400">Invalid</h3>
+								)}
 							</motion.div>
 						)}
 					</AnimatePresence>
@@ -101,9 +122,11 @@ export const Set = ({ set, exercise }: Props) => {
 								<Input
 									type="number"
 									step=".01"
+									min="0"
 									label="Reps"
-									defaultValue={reps ?? ""}
-									onChange={(e) => setReps(parseInt(e.target.value))}
+									autoFocus
+									invalid={!!form.formState.errors.reps?.message}
+									{...form.register("reps", inputProps)}
 								/>
 							)}
 
@@ -112,22 +135,24 @@ export const Set = ({ set, exercise }: Props) => {
 									type="number"
 									step=".01"
 									label="(kg) Weight"
-									defaultValue={weight ?? ""}
-									onChange={(e) => setWeight(parseInt(e.target.value))}
+									invalid={!!form.formState.errors.weight?.message}
+									{...form.register("weight", inputProps)}
 								/>
 							)}
 						</div>
 					)}
 
 					{(timeEnabled || distanceEnabled) && (
-						<div className="flex gap-2">
+						<div className="flex gap-2 pt-2">
 							{timeEnabled && (
 								<Input
 									type="number"
 									step=".01"
+									min="0"
 									label="Time"
-									defaultValue={time ?? ""}
-									onChange={(e) => setTime(parseInt(e.target.value))}
+									autoFocus
+									invalid={!!form.formState.errors.time?.message}
+									{...form.register("time", inputProps)}
 								/>
 							)}
 
@@ -135,22 +160,26 @@ export const Set = ({ set, exercise }: Props) => {
 								<Input
 									type="number"
 									step=".01"
+									min="0"
 									label="(m) Distance"
-									defaultValue={distance ?? ""}
-									onChange={(e) => setDistance(parseInt(e.target.value))}
+									invalid={!!form.formState.errors.distance?.message}
+									{...form.register("distance", inputProps)}
 								/>
 							)}
 						</div>
 					)}
 
 					{kcalEnabled && (
-						<Input
-							type="number"
-							step=".01"
-							label="Kcal"
-							defaultValue={kcal ?? ""}
-							onChange={(e) => setKcal(parseInt(e.target.value))}
-						/>
+						<div className="pt-2">
+							<Input
+								type="number"
+								step=".01"
+								label="Kcal"
+								invalid={!!form.formState.errors.kcal?.message}
+								autoFocus
+								{...form.register("kcal", inputProps)}
+							/>
+						</div>
 					)}
 				</div>
 			</Card>
