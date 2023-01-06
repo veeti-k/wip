@@ -23,7 +23,7 @@ export const AuthWaitingPage = () => {
 	const token = searchParams.get("waiterToken");
 	const email = searchParams.get("email");
 
-	const mutation = trpc.auth.verifyWaiterToken.useMutation({ retry: true });
+	const mutation = trpc.auth.verifyWaiterToken.useMutation({ retry: false });
 
 	useSetInterval(
 		async () => {
