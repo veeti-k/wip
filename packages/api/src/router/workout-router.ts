@@ -237,8 +237,6 @@ export const workoutRouter = router({
 			await ctx.prisma.exercise.delete({
 				where: { id: existingExercise.id },
 			});
-
-			return existingExercise;
 		}),
 
 	addExerciseSet: protectedProcedure
@@ -303,7 +301,7 @@ export const workoutRouter = router({
 			});
 		}),
 
-	removeExerciseSet: protectedProcedure
+	deleteExerciseSet: protectedProcedure
 		.input(z.object({ setId: z.string() }))
 		.mutation(async ({ ctx, input }) => {
 			const set = await ctx.prisma.set.findFirst({

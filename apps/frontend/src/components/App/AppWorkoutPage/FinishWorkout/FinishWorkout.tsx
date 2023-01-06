@@ -18,7 +18,7 @@ export const FinishWorkout = ({ workout }: Props) => {
 		mutation
 			.mutateAsync({ workoutId: workout.id })
 			.then(() => closeModal())
-			.catch(errorMsg("Error finishing workout"));
+			.catch(errorMsg("Failed to finish workout"));
 
 	return (
 		<>

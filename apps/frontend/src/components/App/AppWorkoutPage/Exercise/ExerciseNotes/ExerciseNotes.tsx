@@ -7,6 +7,7 @@ import type { RouterOutputs } from "@gym/api";
 import { updateExercise } from "@gym/validation";
 
 import { Input } from "~components/_ui/Input";
+import { errorMsg } from "~utils/errorMsg";
 
 import { useUpdateExerciseMutation } from "./useUpdateExerciseMutation";
 
@@ -24,11 +25,13 @@ export const ExerciseNotes = ({ exercise }: Props) => {
 
 	const updateData = () =>
 		form.handleSubmit((values) =>
-			mutation.mutateAsync({
-				workoutId: exercise.workoutId,
-				exerciseId: exercise.id,
-				...values,
-			})
+			mutation
+				.mutateAsync({
+					workoutId: exercise.workoutId,
+					exerciseId: exercise.id,
+					...values,
+				})
+				.catch(errorMsg(`Failed to update ${exercise.modelExercise.name} notes`))
 		)();
 
 	const debouncedUpdateData = useCallback(debounce(updateData, 500), []);

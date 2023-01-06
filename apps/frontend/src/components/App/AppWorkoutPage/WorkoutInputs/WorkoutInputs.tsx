@@ -7,6 +7,7 @@ import type { RouterOutputs } from "@gym/api";
 import { updateWorkout } from "@gym/validation";
 
 import { Input } from "~components/_ui/Input";
+import { errorMsg } from "~utils/errorMsg";
 
 import { useUpdateWorkoutMutation } from "./useUpdateWorkoutMutation";
 
@@ -27,10 +28,12 @@ export const WorkoutInputs = ({ workout }: Props) => {
 
 	const updateData = () =>
 		form.handleSubmit((values) =>
-			mutation.mutateAsync({
-				workoutId: workout.id,
-				...values,
-			})
+			mutation
+				.mutateAsync({
+					workoutId: workout.id,
+					...values,
+				})
+				.catch(errorMsg("Failed to update workout"))
 		)();
 
 	const debouncedUpdateData = useCallback(debounce(updateData, 500), []);

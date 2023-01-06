@@ -5,10 +5,10 @@ type Props = {
 	exerciseId: string;
 };
 
-export const useRemoveSetMutation = ({ exerciseId, workoutId }: Props) => {
+export const useUpdateSetMutation = ({ exerciseId, workoutId }: Props) => {
 	const trpcCtx = trpc.useContext();
 
-	return trpc.workout.removeExerciseSet.useMutation({
+	return trpc.workout.updateExerciseSet.useMutation({
 		onMutate: async (vars) => {
 			await trpcCtx.workout.getOne.cancel({ id: workoutId });
 
@@ -24,7 +24,16 @@ export const useRemoveSetMutation = ({ exerciseId, workoutId }: Props) => {
 
 						return {
 							...exercise,
-							sets: exercise.sets.filter((set) => set.id !== vars.setId),
+							sets: exercise.sets.map((set) => {
+								if (set.id !== vars.setId) return set;
+
+								return {
+									...set,
+									weight: vars.weight,
+									reps: vars.reps,
+									duplicates: vars.duplicates,
+								};
+							}),
 						};
 					}),
 				};

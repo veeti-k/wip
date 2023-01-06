@@ -4,15 +4,13 @@ export const useDeleteExerciseMutation = () => {
 	const trpcCtx = trpc.useContext();
 
 	return trpc.workout.deleteExercise.useMutation({
-		onSuccess: (deletedExercise) => {
-			trpcCtx.workout.getOne.setData({ id: deletedExercise.workoutId }, (oldData) => {
+		onSuccess: (_, { workoutId, exerciseId }) => {
+			trpcCtx.workout.getOne.setData({ id: workoutId }, (oldData) => {
 				if (!oldData) return null;
 
 				return {
 					...oldData,
-					exercises: oldData.exercises.filter(
-						(exercise) => exercise.id !== deletedExercise.id
-					),
+					exercises: oldData.exercises.filter((exercise) => exercise.id !== exerciseId),
 				};
 			});
 		},

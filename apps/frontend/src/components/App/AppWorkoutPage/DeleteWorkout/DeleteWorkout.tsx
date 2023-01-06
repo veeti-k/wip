@@ -5,7 +5,9 @@ import type { RouterOutputs } from "@gym/api";
 
 import { Button } from "~components/_ui/Button";
 import { Modal, useModal } from "~components/_ui/Modal";
-import { trpc } from "~trpcReact/trpcReact";
+import { errorMsg } from "~utils/errorMsg";
+
+import { useDeleteWorkoutMutation } from "./useDeleteWorkoutMutation";
 
 type Props = {
 	workout: NonNullable<RouterOutputs["workout"]["getOne"]>;
@@ -15,11 +17,7 @@ export const DeleteWorkout = ({ workout }: Props) => {
 	const navigate = useNavigate();
 	const { closeModal, isModalOpen, openModal } = useModal();
 
-	const trpcCtx = trpc.useContext();
-
-	const mutation = trpc.workout.deleteWorkout.useMutation({
-		onSuccess: () => trpcCtx.workout.getOne.reset({ id: workout.id }),
-	});
+	const mutation = useDeleteWorkoutMutation();
 
 	const onSubmit = () =>
 		mutation
@@ -29,7 +27,7 @@ export const DeleteWorkout = ({ workout }: Props) => {
 				toast.success("Workout deleted");
 				navigate("/app");
 			})
-			.catch((err) => toast.error(err?.message ?? "Unknown error"));
+			.catch(errorMsg("Failed to delete workout"));
 
 	return (
 		<>

@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import debounce from "lodash.debounce";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
 
 import type { RouterOutputs } from "@gym/api";
 import { hasExerciseField } from "@gym/db/modelExerciseFields";
@@ -13,9 +12,10 @@ import { Card } from "~components/_ui/Card";
 import { Input } from "~components/_ui/Input";
 import { animateHeightProps, dragStuff } from "~utils/animations";
 import { dragActions } from "~utils/dragActions";
+import { errorMsg } from "~utils/errorMsg";
 
-import { useRemoveSetMutation } from "./removeSetMutation";
-import { useUpdateSetMutation } from "./updateSetMutation";
+import { useDeleteSetMutation } from "./useDeleteSetMutation";
+import { useUpdateSetMutation } from "./useUpdateSetMutation";
 
 type Props = {
 	set: NonNullable<RouterOutputs["workout"]["getOne"]>["exercises"][number]["sets"][number];
@@ -27,15 +27,13 @@ export const Set = ({ set, exercise }: Props) => {
 		exerciseId: set.exerciseId,
 		workoutId: set.workoutId,
 	});
-	const removeMutation = useRemoveSetMutation({
+	const removeMutation = useDeleteSetMutation({
 		exerciseId: set.exerciseId,
 		workoutId: set.workoutId,
 	});
 
-	const removeSet = () =>
-		removeMutation
-			.mutateAsync({ setId: set.id })
-			.catch((e) => toast.error(`Failed to delete set ${e}`));
+	const deleteSet = () =>
+		removeMutation.mutateAsync({ setId: set.id }).catch(errorMsg("Failed to delete set"));
 
 	const form = useForm<updateExerciseSet.FormType>({
 		resolver: zodResolver(updateExerciseSet.form),
@@ -60,7 +58,7 @@ export const Set = ({ set, exercise }: Props) => {
 			form.setValue("duplicates", duplicates - 1);
 			updateData();
 		} else {
-			removeSet();
+			deleteSet();
 		}
 	};
 

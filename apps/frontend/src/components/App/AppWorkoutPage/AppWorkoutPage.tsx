@@ -11,7 +11,7 @@ import { useTitle } from "~utils/useTitle";
 import { AppPageWrapper } from "../App";
 import { AddExerciseModal } from "./AddExercise/AddExercise";
 import { AddExerciseProvider } from "./AddExercise/AddExerciseContext";
-import { DeleteWorkout } from "./DeleteWorkout";
+import { DeleteWorkout } from "./DeleteWorkout/DeleteWorkout";
 import { Exercise } from "./Exercise/Exercise";
 import { FinishWorkout } from "./FinishWorkout/FinishWorkout";
 import { Times } from "./Times/Times";

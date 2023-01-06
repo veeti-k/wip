@@ -1,10 +1,9 @@
-import { toast } from "react-hot-toast";
-
 import type { RouterOutputs } from "@gym/api";
 
 import { Button } from "~components/_ui/Button";
 import { RemoveIcon } from "~components/_ui/Icons/RemoveIcon";
 import { Modal, useModal } from "~components/_ui/Modal";
+import { errorMsg } from "~utils/errorMsg";
 
 import { useDeleteExerciseMutation } from "./useDeleteExerciseMutation";
 
@@ -23,9 +22,7 @@ export const DeleteExercise = ({ exercise }: Props) => {
 				workoutId: exercise.workoutId,
 			})
 			.then(() => closeModal())
-			.catch((err) =>
-				toast.error(`Failed to delete exercise: ${err?.message || "Unknown error"}`)
-			);
+			.catch(errorMsg("Failed to delete exercise"));
 
 	return (
 		<>
