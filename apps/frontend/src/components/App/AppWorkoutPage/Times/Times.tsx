@@ -1,7 +1,6 @@
 import type { RouterOutputs } from "@gym/api";
 
 import { ShowDate } from "~components/_ui/ShowDate";
-import { formatDate } from "~utils/formatDate";
 
 import { Duration } from "./Duration";
 
@@ -23,7 +22,9 @@ export const Times = ({ workout }: Props) => {
 					In progress - <Duration workout={workout} />
 				</span>
 			) : (
-				<span>Finished {formatDate(workout.stoppedAt)}</span>
+				<span>
+					Finished <ShowDate date={workout.stoppedAt} />
+				</span>
 			)}
 		</div>
 	);
