@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { forwardRef } from "react";
 import { toast } from "react-hot-toast";
 
@@ -54,9 +54,11 @@ export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) =>
 					</h2>
 
 					<div className="flex flex-col">
-						{exercise.sets?.map((set, index) => (
-							<Set key={index} exercise={exercise} set={set} />
-						))}
+						<AnimatePresence initial={false}>
+							{exercise.sets?.map((set, index) => (
+								<Set key={index} exercise={exercise} set={set} />
+							))}
+						</AnimatePresence>
 					</div>
 				</div>
 
