@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { updateExerciseSet } from "@gym/validation";
+
 import { protectedProcedure, router } from "../trpc.js";
 
 export const workoutRouter = router({
@@ -268,17 +270,7 @@ export const workoutRouter = router({
 		}),
 
 	updateExerciseSet: protectedProcedure
-		.input(
-			z.object({
-				setId: z.string(),
-				reps: z.number().nullable(),
-				weight: z.number().nullable(),
-				time: z.number().nullable(),
-				distance: z.number().nullable(),
-				kcal: z.number().nullable(),
-				duplicates: z.number(),
-			})
-		)
+		.input(updateExerciseSet.input)
 		.mutation(async ({ ctx, input }) => {
 			const existingSet = await ctx.prisma.set.findFirst({
 				where: { id: input.setId, ownerId: ctx.auth.userId },
