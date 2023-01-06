@@ -83,7 +83,7 @@ export const authRouter = router({
 				to: email,
 				subject: "Your magic link",
 				html: `<a href="${encodeURI(
-					`http://localhost:3000/auth/magic?token=${emailToken}&email=${email}`
+					`${env.FRONT_BASE_URL}/auth/magic?token=${emailToken}&email=${email}`
 				)}">Click here to login</a>`,
 			};
 
