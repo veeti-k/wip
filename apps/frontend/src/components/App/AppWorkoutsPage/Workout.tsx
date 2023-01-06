@@ -35,7 +35,7 @@ export const Workout = ({ workout }: Props) => {
 						);
 
 						return (
-							<div className="flex flex-col gap-1">
+							<div className="flex flex-col gap-1" key={exercise.id}>
 								<span className="max-w-[200px] truncate text-sm font-light">
 									{amountOfSets}x {exercise.modelExercise.name}
 								</span>

@@ -1,5 +1,5 @@
 import { VariantProps, cva } from "class-variance-authority";
-import type { ComponentProps } from "react";
+import { ComponentProps, ComponentPropsWithoutRef, forwardRef } from "react";
 import { Link } from "react-router-dom";
 
 import { classNames } from "~utils/classNames";
@@ -38,11 +38,12 @@ const buttonStyles = cva(
 	}
 );
 
-type Props = ComponentProps<"button"> & VariantProps<typeof buttonStyles>;
+type Props = ComponentPropsWithoutRef<"button"> & VariantProps<typeof buttonStyles>;
 
-export const Button = ({ className, ...props }: Props) => {
+export const Button = forwardRef<HTMLButtonElement, Props>(({ className, ...props }, ref) => {
 	return (
 		<button
+			ref={ref}
 			className={classNames(buttonStyles(props), !!className && className)}
 			{...props}
 			type={props.type ?? "button"}
@@ -50,11 +51,12 @@ export const Button = ({ className, ...props }: Props) => {
 			{props.children}
 		</button>
 	);
-};
+});
 
-export const SkeletonButton = ({ className }: { className?: string }) => {
+export const SkeletonButton = forwardRef<HTMLButtonElement, Props>(({ className }, ref) => {
 	return (
 		<button
+			ref={ref}
 			disabled
 			className={classNames(
 				"border-primary-600 bg-primary-800 rounded-md border px-3 py-2 transition-[outline,_opacity] duration-200 disabled:cursor-not-allowed disabled:opacity-30",
@@ -64,7 +66,7 @@ export const SkeletonButton = ({ className }: { className?: string }) => {
 			<NonBreakingSpace />
 		</button>
 	);
-};
+});
 
 type ButtonLinkProps = ComponentProps<typeof Link> & VariantProps<typeof buttonStyles>;
 

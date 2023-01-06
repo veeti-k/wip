@@ -75,6 +75,7 @@ export const AddExerciseSlide = () => {
 				) : innerCategories?.length ? (
 					innerCategories?.map((category) => (
 						<ExerciseCategory
+							key={category.id}
 							category={category}
 							allOpen={!!queryAndCategories}
 							openCategoryId={openCategoryId}

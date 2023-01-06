@@ -1,4 +1,5 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
+import { forwardRef } from "react";
 import { toast } from "react-hot-toast";
 
 import type { RouterOutputs } from "@gym/api";
@@ -16,7 +17,7 @@ type Props = {
 	exercise: NonNullable<RouterOutputs["workout"]["getOne"]>["exercises"][number];
 };
 
-export const Exercise = ({ exercise }: Props) => {
+export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) => {
 	const addSetMutation = trpc.workout.addExerciseSet.useMutation();
 	const trpcCtx = trpc.useContext();
 
@@ -34,6 +35,7 @@ export const Exercise = ({ exercise }: Props) => {
 
 	return (
 		<Card
+			ref={ref}
 			as={motion.div}
 			className="flex flex-col gap-2 rounded-xl p-3"
 			{...animateHeightProps}
@@ -52,11 +54,9 @@ export const Exercise = ({ exercise }: Props) => {
 					</h2>
 
 					<div className="flex flex-col">
-						<AnimatePresence initial={false}>
-							{exercise.sets?.map((set, index) => (
-								<Set key={index} exercise={exercise} set={set} />
-							))}
-						</AnimatePresence>
+						{exercise.sets?.map((set, index) => (
+							<Set key={index} exercise={exercise} set={set} />
+						))}
 					</div>
 				</div>
 
@@ -76,4 +76,4 @@ export const Exercise = ({ exercise }: Props) => {
 			</div>
 		</Card>
 	);
-};
+});

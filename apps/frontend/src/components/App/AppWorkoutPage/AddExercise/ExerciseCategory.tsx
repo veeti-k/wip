@@ -51,13 +51,14 @@ export const ExerciseCategory = ({
 					</Collapsible.Trigger>
 				</div>
 
-				<Collapsible.Content asChild forceMount>
+				<Collapsible.Content forceMount>
 					<AnimatePresence initial={false}>
 						{isOpen && (
 							<motion.div {...animateHeightProps} className="flex flex-col space-y-2">
 								<div className="mt-1" />
 								{category.modelExercises.map((modelExercise) => (
 									<Button
+										key={modelExercise.id}
 										onClick={() => onClick(modelExercise.id)}
 										className="!justify-start"
 									>

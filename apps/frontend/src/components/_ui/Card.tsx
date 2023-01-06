@@ -1,5 +1,5 @@
 import { VariantProps, cva } from "class-variance-authority";
-import type { ComponentPropsWithoutRef, ElementType, ReactNode, Ref } from "react";
+import type { ComponentProps, ElementType, ReactNode, Ref } from "react";
 
 import { classNames } from "~utils/classNames";
 
@@ -22,7 +22,7 @@ export const cardStyles = cva("border", {
 type Props<T extends ElementType = "div"> = {
 	as?: T;
 	children: ReactNode;
-} & ComponentPropsWithoutRef<T> &
+} & ComponentProps<T> &
 	VariantProps<typeof cardStyles>;
 
 export const Card = forwardRefWithAs(
