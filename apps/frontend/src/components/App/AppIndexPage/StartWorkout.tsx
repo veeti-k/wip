@@ -27,7 +27,7 @@ export const StartWorkout = () => {
 				closeModal();
 				form.reset();
 			})
-			.catch((err) => toast.error(err?.message ?? "Unknown error"));
+			.catch((err) => toast.error(`Error creating workout: ${err}`));
 
 	return (
 		<>
