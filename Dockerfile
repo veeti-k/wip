@@ -2,6 +2,8 @@ FROM node:18-bullseye-slim as base
 
 WORKDIR /app
 
+RUN apt update && apt install ca-certificates -y
+
 FROM base as pruner
 
 ARG APP
