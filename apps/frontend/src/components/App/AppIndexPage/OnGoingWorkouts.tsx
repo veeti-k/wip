@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { Card } from "~components/_ui/Card";
+import { ErrorCard } from "~components/_ui/ErrorCard";
 import { trpc } from "~trpcReact/trpcReact";
 
 import { Duration } from "../AppWorkoutPage/Times/Duration";
@@ -11,8 +12,13 @@ export const OnGoingWorkouts = () => {
 	const trpcCtx = trpc.useContext();
 	data?.forEach((s) => trpcCtx.workout.getOne.prefetch({ id: s.id }));
 
-	if (isLoading) return null;
-	if (error) return <div>{error.message}</div>;
+	if (isLoading)
+		return (
+			<Card className="animate-pulse px-4 py-5 text-center">
+				<h1 className="font-light">Getting on going workouts...</h1>
+			</Card>
+		);
+	if (error) return <ErrorCard message="Error getting on going workouts" />;
 
 	return data?.length ? (
 		<div className="flex flex-col gap-2">
@@ -32,8 +38,8 @@ export const OnGoingWorkouts = () => {
 			))}
 		</div>
 	) : (
-		<Card className="rounded-xl p-3">
-			<h2 className="text-center text-lg font-light">No on going workouts</h2>
+		<Card className="px-4 py-5 text-center">
+			<h1 className="font-light">No on going workouts</h1>
 		</Card>
 	);
 };
