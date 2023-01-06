@@ -29,10 +29,10 @@ export const CreateCategorySlide = () => {
 			.catch((err) => toast.error(`Failed to create category ${err?.message}`));
 
 	return (
-		<form className="flex flex-col gap-4 p-4" onSubmit={form.handleSubmit(onSubmit)}>
+		<form className="flex flex-col gap-3 p-4" onSubmit={form.handleSubmit(onSubmit)}>
 			<Input label="Name" {...form.register("name")} />
 
-			<div className="flex gap-4">
+			<div className="flex gap-3">
 				<Button className="w-full" onClick={() => setSlide("createExercise")}>
 					Cancel
 				</Button>
