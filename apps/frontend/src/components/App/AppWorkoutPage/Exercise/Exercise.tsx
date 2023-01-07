@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { forwardRef } from "react";
+import { forwardRef, useRef } from "react";
 
 import type { RouterOutputs } from "@gym/api";
 
@@ -18,6 +18,7 @@ type Props = {
 export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) => {
 	const amountOfSets = exercise.sets.reduce((acc, set) => acc + set.duplicates, 0);
 	const setsPlural = amountOfSets === 1 ? "" : "s";
+	const lastSetRef = useRef<HTMLDivElement>(null);
 
 	return (
 		<Card
@@ -42,14 +43,20 @@ export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) =>
 					<div className="flex flex-col">
 						<AnimatePresence initial={false}>
 							{exercise.sets?.map((set, index) => (
-								<Set key={index} exercise={exercise} set={set} />
+								<Set
+									key={index}
+									isLast={index === exercise.sets.length - 1}
+									setRef={lastSetRef}
+									exercise={exercise}
+									set={set}
+								/>
 							))}
 						</AnimatePresence>
 					</div>
 				</div>
 
 				<div className="mt-3 flex gap-2">
-					<AddExerciseSet exercise={exercise} />
+					<AddExerciseSet lastSetRef={lastSetRef} exercise={exercise} />
 
 					{/* <Dropdown>
 						<div>
