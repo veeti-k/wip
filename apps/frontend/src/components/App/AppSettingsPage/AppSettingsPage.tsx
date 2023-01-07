@@ -1,6 +1,6 @@
 import { useAuth } from "~Auth/Auth";
 import { Button } from "~components/_ui/Button";
-import { Card } from "~components/_ui/Card";
+import { Card } from "~components/_ui/Cards/Card";
 import { useTitle } from "~utils/useTitle";
 
 import { AppPageWrapper } from "../App";

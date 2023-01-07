@@ -6,7 +6,7 @@ import type { RouterOutputs } from "@gym/api";
 
 import { AnimatedChevron } from "~components/_ui/AnimatedChevron";
 import { Button } from "~components/_ui/Button";
-import { Card } from "~components/_ui/Card";
+import { Card } from "~components/_ui/Cards/Card";
 import { animateHeightProps } from "~utils/animations";
 
 type Props = {

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import type { RouterOutputs } from "@gym/api";
 
-import { Card } from "~components/_ui/Card";
+import { Card } from "~components/_ui/Cards/Card";
 
 import { Duration } from "../AppWorkoutPage/Times/Duration";
 

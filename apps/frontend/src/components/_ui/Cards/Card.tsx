@@ -3,7 +3,7 @@ import type { ComponentProps, ElementType, ReactNode, Ref } from "react";
 
 import { classNames } from "~utils/classNames";
 
-import { forwardRefWithAs } from "./utils";
+import { forwardRefWithAs } from "../utils";
 
 export const cardStyles = cva("border", {
 	variants: {

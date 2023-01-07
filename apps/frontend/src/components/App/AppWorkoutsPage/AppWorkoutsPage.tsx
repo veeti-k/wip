@@ -1,16 +1,27 @@
 import { AnimatePresence, motion } from "framer-motion";
 
-import { Card } from "~components/_ui/Card";
+import { Card } from "~components/_ui/Cards/Card";
+import { ErrorCard } from "~components/_ui/Cards/ErrorCard";
+import { LoadingCard } from "~components/_ui/Cards/LoadingCard";
 import { trpc } from "~trpcReact/trpcReact";
-import { animateOpacityProps, errorCardStuff } from "~utils/animations";
+import { animateOpacityProps } from "~utils/animations";
+import { lazyWithPreload } from "~utils/lazyWithPreload";
 import { useTitle } from "~utils/useTitle";
 
 import { AppPageWrapper } from "../App";
 import { Workout } from "./Workout";
 
+const AppWorkoutPage = lazyWithPreload(() =>
+	import("~components/App/AppWorkoutPage/AppWorkoutPage").then((mod) => ({
+		default: mod.AppWorkoutPage,
+	}))
+);
+
 export const AppWorkoutsPage = () => {
 	useTitle("Workouts");
 	const { data, isLoading, error } = trpc.workout.getAllPerMonth.useQuery();
+
+	AppWorkoutPage.preload();
 
 	return (
 		<AppPageWrapper>
@@ -18,19 +29,10 @@ export const AppWorkoutsPage = () => {
 
 			<AnimatePresence initial={false}>
 				{isLoading ? (
-					<Card
-						{...animateOpacityProps}
-						className="flex items-center justify-center rounded-xl p-3"
-					>
-						Loading...
-					</Card>
+					<LoadingCard message="Getting workouts..." />
 				) : error ? (
-					<Card as={motion.div} {...errorCardStuff} className="rounded-xl">
-						<div className="flex flex-col items-center justify-between gap-6 px-2 py-[4rem]">
-							<h1 className="text-xl">Error getting workouts</h1>
-						</div>
-					</Card>
-				) : (
+					<ErrorCard message="Error getting workouts" />
+				) : data?.length ? (
 					<motion.div {...animateOpacityProps}>
 						{Object.entries(data).map(([month, workouts]) => (
 							<div key={month}>
@@ -44,6 +46,14 @@ export const AppWorkoutsPage = () => {
 							</div>
 						))}
 					</motion.div>
+				) : (
+					<Card
+						as={motion.div}
+						{...animateOpacityProps}
+						className="px-3 py-5 text-center font-light"
+					>
+						No workouts
+					</Card>
 				)}
 			</AnimatePresence>
 		</AppPageWrapper>

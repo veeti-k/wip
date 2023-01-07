@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { Button } from "~components/_ui/Button";
-import { Card } from "~components/_ui/Card";
+import { Card } from "~components/_ui/Cards/Card";
 import { Link } from "~components/_ui/Link";
 import { Modal } from "~components/_ui/Modal";
 import { trpc } from "~trpcReact/trpcReact";

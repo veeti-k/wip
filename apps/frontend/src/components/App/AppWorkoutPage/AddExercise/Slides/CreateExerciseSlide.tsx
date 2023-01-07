@@ -110,8 +110,13 @@ export const CreateExerciseSlide = () => {
 					Cancel
 				</Button>
 
-				<Button className="w-full" intent="submit" type="submit">
-					Add
+				<Button
+					className="w-full"
+					intent="submit"
+					type="submit"
+					disabled={mutation.isLoading}
+				>
+					{mutation.isLoading ? "Creating..." : "Create"}
 				</Button>
 			</div>
 		</form>

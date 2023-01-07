@@ -2,7 +2,7 @@ import { Dialog } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode, useRef, useState } from "react";
 
-import { Card } from "./Card";
+import { Card } from "./Cards/Card";
 
 type Props = {
 	title: string;

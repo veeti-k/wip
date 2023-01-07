@@ -10,10 +10,12 @@ type Props = {
 
 export const ErrorCard = ({ message }: Props) => {
 	return (
-		<Card as={motion.div} {...errorCardStuff} className="rounded-xl">
-			<div className="flex flex-col items-center justify-between px-3 py-5 font-light">
-				{message}
-			</div>
+		<Card
+			as={motion.div}
+			{...errorCardStuff}
+			className="flex items-center justify-center rounded-xl px-3 py-5 font-light"
+		>
+			{message}
 		</Card>
 	);
 };

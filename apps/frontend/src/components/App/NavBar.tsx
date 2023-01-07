@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 import { ButtonLink } from "~components/_ui/Button";
-import { Card } from "~components/_ui/Card";
+import { Card } from "~components/_ui/Cards/Card";
 import { animateOpacityProps } from "~utils/animations";
 
 export const NavBar = () => {

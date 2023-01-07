@@ -8,7 +8,7 @@ import type { RouterOutputs } from "@gym/api";
 import { hasExerciseField } from "@gym/db/modelExerciseFields";
 import { updateExerciseSet } from "@gym/validation";
 
-import { Card } from "~components/_ui/Card";
+import { Card } from "~components/_ui/Cards/Card";
 import { Input } from "~components/_ui/Input";
 import { animateHeightProps, dragStuff } from "~utils/animations";
 import { dragActions } from "~utils/dragActions";

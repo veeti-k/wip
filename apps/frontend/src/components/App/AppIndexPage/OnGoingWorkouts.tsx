@@ -1,8 +1,11 @@
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
-import { Card } from "~components/_ui/Card";
-import { ErrorCard } from "~components/_ui/ErrorCard";
+import { Card } from "~components/_ui/Cards/Card";
+import { ErrorCard } from "~components/_ui/Cards/ErrorCard";
+import { LoadingCard } from "~components/_ui/Cards/LoadingCard";
 import { trpc } from "~trpcReact/trpcReact";
+import { animateOpacityProps } from "~utils/animations";
 
 import { Duration } from "../AppWorkoutPage/Times/Duration";
 
@@ -12,17 +15,13 @@ export const OnGoingWorkouts = () => {
 	const trpcCtx = trpc.useContext();
 	data?.forEach((s) => trpcCtx.workout.getOne.prefetch({ id: s.id }));
 
-	if (isLoading)
-		return (
-			<Card className="animate-pulse px-4 py-5 text-center">
-				<h1 className="font-light">Getting on going workouts...</h1>
-			</Card>
-		);
+	if (isLoading) return <LoadingCard message="Getting on going workouts..." />;
 	if (error) return <ErrorCard message="Error getting on going workouts" />;
 
 	return data?.length ? (
-		<div className="flex flex-col gap-2">
+		<motion.div {...animateOpacityProps} className="flex flex-col gap-2">
 			<h2 className="text-lg font-light">On going workouts</h2>
+
 			{data?.map((workout) => (
 				<Card as={Link} to={`workouts/${workout.id}`} className="rounded-md">
 					<div className="flex flex-col gap-2 p-2">
@@ -36,10 +35,8 @@ export const OnGoingWorkouts = () => {
 					</div>
 				</Card>
 			))}
-		</div>
+		</motion.div>
 	) : (
-		<Card className="px-4 py-5 text-center">
-			<h1 className="font-light">No on going workouts</h1>
-		</Card>
+		<Card className="px-4 py-5 text-center font-light">No on going workouts</Card>
 	);
 };

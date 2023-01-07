@@ -3,7 +3,7 @@ import { useState } from "react";
 import { LoaderIcon } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { Card } from "~components/_ui/Card";
+import { Card } from "~components/_ui/Cards/Card";
 import { AnimatedSuccessIcon } from "~components/_ui/Icons/AnimatedSuccess";
 import { Link } from "~components/_ui/Link";
 import { setAuth } from "~trpcReact/trpcAuth";

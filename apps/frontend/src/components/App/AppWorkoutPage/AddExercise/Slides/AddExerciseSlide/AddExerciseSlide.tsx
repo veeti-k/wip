@@ -1,11 +1,13 @@
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
 
-import { Card } from "~components/_ui/Card";
-import { ErrorCard } from "~components/_ui/ErrorCard";
+import { Card } from "~components/_ui/Cards/Card";
+import { ErrorCard } from "~components/_ui/Cards/ErrorCard";
+import { LoadingCard } from "~components/_ui/Cards/LoadingCard";
 import { Input } from "~components/_ui/Input";
 import { trpc } from "~trpcReact/trpcReact";
 import { animateOpacityProps } from "~utils/animations";
+import { errorMsg } from "~utils/errorMsg";
 
 import { useAddExerciseContext } from "../../AddExerciseContext";
 import { ExerciseCategory } from "../../ExerciseCategory";
@@ -54,17 +56,12 @@ export const AddExerciseSlide = () => {
 
 			<div className="mt-4 flex max-h-[300px] flex-col gap-2 overflow-auto">
 				{isLoading ? (
-					<Card
-						variant={2}
-						className="flex items-center justify-center p-3"
-						{...animateOpacityProps}
-					>
-						Loading...
-					</Card>
+					<LoadingCard message="Getting exercises..." />
 				) : error ? (
-					<ErrorCard message="Error loading exercises" />
+					<ErrorCard message="Error getting exercises" />
 				) : noCategoriesAndQuery ? (
 					<Card
+						as={motion.div}
 						variant={2}
 						className="flex items-center justify-center p-3"
 						{...animateOpacityProps}
@@ -84,16 +81,13 @@ export const AddExerciseSlide = () => {
 								mutation
 									.mutateAsync({ modelExerciseId, workoutId })
 									.then(() => closeModal())
-									.catch((err) =>
-										toast.error(
-											`Error adding exercise to workout ${err?.message}`
-										)
-									)
+									.catch(errorMsg("Failed to adding exercise to workout"))
 							}
 						/>
 					))
 				) : (
 					<Card
+						as={motion.div}
 						variant={2}
 						className="flex items-center justify-center px-3 py-5 font-light"
 						{...animateOpacityProps}

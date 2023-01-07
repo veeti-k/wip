@@ -1,9 +1,10 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 
 import { Button } from "~components/_ui/Button";
-import { Card } from "~components/_ui/Card";
-import { ErrorCard } from "~components/_ui/ErrorCard";
+import { Card } from "~components/_ui/Cards/Card";
+import { ErrorCard } from "~components/_ui/Cards/ErrorCard";
+import { LoadingCard } from "~components/_ui/Cards/LoadingCard";
 import { trpc } from "~trpcReact/trpcReact";
 import { animateOpacityProps } from "~utils/animations";
 import { useTitle } from "~utils/useTitle";
@@ -36,12 +37,7 @@ export const AppWorkoutPage = () => {
 	return (
 		<AppPageWrapper>
 			{isLoading ? (
-				<Card
-					className="flex items-center justify-center px-3 py-5 font-light"
-					{...animateOpacityProps}
-				>
-					Loading...
-				</Card>
+				<LoadingCard message="Getting workout info..." />
 			) : error ? (
 				<ErrorCard message="Error getting workout" />
 			) : workout ? (
@@ -73,6 +69,7 @@ export const AppWorkoutPage = () => {
 									))
 								) : (
 									<Card
+										as={motion.div}
 										key="no-exercises"
 										className="flex items-center justify-center px-3 py-5 font-light"
 										{...animateOpacityProps}
