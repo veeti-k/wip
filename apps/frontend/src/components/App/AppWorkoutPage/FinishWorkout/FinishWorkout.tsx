@@ -39,7 +39,7 @@ export const FinishWorkout = ({ workout }: Props) => {
 							onClick={onSubmit}
 							disabled={mutation.isLoading}
 						>
-							{mutation.isLoading ? "Finishing workout..." : "Finish workout"}
+							{mutation.isLoading ? "Finishing..." : "Finish"}
 						</Button>
 					</div>
 				</div>
