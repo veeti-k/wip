@@ -119,7 +119,6 @@ export const Set = ({ set, exercise }: Props) => {
 									step=".01"
 									min="0"
 									label="Reps"
-									autoFocus
 									invalid={!!form.formState.errors.reps?.message}
 									{...form.register("reps", inputProps)}
 								/>
@@ -145,7 +144,6 @@ export const Set = ({ set, exercise }: Props) => {
 									step=".01"
 									min="0"
 									label="Time"
-									autoFocus
 									invalid={!!form.formState.errors.time?.message}
 									{...form.register("time", inputProps)}
 								/>
@@ -171,7 +169,6 @@ export const Set = ({ set, exercise }: Props) => {
 								step=".01"
 								label="Kcal"
 								invalid={!!form.formState.errors.kcal?.message}
-								autoFocus
 								{...form.register("kcal", inputProps)}
 							/>
 						</div>
