@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
 
 import type { RouterInputs } from "@gym/api";
 import { startSession } from "@gym/validation";
@@ -8,6 +7,7 @@ import { startSession } from "@gym/validation";
 import { Button } from "~components/_ui/Button";
 import { Input } from "~components/_ui/Input";
 import { Modal, useModal } from "~components/_ui/Modal";
+import { errorMsg } from "~utils/errorMsg";
 
 import { useCreateWorkoutMutation } from "./useCreateWorkoutMutation";
 
@@ -27,7 +27,7 @@ export const StartWorkout = () => {
 				closeModal();
 				form.reset();
 			})
-			.catch((err) => toast.error(`Error creating workout: ${err}`));
+			.catch(errorMsg("Failed to start workout"));
 
 	return (
 		<>
@@ -51,7 +51,7 @@ export const StartWorkout = () => {
 							Cancel
 						</Button>
 						<Button intent="submit" className="w-full">
-							Start
+							{mutation.isLoading ? "Starting..." : "Start"}
 						</Button>
 					</div>
 				</form>
