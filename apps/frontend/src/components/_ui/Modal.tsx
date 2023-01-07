@@ -36,7 +36,7 @@ export const Modal = ({ title, children, closeModal, isOpen }: Props) => {
 
 					<Dialog.Panel
 						key={title}
-						className="absolute left-1/2 top-1/2 w-full max-w-sm -translate-x-1/2 -translate-y-[100%] rounded-xl shadow-xl"
+						className="absolute left-1/2 top-1/2 w-full max-w-sm -translate-x-1/2 -translate-y-[100%] rounded-xl p-2 shadow-xl"
 					>
 						<Card
 							as={motion.div}
