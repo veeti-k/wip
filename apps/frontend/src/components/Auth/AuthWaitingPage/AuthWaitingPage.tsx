@@ -4,11 +4,12 @@ import { LoaderIcon } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { Card } from "~components/_ui/Cards/Card";
+import { ErrorCard } from "~components/_ui/Cards/ErrorCard";
 import { AnimatedSuccessIcon } from "~components/_ui/Icons/AnimatedSuccess";
 import { Link } from "~components/_ui/Link";
 import { setAuth } from "~trpcReact/trpcAuth";
 import { trpc } from "~trpcReact/trpcReact";
-import { errorCardStuff } from "~utils/animations";
+import { animateOpacityProps } from "~utils/animations";
 import { useSetInterval } from "~utils/useSetInterval";
 
 import { AuthPageWrapper } from "../Auth";
@@ -45,7 +46,9 @@ export const AuthWaitingPage = () => {
 					expiresAt,
 				});
 
-				navigate("/app");
+				setWaiting(false);
+
+				setTimeout(() => navigate("/app"), 2000);
 			} catch (e) {}
 		},
 		waiting ? 1000 : null
@@ -54,20 +57,25 @@ export const AuthWaitingPage = () => {
 	return (
 		<AuthPageWrapper>
 			{waiting ? (
-				<Card className="w-full max-w-[280px] rounded-xl">
+				<Card
+					as={motion.div}
+					{...animateOpacityProps}
+					className="w-full max-w-[280px] rounded-xl"
+				>
 					<div className="flex flex-col items-center justify-between gap-6 px-2 py-[4rem]">
 						<LoaderIcon className="!h-8 !w-8" />
 
-						<h1>Waiting...</h1>
+						<h1>Waiting for confirmation...</h1>
+
+						<p className="text-sm font-light">
+							An message has been sent to your email. Please click the link in the
+							email to confirm your email.
+						</p>
 					</div>
 				</Card>
 			) : error ? (
 				<div className="flex w-full flex-col gap-2">
-					<Card as={motion.div} {...errorCardStuff} className="rounded-xl">
-						<div className="flex flex-col items-center justify-between gap-6 px-2 py-[4rem]">
-							<h1 className="text-xl">Error verifying link</h1>
-						</div>
-					</Card>
+					<ErrorCard message="Error verifying link" />
 
 					<Link to="/auth">Back to login</Link>
 				</div>

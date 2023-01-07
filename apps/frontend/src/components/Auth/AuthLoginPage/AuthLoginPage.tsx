@@ -1,12 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { LoaderIcon, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 import { Button } from "~components/_ui/Button";
 import { Input } from "~components/_ui/Input";
 import { trpc } from "~trpcReact/trpcReact";
+
+import { AuthPageWrapper } from "../Auth";
 
 export const AuthLoginPage = () => {
 	const navigate = useNavigate();
@@ -38,7 +40,7 @@ export const AuthLoginPage = () => {
 	};
 
 	return (
-		<main className="mx-auto mt-[10rem] flex max-w-[280px] flex-col">
+		<AuthPageWrapper>
 			<h1 className="mb-10 text-center text-5xl font-bold">Login</h1>
 
 			<form className="flex flex-col gap-2" onSubmit={form.handleSubmit(onSubmit)} noValidate>
@@ -48,14 +50,10 @@ export const AuthLoginPage = () => {
 					error={form.formState.errors.email?.message}
 					{...form.register("email")}
 				/>
-				<Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-					{form.formState.isSubmitting ? (
-						<LoaderIcon className="mx-2 !h-6 !w-6" />
-					) : (
-						"Login"
-					)}
+				<Button type="submit" className="w-full" disabled={mutation.isLoading}>
+					{mutation.isLoading ? "Logging in..." : "Login"}
 				</Button>
 			</form>
-		</main>
+		</AuthPageWrapper>
 	);
 };

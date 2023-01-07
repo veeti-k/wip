@@ -10,14 +10,12 @@ export const Auth = () => {
 	const { state } = useAuth();
 	const location = useLocation();
 
-	if (state === "loading") return <></>;
-
 	if (state === "authenticated" && !location.pathname.includes("magic")) {
 		return <Navigate to="/app" />;
 	}
 
 	return (
-		<AnimatePresence initial={false}>
+		<AnimatePresence>
 			<Suspense>
 				<Outlet />
 			</Suspense>
@@ -35,11 +33,11 @@ export const AuthPageWrapper = ({
 	return (
 		<motion.main
 			key={location.pathname}
+			{...animateOpacityProps}
 			className={classNames(
 				"max-w-page mx-auto h-max px-3 pb-[6rem] pt-[5rem] sm:pt-[7rem]",
 				className
 			)}
-			{...animateOpacityProps}
 			{...props}
 		>
 			{children}
