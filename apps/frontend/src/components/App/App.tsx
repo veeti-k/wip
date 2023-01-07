@@ -42,7 +42,7 @@ export const AppPageWrapper = ({
 		<motion.main
 			key={location.pathname}
 			className={classNames(
-				"max-w-page mx-auto h-max px-3 pb-[6rem] pt-[5rem] sm:pt-[7rem]",
+				"max-w-page mx-auto h-max px-3 pb-[11rem] pt-[5rem] sm:pt-[7rem]",
 				className
 			)}
 			{...animateOpacityProps}
