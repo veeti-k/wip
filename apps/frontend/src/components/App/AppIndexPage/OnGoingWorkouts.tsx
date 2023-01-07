@@ -6,8 +6,15 @@ import { ErrorCard } from "~components/_ui/Cards/ErrorCard";
 import { LoadingCard } from "~components/_ui/Cards/LoadingCard";
 import { trpc } from "~trpcReact/trpcReact";
 import { animateOpacityProps } from "~utils/animations";
+import { lazyWithPreload } from "~utils/lazyWithPreload";
 
 import { Duration } from "../AppWorkoutPage/Times/Duration";
+
+const AppWorkoutPage = lazyWithPreload(() =>
+	import("~components/App/AppWorkoutPage/AppWorkoutPage").then((mod) => ({
+		default: mod.AppWorkoutPage,
+	}))
+);
 
 export const OnGoingWorkouts = () => {
 	const { data, isLoading, error } = trpc.workout.getOnGoing.useQuery();
@@ -17,6 +24,8 @@ export const OnGoingWorkouts = () => {
 
 	if (isLoading) return <LoadingCard message="Getting on going workouts..." />;
 	if (error) return <ErrorCard message="Error getting on going workouts" />;
+
+	data?.length && AppWorkoutPage.preload();
 
 	return data?.length ? (
 		<motion.div {...animateOpacityProps} className="flex flex-col gap-2">
