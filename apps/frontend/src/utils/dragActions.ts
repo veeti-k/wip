@@ -8,9 +8,9 @@ export const dragActions = (
 		const offset = info.offset.x;
 		const velocity = info.velocity.x;
 
-		if (offset < -300 || velocity < -2000) {
+		if (offset < -120 || velocity < -2000) {
 			left(event, info);
-		} else if (offset > 300 || velocity > 2000) {
+		} else if (offset > 120 || velocity > 2000) {
 			right(event, info);
 		}
 	},

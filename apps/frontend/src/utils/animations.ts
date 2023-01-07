@@ -15,7 +15,7 @@ export const animateOpacityProps = {
 export const dragStuff = {
 	drag: "x",
 	dragConstraints: { left: 0, right: 0 },
-	dragElastic: 0.2,
+	dragElastic: 0.5,
 	dragMomentum: false,
 } as const;
 
