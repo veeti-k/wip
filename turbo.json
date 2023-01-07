@@ -23,7 +23,8 @@
 		},
 		"build": {
 			"dependsOn": ["^build"],
-			"outputs": [".next/**"]
+			"outputs": [".next/**"],
+			"cache": false
 		},
 		"lint": {
 			"outputs": []
