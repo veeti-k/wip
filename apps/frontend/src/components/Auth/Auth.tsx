@@ -8,20 +8,21 @@ import { classNames } from "~utils/classNames";
 
 export const Auth = () => {
 	const { state } = useAuth();
+	const location = useLocation();
 
-	if (state === "loading") {
-		return <></>;
-	} else if (state === "authenticated") {
+	if (state === "loading") return <></>;
+
+	if (state === "authenticated" && !location.pathname.includes("magic")) {
 		return <Navigate to="/app" />;
-	} else {
-		return (
-			<AnimatePresence initial={false}>
-				<Suspense>
-					<Outlet />
-				</Suspense>
-			</AnimatePresence>
-		);
 	}
+
+	return (
+		<AnimatePresence initial={false}>
+			<Suspense>
+				<Outlet />
+			</Suspense>
+		</AnimatePresence>
+	);
 };
 
 export const AuthPageWrapper = ({
