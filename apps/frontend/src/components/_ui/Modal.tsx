@@ -19,46 +19,48 @@ export const Modal = ({ title, children, closeModal, isOpen }: Props) => {
 			{isOpen && (
 				<Dialog
 					static
-					as={motion.div}
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1, transition: { duration: 0.15 } }}
-					exit={{ opacity: 0, transition: { duration: 0.075 } }}
 					open={isOpen}
-					className="relative z-10"
+					className="z-10"
 					onClose={() => closeModal()}
 					initialFocus={initialFocusRef}
 				>
-					<motion.div className="bg-primary-1200/50 fixed inset-0 backdrop-blur-sm" />
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{
+							opacity: 1,
+							transition: { duration: 0.09 },
+						}}
+						exit={{ opacity: 0, transition: { duration: 0.1 } }}
+						className="bg-primary-1200/50 fixed inset-0 backdrop-blur-sm"
+					/>
 
-					<div className="fixed inset-0 overflow-y-auto">
-						<div className="flex justify-center p-1">
-							<Dialog.Panel
-								as={motion.div}
-								initial={{ opacity: 0, scale: 0.95 }}
-								animate={{
-									opacity: 1,
-									scale: 1,
-									height: "auto",
-									transition: { duration: 0.15 },
-								}}
-								key={title}
-								exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.075 } }}
-								className="relative top-[15rem] w-full max-w-sm will-change-auto"
+					<Dialog.Panel
+						key={title}
+						className="absolute left-1/2 top-1/2 w-full max-w-sm -translate-x-1/2 -translate-y-[100%] rounded-xl shadow-xl"
+					>
+						<Card
+							as={motion.div}
+							initial={{ opacity: 0, scale: 0.97 }}
+							animate={{
+								opacity: 1,
+								y: 0,
+								scale: 1,
+								height: "auto",
+								transition: { duration: 0.1 },
+							}}
+							exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.1 } }}
+						>
+							<Dialog.Title
+								ref={initialFocusRef}
+								as="h3"
+								className="px-4 pt-4 text-lg font-medium leading-6"
 							>
-								<Card className="w-full rounded-xl shadow-xl">
-									<Dialog.Title
-										ref={initialFocusRef}
-										as="h3"
-										className="px-4 pt-4 text-lg font-medium leading-6"
-									>
-										{title}
-									</Dialog.Title>
+								{title}
+							</Dialog.Title>
 
-									{children}
-								</Card>
-							</Dialog.Panel>
-						</div>
-					</div>
+							{children}
+						</Card>
+					</Dialog.Panel>
 				</Dialog>
 			)}
 		</AnimatePresence>
