@@ -59,9 +59,9 @@ jobs:
               -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
               -e G_CLIENT_ID=${{ secrets.G_CLIENT_ID }} \
               -e G_CLIENT_SECRET=${{ secrets.G_CLIENT_SECRET }} \
-              -e G_CLIENT_REDIRECT_URI=https://h-api.veetik.com/google-auth/callback \
-              -e JWT_AUDIENCE=h.veetik.com \
-              -e JWT_ISSUER=h-api.veetik.com \
+              -e G_CLIENT_REDIRECT_URI=https://api--prod.fly.dev/google-auth/callback \
+              -e JWT_AUDIENCE=h-prod \
+              -e JWT_ISSUER=h-api-prod \
               -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
               -e PORT=5000
         env:
