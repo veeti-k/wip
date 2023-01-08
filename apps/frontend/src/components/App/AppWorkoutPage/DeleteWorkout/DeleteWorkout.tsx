@@ -36,7 +36,7 @@ export const DeleteWorkout = ({ workout }: Props) => {
 			</Button>
 
 			<Modal isOpen={isModalOpen} closeModal={closeModal} title="Delete workout">
-				<div className="flex flex-col gap-3 px-4 pb-4 pt-3">
+				<div className="flex flex-col gap-3 px-4 pb-4 pt-2">
 					<p>Are you sure you want to delete {workout.name}?</p>
 
 					<div className="flex gap-3">
