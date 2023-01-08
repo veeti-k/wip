@@ -13,10 +13,10 @@
 		"db-push": "yarn dotenv -e ./.env -- turbo db-push",
 		"db-studio": "yarn dotenv -e ./.env -- turbo db-studio",
 		"db-reset": "yarn dotenv -e ./.env -- turbo db-reset",
-		"db": "docker run -d --name gym-psql -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=gym -p 5432:5432 postgres",
+		"db": "docker run -d --name gym-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=gym -p 3306:3306 mysql",
 		"dev": "yarn dotenv -e ./.env -- turbo dev --parallel",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
-		"type-check": "turbo type-check",
+		"checks": "turbo checks",
 		"lint": "turbo lint"
 	},
 	"engines": {

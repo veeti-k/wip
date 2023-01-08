@@ -26,15 +26,10 @@
 			"outputs": [".next/**"],
 			"cache": false
 		},
-		"lint": {
-			"outputs": []
-		},
-		"clean": {
-			"cache": false
-		},
-		"type-check": {
-			"dependsOn": ["^db-generate"],
-			"cache": false
+		"clean": { "cache": false },
+		"lint": { "outputs": [] },
+		"checks": {
+			"dependsOn": ["^build", "^lint"]
 		}
 	}
 }
