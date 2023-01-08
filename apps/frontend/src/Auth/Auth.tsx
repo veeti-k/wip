@@ -6,13 +6,10 @@ import { clearAuth } from "~trpcReact/trpcAuth";
 import { trpc } from "~trpcReact/trpcReact";
 import { createCtx } from "~utils/context";
 
-import { useLogin } from "./useLogin";
-
 type ContextType = {
 	state: "loading" | "authenticated" | "unauthenticated";
 	info?: RouterOutputs["auth"]["info"];
 
-	initLogin: (email: string) => Promise<void>;
 	logout: () => Promise<void>;
 };
 
@@ -24,11 +21,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const { data, isLoading, error } = trpc.auth.info.useQuery(undefined, {
 		retry: false,
 	});
-	const { magicLinkLogin } = useLogin();
-
-	const initLogin = async (email: string) => {
-		await magicLinkLogin(email);
-	};
 
 	const logout = async () => {
 		clearAuth();
@@ -47,7 +39,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 					: "unauthenticated",
 				info: data,
 
-				initLogin,
 				logout,
 			}}
 		>

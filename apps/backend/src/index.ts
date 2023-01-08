@@ -4,7 +4,8 @@ import { fastify } from "fastify";
 
 import { appRouter, createContext } from "@gym/api";
 
-import { env } from "./envs.js";
+import { envs } from "./envs.js";
+import { googleAuthCallback, googleAuthInit } from "./googleAuth.js";
 
 const server = fastify({
 	logger: true,
@@ -12,7 +13,7 @@ const server = fastify({
 });
 
 await server.register(cors, {
-	origin: env.FRONT_BASE_URL,
+	origin: envs.FRONT_BASE_URL,
 	credentials: true,
 	methods: ["GET", "POST", "HEAD", "OPTIONS"],
 });
@@ -28,6 +29,18 @@ server.route({
 	handler: async (req, res) => {
 		res.send({ status: "ok" });
 	},
+});
+
+server.route({
+	method: "GET",
+	url: "/google-auth/init",
+	handler: googleAuthInit,
+});
+
+server.route({
+	method: "GET",
+	url: "/google-auth/callback",
+	handler: googleAuthCallback,
 });
 
 (async () => {

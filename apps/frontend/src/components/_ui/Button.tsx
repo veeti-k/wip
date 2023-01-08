@@ -77,3 +77,19 @@ export const ButtonLink = ({ className, ...props }: ButtonLinkProps) => {
 		</Link>
 	);
 };
+
+type ButtonAProps = ComponentProps<"a"> & VariantProps<typeof buttonStyles>;
+
+export const ButtonA = forwardRef<HTMLAnchorElement, ButtonAProps>(
+	({ className, ...props }, ref) => {
+		return (
+			<a
+				ref={ref}
+				className={classNames(buttonStyles(props), !!className && className)}
+				{...props}
+			>
+				{props.children}
+			</a>
+		);
+	}
+);

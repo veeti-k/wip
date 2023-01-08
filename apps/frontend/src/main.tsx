@@ -46,21 +46,15 @@ const Auth = React.lazy(() =>
 	}))
 );
 
+const AuthIndexPage = React.lazy(() =>
+	import("~components/Auth/AuthIndexPage").then((mod) => ({
+		default: mod.AuthIndexPage,
+	}))
+);
+
 const AuthLoginPage = React.lazy(() =>
-	import("~components/Auth/AuthLoginPage/AuthLoginPage").then((mod) => ({
+	import("~components/Auth/AuthLoginPage").then((mod) => ({
 		default: mod.AuthLoginPage,
-	}))
-);
-
-const AuthMagicPage = React.lazy(() =>
-	import("~components/Auth/AuthConfirmPage/AuthConfirmPage").then((mod) => ({
-		default: mod.AuthConfirmPage,
-	}))
-);
-
-const AuthWaitingPage = React.lazy(() =>
-	import("~components/Auth/AuthWaitingPage/AuthWaitingPage").then((mod) => ({
-		default: mod.AuthWaitingPage,
 	}))
 );
 
@@ -81,15 +75,11 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: "",
+				element: <AuthIndexPage />,
+			},
+			{
+				path: "login",
 				element: <AuthLoginPage />,
-			},
-			{
-				path: "magic",
-				element: <AuthMagicPage />,
-			},
-			{
-				path: "wait",
-				element: <AuthWaitingPage />,
 			},
 		],
 	},

@@ -11,8 +11,13 @@
 	"dependencies": {
 		"@fastify/cors": "^8.2.0",
 		"@gym/api": "*",
+		"@gym/db": "*",
 		"@trpc/server": "^10.4.1",
-		"fastify": "^4.10.2"
+		"date-fns": "^2.29.3",
+		"fastify": "^4.10.2",
+		"googleapis": "^110.0.0",
+		"jose": "^4.11.2",
+		"zod": "^3.20.2"
 	},
 	"devDependencies": {
 		"@gym/tsconfig": "*",

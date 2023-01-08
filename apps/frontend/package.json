@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "vite --port 3000",
+		"dev": "vite --port 3000 --host",
 		"build": "tsc && vite build",
 		"preview": "vite preview"
 	},
@@ -24,15 +24,11 @@
 		"date-fns": "^2.29.3",
 		"framer-motion": "^7.6.17",
 		"lodash.debounce": "^4.0.8",
-		"match-sorter": "^6.3.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-hook-form": "^7.40.0",
 		"react-hot-toast": "^2.4.0",
 		"react-router-dom": "^6.4.3",
-		"react-use-measure": "^2.1.1",
-		"sort-by": "^1.2.0",
-		"string-similarity": "^4.0.4",
 		"superjson": "^1.11.0",
 		"tabler-icons-react": "^1.55.0",
 		"zod": "^3.18.0"
