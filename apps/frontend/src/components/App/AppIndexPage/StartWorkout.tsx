@@ -37,7 +37,7 @@ export const StartWorkout = () => {
 				<form
 					noValidate
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="flex flex-col gap-4 p-4"
+					className="flex flex-col gap-3 p-4"
 				>
 					<Input
 						label="Name"
@@ -46,7 +46,7 @@ export const StartWorkout = () => {
 						{...form.register("name")}
 					/>
 
-					<div className="flex w-full gap-2">
+					<div className="flex w-full gap-3">
 						<Button className="w-full" onClick={closeModal}>
 							Cancel
 						</Button>

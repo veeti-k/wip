@@ -54,10 +54,10 @@ export const AuthConfirmPage = () => {
 	return (
 		<AuthPageWrapper>
 			<Modal closeModal={() => navigate("/auth/login")} isOpen={true} title="Verify login">
-				<div className="flex flex-col gap-4 p-4">
+				<div className="flex flex-col gap-3 px-4 pb-4 pt-3">
 					<h1>Are you sure you want to login?</h1>
 
-					<div className="flex gap-4">
+					<div className="flex gap-3">
 						<Button onClick={() => navigate("/auth")}>Cancel</Button>
 
 						<Button onClick={onSubmit} intent="submit">

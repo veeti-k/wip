@@ -25,10 +25,10 @@ export const FinishWorkout = ({ workout }: Props) => {
 			<Button onClick={openModal}>Finish workout</Button>
 
 			<Modal isOpen={isModalOpen} closeModal={closeModal} title="Finish workout">
-				<div className="flex flex-col gap-4 p-4">
+				<div className="flex flex-col gap-3 px-4 pb-4 pt-3">
 					<p>Are you sure you want to finish {workout.name}?</p>
 
-					<div className="flex gap-2">
+					<div className="flex gap-3">
 						<Button className="w-full" onClick={closeModal}>
 							Cancel
 						</Button>
@@ -39,7 +39,7 @@ export const FinishWorkout = ({ workout }: Props) => {
 							onClick={onSubmit}
 							disabled={mutation.isLoading}
 						>
-							{mutation.isLoading ? "Finishing..." : "Finish"}
+							{mutation.isLoading ? "Finishing..." : "Yes, finish"}
 						</Button>
 					</div>
 				</div>
