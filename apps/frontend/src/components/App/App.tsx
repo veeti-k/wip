@@ -9,7 +9,7 @@ import { classNames } from "~utils/classNames";
 
 import { NavBar } from "./NavBar";
 
-export const App = () => {
+export function App() {
 	const { state } = useAuth();
 	const location = useLocation();
 
@@ -30,13 +30,13 @@ export const App = () => {
 			</>
 		);
 	}
-};
+}
 
-export const AppPageWrapper = ({
+export function AppPageWrapper({
 	children,
 	className,
 	...props
-}: ComponentProps<typeof motion.main>) => {
+}: ComponentProps<typeof motion.main>) {
 	const location = useLocation();
 
 	return (
@@ -52,4 +52,4 @@ export const AppPageWrapper = ({
 			{children}
 		</motion.main>
 	);
-};
+}

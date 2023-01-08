@@ -25,7 +25,7 @@ type Props = {
 	isLast: boolean;
 };
 
-export const Set = ({ set, exercise, setRef, isLast }: Props) => {
+export function Set({ set, exercise, setRef, isLast }: Props) {
 	const updateMutation = useUpdateSetMutation({
 		exerciseId: set.exerciseId,
 		workoutId: set.workoutId,
@@ -35,8 +35,11 @@ export const Set = ({ set, exercise, setRef, isLast }: Props) => {
 		workoutId: set.workoutId,
 	});
 
-	const deleteSet = () =>
-		removeMutation.mutateAsync({ setId: set.id }).catch(errorMsg("Failed to delete set"));
+	function deleteSet() {
+		return removeMutation
+			.mutateAsync({ setId: set.id })
+			.catch(errorMsg("Failed to delete set"));
+	}
 
 	const form = useForm<updateExerciseSet.FormType>({
 		resolver: zodResolver(updateExerciseSet.form),
@@ -174,4 +177,4 @@ export const Set = ({ set, exercise, setRef, isLast }: Props) => {
 			</Card>
 		</motion.div>
 	);
-};
+}

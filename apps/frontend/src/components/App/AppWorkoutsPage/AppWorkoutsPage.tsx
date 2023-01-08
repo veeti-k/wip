@@ -17,7 +17,7 @@ const AppWorkoutPage = lazyWithPreload(() =>
 	}))
 );
 
-export const AppWorkoutsPage = () => {
+export function AppWorkoutsPage() {
 	useTitle("Workouts");
 	const { data, isLoading, error } = trpc.workout.getAllPerMonth.useQuery();
 
@@ -32,7 +32,7 @@ export const AppWorkoutsPage = () => {
 					<LoadingCard message="Getting workouts..." />
 				) : error ? (
 					<ErrorCard message="Error getting workouts" />
-				) : data?.length ? (
+				) : data.length ? (
 					<motion.div {...animateOpacityProps}>
 						{Object.entries(data).map(([month, workouts]) => (
 							<div key={month}>
@@ -58,4 +58,4 @@ export const AppWorkoutsPage = () => {
 			</AnimatePresence>
 		</AppPageWrapper>
 	);
-};
+}

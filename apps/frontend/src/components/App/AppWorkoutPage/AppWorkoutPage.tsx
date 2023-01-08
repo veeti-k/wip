@@ -18,7 +18,7 @@ import { FinishWorkout } from "./FinishWorkout/FinishWorkout";
 import { Times } from "./Times/Times";
 import { WorkoutInputs } from "./WorkoutInputs/WorkoutInputs";
 
-export const AppWorkoutPage = () => {
+export function AppWorkoutPage() {
 	const { workoutId } = useParams();
 
 	const {
@@ -64,7 +64,7 @@ export const AppWorkoutPage = () => {
 
 							<AnimatePresence initial={false} mode="popLayout">
 								{hasExercises ? (
-									workout?.exercises?.map((exercise) => (
+									workout.exercises.map((exercise) => (
 										<Exercise key={exercise.id} exercise={exercise} />
 									))
 								) : (
@@ -88,4 +88,4 @@ export const AppWorkoutPage = () => {
 			) : null}
 		</AppPageWrapper>
 	);
-};
+}

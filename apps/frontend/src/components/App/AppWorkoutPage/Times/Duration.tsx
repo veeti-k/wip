@@ -9,7 +9,7 @@ type Props = {
 	workout: RouterOutputs["workout"]["getOne"];
 };
 
-export const Duration = ({ workout }: Props) => {
+export function Duration({ workout }: Props) {
 	const [duration, setDuration] = useState(0);
 
 	useSetInterval(
@@ -17,7 +17,9 @@ export const Duration = ({ workout }: Props) => {
 		500
 	);
 
-	if (!workout) return null;
+	if (!workout) {
+		return null;
+	}
 
 	const hours = String(Math.floor(duration / 3600)).padStart(2, "0");
 	const minutes = String(Math.floor((duration % 3600) / 60)).padStart(2, "0");
@@ -36,4 +38,4 @@ export const Duration = ({ workout }: Props) => {
 			<span>{seconds}</span>
 		</>
 	);
-};
+}

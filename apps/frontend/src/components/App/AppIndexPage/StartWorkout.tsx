@@ -11,7 +11,7 @@ import { errorMsg } from "~utils/errorMsg";
 
 import { useCreateWorkoutMutation } from "./useCreateWorkoutMutation";
 
-export const StartWorkout = () => {
+export function StartWorkout() {
 	const { closeModal, isModalOpen, openModal } = useModal();
 
 	const form = useForm<startSession.FormType>({
@@ -20,14 +20,15 @@ export const StartWorkout = () => {
 
 	const mutation = useCreateWorkoutMutation();
 
-	const onSubmit = async (values: RouterInputs["workout"]["createWorkout"]) =>
-		mutation
+	async function onSubmit(values: RouterInputs["workout"]["createWorkout"]) {
+		return mutation
 			.mutateAsync(values)
 			.then(() => {
 				closeModal();
 				form.reset();
 			})
 			.catch(errorMsg("Failed to start workout"));
+	}
 
 	return (
 		<>
@@ -63,4 +64,4 @@ export const StartWorkout = () => {
 			</Modal>
 		</>
 	);
-};
+}

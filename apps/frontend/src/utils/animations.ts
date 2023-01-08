@@ -12,13 +12,6 @@ export const animateOpacityProps = {
 	transition: { duration: 0.2 },
 };
 
-export const dragStuff = {
-	drag: "x",
-	dragConstraints: { left: 0, right: 0 },
-	dragElastic: 0.5,
-	dragMomentum: false,
-} as const;
-
 export const errorCardStuff = {
 	initial: { opacity: 0 },
 	animate: {

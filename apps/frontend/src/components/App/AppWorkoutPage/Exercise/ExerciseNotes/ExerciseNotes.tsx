@@ -15,7 +15,7 @@ type Props = {
 	exercise: NonNullable<RouterOutputs["workout"]["getOne"]>["exercises"][number];
 };
 
-export const ExerciseNotes = ({ exercise }: Props) => {
+export function ExerciseNotes({ exercise }: Props) {
 	const mutation = useUpdateExerciseMutation();
 
 	const form = useForm<updateExercise.FormType>({
@@ -23,8 +23,8 @@ export const ExerciseNotes = ({ exercise }: Props) => {
 		defaultValues: { notes: exercise.notes },
 	});
 
-	const updateData = () =>
-		form.handleSubmit((values) =>
+	function updateData() {
+		return form.handleSubmit((values) =>
 			mutation
 				.mutateAsync({
 					workoutId: exercise.workoutId,
@@ -33,7 +33,8 @@ export const ExerciseNotes = ({ exercise }: Props) => {
 				})
 				.catch(errorMsg(`Failed to update ${exercise.modelExercise.name} notes`))
 		)();
+	}
 
 	const debouncedUpdateData = useCallback(debounce(updateData, 500), []);
 	return <Input label="Notes" {...form.register("notes", { onChange: debouncedUpdateData })} />;
-};
+}

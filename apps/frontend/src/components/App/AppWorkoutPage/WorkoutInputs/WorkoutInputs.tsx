@@ -15,7 +15,7 @@ type Props = {
 	workout: NonNullable<RouterOutputs["workout"]["getOne"]>;
 };
 
-export const WorkoutInputs = ({ workout }: Props) => {
+export function WorkoutInputs({ workout }: Props) {
 	const mutation = useUpdateWorkoutMutation();
 
 	const form = useForm<updateWorkout.FormType>({
@@ -26,8 +26,8 @@ export const WorkoutInputs = ({ workout }: Props) => {
 		},
 	});
 
-	const updateData = () =>
-		form.handleSubmit((values) =>
+	function updateData() {
+		return form.handleSubmit((values) =>
 			mutation
 				.mutateAsync({
 					workoutId: workout.id,
@@ -35,6 +35,7 @@ export const WorkoutInputs = ({ workout }: Props) => {
 				})
 				.catch(errorMsg("Failed to update workout"))
 		)();
+	}
 
 	const debouncedUpdateData = useCallback(debounce(updateData, 500), []);
 
@@ -56,4 +57,4 @@ export const WorkoutInputs = ({ workout }: Props) => {
 			/>
 		</div>
 	);
-};
+}

@@ -1,12 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ComponentProps, Suspense } from "react";
+import type { ComponentProps } from "react";
+import { Suspense } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { useAuth } from "~Auth/Auth";
 import { animateOpacityProps } from "~utils/animations";
 import { classNames } from "~utils/classNames";
 
-export const Auth = () => {
+export function Auth() {
 	const { state } = useAuth();
 	const location = useLocation();
 
@@ -21,7 +22,7 @@ export const Auth = () => {
 			</Suspense>
 		</AnimatePresence>
 	);
-};
+}
 
 export const AuthPageWrapper = ({
 	children,

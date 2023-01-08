@@ -13,14 +13,14 @@ type Props = {
 	workout: NonNullable<RouterOutputs["workout"]["getOne"]>;
 };
 
-export const DeleteWorkout = ({ workout }: Props) => {
+export function DeleteWorkout({ workout }: Props) {
 	const navigate = useNavigate();
 	const { closeModal, isModalOpen, openModal } = useModal();
 
 	const mutation = useDeleteWorkoutMutation();
 
-	const onSubmit = () =>
-		mutation
+	function onSubmit() {
+		return mutation
 			.mutateAsync({ workoutId: workout.id })
 			.then(() => {
 				closeModal();
@@ -28,6 +28,7 @@ export const DeleteWorkout = ({ workout }: Props) => {
 				navigate("/app");
 			})
 			.catch(errorMsg("Failed to delete workout"));
+	}
 
 	return (
 		<>
@@ -61,4 +62,4 @@ export const DeleteWorkout = ({ workout }: Props) => {
 			</Modal>
 		</>
 	);
-};
+}

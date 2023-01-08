@@ -3,12 +3,14 @@ import { Modal } from "~components/_ui/Modal";
 
 import { useAddExerciseContext } from "./AddExerciseContext";
 
-export const AddExerciseModal = () => {
+export function AddExerciseModal() {
 	const { getOpenSlide, setSlide, closeModal, isModalOpen, openModal } = useAddExerciseContext();
 
 	const slide = getOpenSlide();
 
-	if (!slide) return null;
+	if (!slide) {
+		return null;
+	}
 
 	return (
 		<>
@@ -26,7 +28,7 @@ export const AddExerciseModal = () => {
 			</Modal>
 		</>
 	);
-};
+}
 
 // const exercises = {
 // 	abs: [{ name: "Crunches" }, { name: "Leg raises" }],

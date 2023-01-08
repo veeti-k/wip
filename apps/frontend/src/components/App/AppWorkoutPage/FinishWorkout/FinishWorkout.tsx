@@ -10,15 +10,16 @@ type Props = {
 	workout: NonNullable<RouterOutputs["workout"]["getOne"]>;
 };
 
-export const FinishWorkout = ({ workout }: Props) => {
+export function FinishWorkout({ workout }: Props) {
 	const mutation = useFinishWorkoutMutation();
 	const { closeModal, isModalOpen, openModal } = useModal();
 
-	const onSubmit = () =>
-		mutation
+	function onSubmit() {
+		return mutation
 			.mutateAsync({ workoutId: workout.id })
 			.then(() => closeModal())
 			.catch(errorMsg("Failed to finish workout"));
+	}
 
 	return (
 		<>
@@ -46,4 +47,4 @@ export const FinishWorkout = ({ workout }: Props) => {
 			</Modal>
 		</>
 	);
-};
+}

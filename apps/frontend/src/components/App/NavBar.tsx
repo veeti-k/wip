@@ -4,7 +4,7 @@ import { ButtonLink } from "~components/_ui/Button";
 import { Card } from "~components/_ui/Cards/Card";
 import { animateOpacityProps } from "~utils/animations";
 
-export const NavBar = () => {
+export function NavBar() {
 	return (
 		<motion.nav
 			{...animateOpacityProps}
@@ -19,4 +19,4 @@ export const NavBar = () => {
 			</Card>
 		</motion.nav>
 	);
-};
+}

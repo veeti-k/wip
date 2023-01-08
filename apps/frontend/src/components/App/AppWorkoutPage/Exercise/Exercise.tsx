@@ -42,7 +42,7 @@ export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) =>
 
 					<div className="flex flex-col">
 						<AnimatePresence initial={false}>
-							{exercise.sets?.map((set, index) => (
+							{exercise.sets.map((set, index) => (
 								<Set
 									key={index}
 									isLast={index === exercise.sets.length - 1}

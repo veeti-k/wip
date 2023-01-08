@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReactNode, useState } from "react";
-import { UseFormReturn, useForm } from "react-hook-form";
+import type { ReactNode } from "react";
+import { useState } from "react";
+import type { UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { createExercise } from "@gym/validation";
 
@@ -37,15 +39,17 @@ type ContextType = {
 
 const [useContextInner, Context] = createCtx<ContextType>();
 
-export const useAddExerciseContext = () => useContextInner();
+export function useAddExerciseContext() {
+	return useContextInner();
+}
 
-export const AddExerciseProvider = ({
+export function AddExerciseProvider({
 	children,
 	workoutId,
 }: {
 	children: ReactNode;
 	workoutId: string;
-}) => {
+}) {
 	const { closeModal, isModalOpen, openModal } = useModal();
 	const useSlidesReturn = useSlides({
 		slideIndexes,
@@ -90,9 +94,9 @@ export const AddExerciseProvider = ({
 			{children}
 		</Context.Provider>
 	);
-};
+}
 
-const useSlides = <Slides extends { [key: string]: number }>({
+const useSlides = <Slides extends Record<string, number>>({
 	slideIndexes,
 	slides: incSlides,
 }: {
@@ -132,7 +136,7 @@ const useSlides = <Slides extends { [key: string]: number }>({
 	return { openSlideIndex, nextSlide, prevSlide, setSlide, getOpenSlide };
 };
 
-type UseSlidesReturnType<Slides extends { [key: string]: number }> = {
+type UseSlidesReturnType<Slides extends Record<string, number>> = {
 	openSlideIndex: number;
 	nextSlide: () => void;
 	prevSlide: () => void;

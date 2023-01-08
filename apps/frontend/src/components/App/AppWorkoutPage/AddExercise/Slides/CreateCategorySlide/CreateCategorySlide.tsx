@@ -10,7 +10,7 @@ import { Input } from "~components/_ui/Input";
 import { useAddExerciseContext } from "../../AddExerciseContext";
 import { useCreateCategoryMutation } from "./useCreateCategoryMutation";
 
-export const CreateCategorySlide = () => {
+export function CreateCategorySlide() {
 	const { createExerciseForm, setSlide } = useAddExerciseContext();
 
 	const mutation = useCreateCategoryMutation();
@@ -19,14 +19,15 @@ export const CreateCategorySlide = () => {
 		resolver: zodResolver(createCategory.form),
 	});
 
-	const onSubmit = (values: createCategory.FormType) =>
-		mutation
+	function onSubmit(values: createCategory.FormType) {
+		return mutation
 			.mutateAsync(values)
 			.then((createdCategory) => {
 				createExerciseForm.setValue("categoryId", createdCategory.id);
 				setSlide("createExercise");
 			})
 			.catch((err) => toast.error(`Failed to create category ${err?.message}`));
+	}
 
 	return (
 		<form className="flex flex-col gap-3 p-4" onSubmit={form.handleSubmit(onSubmit)}>
@@ -48,4 +49,4 @@ export const CreateCategorySlide = () => {
 			</div>
 		</form>
 	);
-};
+}

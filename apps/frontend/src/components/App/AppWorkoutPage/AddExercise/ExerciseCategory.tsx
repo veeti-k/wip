@@ -17,13 +17,13 @@ type Props = {
 	onClick: (modelExerciseId: string) => void;
 };
 
-export const ExerciseCategory = ({
+export function ExerciseCategory({
 	category,
 	openCategoryId,
 	setOpenCategoryId,
 	allOpen,
 	onClick,
-}: Props) => {
+}: Props) {
 	const [isOpen, setIsOpen] = useState(openCategoryId === category.id || allOpen);
 
 	useEffect(() => {
@@ -72,4 +72,4 @@ export const ExerciseCategory = ({
 			</Card>
 		</Collapsible.Root>
 	);
-};
+}

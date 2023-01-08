@@ -21,7 +21,7 @@ const AppIndexPage = lazyWithPreload(() =>
 	}))
 );
 
-export const AuthLoginPage = () => {
+export function AuthLoginPage() {
 	const trpcCtx = trpc.useContext();
 	const navigate = useNavigate();
 	const searchParams = new URLSearchParams(useLocation().search);
@@ -86,4 +86,4 @@ export const AuthLoginPage = () => {
 			)}
 		</AuthPageWrapper>
 	);
-};
+}

@@ -11,7 +11,7 @@ const AppWorkoutsPage = lazyWithPreload(() =>
 	}))
 );
 
-export const AppIndexPage = () => {
+export function AppIndexPage() {
 	useTitle("Home");
 
 	AppWorkoutsPage.preload();
@@ -24,4 +24,4 @@ export const AppIndexPage = () => {
 			</div>
 		</AppPageWrapper>
 	);
-};
+}

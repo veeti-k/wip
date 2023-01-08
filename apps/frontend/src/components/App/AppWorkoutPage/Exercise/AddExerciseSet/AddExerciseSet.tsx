@@ -10,13 +10,13 @@ type Props = {
 	lastSetRef: React.RefObject<HTMLDivElement>;
 };
 
-export const AddExerciseSet = ({ exercise, lastSetRef }: Props) => {
+export function AddExerciseSet({ exercise, lastSetRef }: Props) {
 	const mutation = useAddExerciseSetMutation();
 
 	console.log(lastSetRef);
 
-	const addSet = () =>
-		mutation
+	function addSet() {
+		return mutation
 			.mutateAsync({
 				exerciseId: exercise.id,
 				workoutId: exercise.workoutId,
@@ -29,10 +29,11 @@ export const AddExerciseSet = ({ exercise, lastSetRef }: Props) => {
 				)
 			)
 			.catch(errorMsg("Failed to add set"));
+	}
 
 	return (
 		<Button className="w-full" onClick={addSet} disabled={mutation.isLoading}>
 			{mutation.isLoading ? "Adding..." : "Add a set"}
 		</Button>
 	);
-};
+}

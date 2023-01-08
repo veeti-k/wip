@@ -5,7 +5,7 @@ import { useTitle } from "~utils/useTitle";
 
 import { AppPageWrapper } from "../App";
 
-export const AppSettingsPage = () => {
+export function AppSettingsPage() {
 	useTitle("Settings");
 	const { info, logout } = useAuth();
 
@@ -24,4 +24,4 @@ export const AppSettingsPage = () => {
 			</div>
 		</AppPageWrapper>
 	);
-};
+}

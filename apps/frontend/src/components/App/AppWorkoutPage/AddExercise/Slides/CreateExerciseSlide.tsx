@@ -11,7 +11,7 @@ import { errorMsg } from "~utils/errorMsg";
 import { useAddExerciseContext } from "../AddExerciseContext";
 import { useAddExerciseMutation } from "./AddExerciseSlide/useAddExerciseMutation";
 
-export const CreateExerciseSlide = () => {
+export function CreateExerciseSlide() {
 	const {
 		addExerciseSearchQuery,
 		createExerciseForm: form,
@@ -30,8 +30,8 @@ export const CreateExerciseSlide = () => {
 
 	const mutation = trpc.exercise.createExercise.useMutation();
 
-	const onSubmit = (values: createExercise.FormType) =>
-		mutation
+	function onSubmit(values: createExercise.FormType) {
+		return mutation
 			.mutateAsync(values)
 			.then((createdExercise) =>
 				addExerciseMutation
@@ -43,6 +43,7 @@ export const CreateExerciseSlide = () => {
 					.catch(errorMsg("Failed to add created exercise to workout"))
 			)
 			.catch(errorMsg("Failed to create exercise"));
+	}
 
 	useEffect(() => {
 		form.setValue("name", addExerciseSearchQuery);
@@ -75,7 +76,7 @@ export const CreateExerciseSlide = () => {
 							Error getting categories
 						</option>
 					) : (
-						exerciseCategories?.map((category) => (
+						exerciseCategories.map((category) => (
 							<option key={category.id} value={category.id}>
 								{category.name}
 							</option>
@@ -121,4 +122,4 @@ export const CreateExerciseSlide = () => {
 			</div>
 		</form>
 	);
-};
+}

@@ -4,7 +4,7 @@ import { useTitle } from "~utils/useTitle";
 
 import { AuthPageWrapper } from "./Auth";
 
-export const AuthIndexPage = () => {
+export function AuthIndexPage() {
 	useTitle("Login");
 
 	return (
@@ -16,4 +16,4 @@ export const AuthIndexPage = () => {
 			</ButtonA>
 		</AuthPageWrapper>
 	);
-};
+}

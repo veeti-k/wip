@@ -13,7 +13,7 @@ import { useAddExerciseContext } from "../../AddExerciseContext";
 import { ExerciseCategory } from "../../ExerciseCategory";
 import { useAddExerciseMutation } from "./useAddExerciseMutation";
 
-export const AddExerciseSlide = () => {
+export function AddExerciseSlide() {
 	const { addExerciseSearchQuery, setAddExerciseSearchQuery, setSlide, workoutId, closeModal } =
 		useAddExerciseContext();
 	const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
@@ -26,7 +26,7 @@ export const AddExerciseSlide = () => {
 	const mutation = useAddExerciseMutation({ workoutId });
 
 	const queryAndCategories =
-		!isLoading && !error && exerciseCategories?.length && addExerciseSearchQuery;
+		!isLoading && !error && exerciseCategories.length && addExerciseSearchQuery;
 
 	const innerCategories = queryAndCategories
 		? exerciseCategories?.filter(
@@ -70,7 +70,7 @@ export const AddExerciseSlide = () => {
 						Create "{addExerciseSearchQuery}"
 					</Card>
 				) : innerCategories?.length ? (
-					innerCategories?.map((category) => (
+					innerCategories.map((category) => (
 						<ExerciseCategory
 							key={category.id}
 							category={category}
@@ -98,4 +98,4 @@ export const AddExerciseSlide = () => {
 			</div>
 		</div>
 	);
-};
+}

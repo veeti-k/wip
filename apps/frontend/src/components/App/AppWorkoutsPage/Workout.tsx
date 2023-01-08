@@ -12,7 +12,7 @@ type Props = {
 	workout: RouterOutputs["workout"]["getAllPerMonth"][string][number];
 };
 
-export const Workout = ({ workout }: Props) => {
+export function Workout({ workout }: Props) {
 	return (
 		<Card as={Link} to={workout.id} className="flex flex-col gap-4 rounded-xl p-3">
 			<div className="flex gap-4">
@@ -56,4 +56,4 @@ export const Workout = ({ workout }: Props) => {
 			)}
 		</Card>
 	);
-};
+}

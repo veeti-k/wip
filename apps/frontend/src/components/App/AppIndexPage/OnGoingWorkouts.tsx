@@ -16,22 +16,26 @@ const AppWorkoutPage = lazyWithPreload(() =>
 	}))
 );
 
-export const OnGoingWorkouts = () => {
+export function OnGoingWorkouts() {
 	const { data, isLoading, error } = trpc.workout.getOnGoing.useQuery();
 
 	const trpcCtx = trpc.useContext();
 	data?.forEach((s) => trpcCtx.workout.getOne.prefetch({ id: s.id }));
 
-	if (isLoading) return <LoadingCard message="Getting on going workouts..." />;
-	if (error) return <ErrorCard message="Error getting on going workouts" />;
+	if (isLoading) {
+		return <LoadingCard message="Getting on going workouts..." />;
+	}
+	if (error) {
+		return <ErrorCard message="Error getting on going workouts" />;
+	}
 
-	data?.length && AppWorkoutPage.preload();
+	data.length && AppWorkoutPage.preload();
 
-	return data?.length ? (
+	return data.length ? (
 		<motion.div {...animateOpacityProps} className="flex flex-col gap-2">
 			<h2 className="text-lg font-light">On going workouts</h2>
 
-			{data?.map((workout) => (
+			{data.map((workout) => (
 				<Card as={Link} to={`workouts/${workout.id}`} className="rounded-md">
 					<div className="flex flex-col gap-2 p-2">
 						<div className="flex justify-between gap-2">
@@ -48,4 +52,4 @@ export const OnGoingWorkouts = () => {
 	) : (
 		<Card className="px-4 py-5 text-center font-light">No on going workouts</Card>
 	);
-};
+}

@@ -8,8 +8,10 @@ type Props = {
 	workout: RouterOutputs["workout"]["getOne"];
 };
 
-export const Times = ({ workout }: Props) => {
-	if (!workout) return null;
+export function Times({ workout }: Props) {
+	if (!workout) {
+		return null;
+	}
 
 	return (
 		<div className="flex flex-col font-light">
@@ -28,4 +30,4 @@ export const Times = ({ workout }: Props) => {
 			)}
 		</div>
 	);
-};
+}
