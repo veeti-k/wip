@@ -26,8 +26,8 @@ export function AuthLoginPage() {
 	const navigate = useNavigate();
 	const searchParams = new URLSearchParams(useLocation().search);
 
-	const accessToken = searchParams.get("access_token");
-	const expiresIn = searchParams.get("expires_in");
+	const accessToken = searchParams.get("accessToken");
+	const expiresIn = searchParams.get("expiresIn");
 
 	const [state, setState] = useState<"loggingIn" | "error" | "loggedIn">("loggingIn");
 
