@@ -1,6 +1,6 @@
 import { trpc } from "~trpcReact/trpcReact";
 
-export const useCreateWorkoutMutation = () => {
+export function useCreateWorkoutMutation() {
 	const trpcCtx = trpc.useContext();
 
 	return trpc.workout.createWorkout.useMutation({
@@ -11,4 +11,4 @@ export const useCreateWorkoutMutation = () => {
 			]),
 		onSettled: () => trpcCtx.workout.getOnGoing.invalidate(),
 	});
-};
+}

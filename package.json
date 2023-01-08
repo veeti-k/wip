@@ -16,13 +16,15 @@
 		"db": "docker run -d --name gym-psql -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=gym -p 5432:5432 postgres",
 		"dev": "yarn dotenv -e ./.env -- turbo dev --parallel",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
-		"type-check": "turbo type-check"
+		"type-check": "turbo type-check",
+		"lint": "turbo lint"
 	},
 	"engines": {
 		"node": ">=16.0.0"
 	},
-	"dependencies": {
+	"devDependencies": {
 		"@trivago/prettier-plugin-sort-imports": "^4.0.0",
+		"@types/eslint": "^8.4.10",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"dotenv-cli": "^6.0.0",

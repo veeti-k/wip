@@ -26,7 +26,7 @@ export const workoutRouter = router({
 			include: { exercises: { include: { sets: true, modelExercise: true } } },
 		});
 
-		const groupedWorkouts = workouts.reduce((acc, workout) => {
+		const groupedWorkouts = workouts.reduce<Record<string, typeof workouts>>((acc, workout) => {
 			const month = workout.createdAt.toLocaleString("default", { month: "long" });
 			const year = workout.createdAt.getFullYear();
 
@@ -39,7 +39,7 @@ export const workoutRouter = router({
 			acc[monthYear]?.push(workout);
 
 			return acc;
-		}, {} as Record<string, typeof workouts>);
+		}, {});
 
 		return groupedWorkouts;
 	}),

@@ -5,7 +5,7 @@ type Props = {
 	exerciseId: string;
 };
 
-export const useDeleteSetMutation = ({ exerciseId, workoutId }: Props) => {
+export function useDeleteSetMutation({ exerciseId, workoutId }: Props) {
 	const trpcCtx = trpc.useContext();
 
 	return trpc.workout.deleteExerciseSet.useMutation({
@@ -15,12 +15,16 @@ export const useDeleteSetMutation = ({ exerciseId, workoutId }: Props) => {
 			const oldData = trpcCtx.workout.getOne.getData({ id: workoutId });
 
 			trpcCtx.workout.getOne.setData({ id: workoutId }, (oldData) => {
-				if (!oldData) return undefined;
+				if (!oldData) {
+					return undefined;
+				}
 
 				return {
 					...oldData,
 					exercises: oldData.exercises.map((exercise) => {
-						if (exercise.id !== exerciseId) return exercise;
+						if (exercise.id !== exerciseId) {
+							return exercise;
+						}
 
 						return {
 							...exercise,
@@ -38,4 +42,4 @@ export const useDeleteSetMutation = ({ exerciseId, workoutId }: Props) => {
 			trpcCtx.workout.getOne.invalidate({ id: workoutId });
 		},
 	});
-};
+}

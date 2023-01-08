@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "vite --port 3000 --host",
 		"build": "tsc && vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"lint": "TIMING=1 eslint \"src/**/*.ts\""
 	},
 	"dependencies": {
 		"@gym/api": "*",

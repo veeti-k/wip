@@ -10,7 +10,7 @@ const t = initTRPC.context<Context>().create({
 	},
 });
 
-const isAuthed = t.middleware(({ ctx, next }) => {
+const isAuthed = t.middleware(async ({ ctx, next }) => {
 	if (!ctx.auth) {
 		throw new TRPCError({
 			code: "UNAUTHORIZED",
@@ -23,7 +23,7 @@ const isAuthed = t.middleware(({ ctx, next }) => {
 	});
 });
 
-const isAdmin = t.middleware(({ ctx, next }) => {
+const isAdmin = t.middleware(async ({ ctx, next }) => {
 	if (!ctx.auth?.isAdmin) {
 		throw new TRPCError({
 			code: "FORBIDDEN",

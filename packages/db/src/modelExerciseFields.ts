@@ -6,11 +6,8 @@ export const modelExerciseFields = {
 	kcal: BigInt(16),
 };
 
-export const hasExerciseField = (
-	exerciseFields: bigint,
-	field: keyof typeof modelExerciseFields
-) => {
+export function hasExerciseField(exerciseFields: bigint, field: keyof typeof modelExerciseFields) {
 	const fieldAsBigInt = modelExerciseFields[field];
 
 	return (exerciseFields & fieldAsBigInt) === fieldAsBigInt;
-};
+}

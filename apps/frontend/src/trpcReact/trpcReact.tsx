@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCReact, httpBatchLink } from "@trpc/react-query";
-import { ReactNode, useState } from "react";
+import type { ReactNode } from "react";
+import { useState } from "react";
 import superjson from "superjson";
 
 import type { AppRouter } from "@gym/api";
@@ -11,10 +12,11 @@ import { getAuth } from "./trpcAuth";
 
 export const trpc = createTRPCReact<AppRouter>();
 
-export const TRPCProvider = ({ children }: { children: ReactNode }) => {
+export function TRPCProvider({ children }: { children: ReactNode }) {
 	const [queryClient] = useState(() => new QueryClient());
 	const [trpcClient] = useState(() =>
 		trpc.createClient({
+			// @ts-expect-error this works
 			transformer: superjson,
 			links: [
 				httpBatchLink({
@@ -36,4 +38,4 @@ export const TRPCProvider = ({ children }: { children: ReactNode }) => {
 			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 		</trpc.Provider>
 	);
-};
+}

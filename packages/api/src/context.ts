@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { prisma } from "@gym/db";
 
-import { env } from "./api-envs.js";
+import { envs } from "./api-envs.js";
 
 const payloadSchema = z.object({
 	userId: z.string(),
@@ -13,19 +13,19 @@ const payloadSchema = z.object({
 	isAdmin: z.boolean(),
 });
 
-export const createContext = async (opts: CreateFastifyContextOptions) => {
+export async function createContext(opts: CreateFastifyContextOptions) {
 	return {
 		auth: await auth(opts),
 		prisma,
 	};
-};
+}
 
-const auth = async ({ req }: CreateFastifyContextOptions) => {
-	const accessToken = req.headers["authorization"]?.replace("Bearer ", "");
+async function auth({ req }: CreateFastifyContextOptions) {
+	const accessToken = req.headers.authorization?.replace("Bearer ", "");
 	const { payload } = await jose
-		.jwtVerify(accessToken || "", env.JWT_SECRET, {
-			issuer: env.JWT_ISSUER,
-			audience: env.JWT_AUDIENCE,
+		.jwtVerify(accessToken ?? "", envs.JWT_SECRET, {
+			issuer: envs.JWT_ISSUER,
+			audience: envs.JWT_AUDIENCE,
 		})
 		.catch((err) => {
 			console.error("Failed to verify JWT - Cause: ", err);
@@ -36,11 +36,11 @@ const auth = async ({ req }: CreateFastifyContextOptions) => {
 	const auth = payload
 		? await payloadSchema
 				.safeParseAsync(payload)
-				.then((res) => (res?.success ? res.data : null))
+				.then((res) => (res.success ? res.data : null))
 				.catch(() => null)
 		: null;
 
 	return auth;
-};
+}
 
 export type Context = inferAsyncReturnType<typeof createContext>;

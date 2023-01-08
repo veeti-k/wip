@@ -1,12 +1,14 @@
 import { trpc } from "~trpcReact/trpcReact";
 
-export const useDeleteExerciseMutation = () => {
+export function useDeleteExerciseMutation() {
 	const trpcCtx = trpc.useContext();
 
 	return trpc.workout.deleteExercise.useMutation({
 		onSuccess: (_, { workoutId, exerciseId }) => {
 			trpcCtx.workout.getOne.setData({ id: workoutId }, (oldData) => {
-				if (!oldData) return null;
+				if (!oldData) {
+					return null;
+				}
 
 				return {
 					...oldData,
@@ -16,4 +18,4 @@ export const useDeleteExerciseMutation = () => {
 		},
 		onSettled: () => trpcCtx.workout.getOnGoing.invalidate(),
 	});
-};
+}

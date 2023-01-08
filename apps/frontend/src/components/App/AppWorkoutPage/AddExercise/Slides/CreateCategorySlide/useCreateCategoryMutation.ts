@@ -1,6 +1,6 @@
 import { trpc } from "~trpcReact/trpcReact";
 
-export const useCreateCategoryMutation = () => {
+export function useCreateCategoryMutation() {
 	const trpcCtx = trpc.useContext();
 
 	return trpc.exercise.createCategory.useMutation({
@@ -11,4 +11,4 @@ export const useCreateCategoryMutation = () => {
 		},
 		onSettled: () => trpcCtx.exercise.getModelExercises.invalidate(),
 	});
-};
+}
