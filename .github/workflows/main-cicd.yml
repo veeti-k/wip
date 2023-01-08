@@ -53,7 +53,7 @@ jobs:
         with:
           args: |
             deploy --dockerfile ./Dockerfile \
-              --strategy immediate --now --app health-backend--prod --detach --remote-only \
+              --strategy immediate --now --app api--prod --detach --remote-only \
               --build-arg APP=backend \
               -e FRONT_BASE_URL=https://h.veetik.com \
               -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
