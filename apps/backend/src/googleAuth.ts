@@ -5,7 +5,10 @@ import { googleAuth } from "@gym/api";
 
 export async function googleAuthInit(req: FastifyRequest, res: FastifyReply) {
 	const { status, headers } = googleAuth.googleAuthInit();
-	return res.status(status).headers(headers ?? {});
+	return res
+		.status(status)
+		.headers(headers ?? {})
+		.send();
 }
 
 const querySchema = z.object({
