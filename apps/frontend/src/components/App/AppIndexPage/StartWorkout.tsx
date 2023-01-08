@@ -50,7 +50,12 @@ export const StartWorkout = () => {
 						<Button className="w-full" onClick={closeModal}>
 							Cancel
 						</Button>
-						<Button intent="submit" className="w-full" disabled={mutation.isLoading}>
+						<Button
+							intent="submit"
+							type="submit"
+							className="w-full"
+							disabled={mutation.isLoading}
+						>
 							{mutation.isLoading ? "Starting..." : "Start"}
 						</Button>
 					</div>
