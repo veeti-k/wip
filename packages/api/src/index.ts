@@ -5,3 +5,5 @@ export { createContext } from "./context.js";
 export type { Context } from "./context.js";
 
 export * as googleAuth from "./googleAuth.js";
+
+export * as defaultUserStuff from "./_defaultUserStuff.js";

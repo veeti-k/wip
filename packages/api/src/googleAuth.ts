@@ -5,6 +5,7 @@ import * as jose from "jose";
 import { prisma } from "@gym/db";
 
 import { envs } from "./api-envs.js";
+import { defaultUserStuff } from "./index.js";
 
 const client = new google.auth.OAuth2(envs.G_CLIENT_ID, envs.G_CLIENT_SECRET, envs.G_REDIRECT_URI);
 
@@ -40,10 +41,53 @@ export async function googleAuthCallback({ code }: GoogleAuthCallbackProps) {
 		return { status: 400, body: { error: "Google responded with no email" } };
 	}
 
-	const user = await prisma.user.upsert({
-		where: { email },
-		create: { email },
-		update: {},
+	const user = await prisma.$transaction(async () => {
+		const existingUser = await prisma.user.findUnique({ where: { email } });
+
+		if (existingUser) {
+			return existingUser;
+		}
+
+		const createdUser = await prisma.user.create({
+			data: { email },
+		});
+
+		await prisma.category.createMany({
+			data: defaultUserStuff.categories.map((categoryName) => ({
+				name: categoryName,
+				ownerId: createdUser.id,
+			})),
+		});
+
+		const createdCategories = await prisma.category.findMany({
+			where: { ownerId: createdUser.id },
+		});
+
+		await prisma.modelExercise.createMany({
+			data: defaultUserStuff.modelExercises.reduce<
+				{ name: string; enabledFields: bigint; categoryId: string; ownerId: string }[]
+			>((acc, modelExercise) => {
+				const category = createdCategories.find(
+					(category) => category.name === modelExercise.categoryName
+				);
+
+				if (!category) {
+					return acc;
+				}
+
+				return [
+					...acc,
+					{
+						name: modelExercise.name,
+						enabledFields: modelExercise.enabledFields,
+						categoryId: category.id,
+						ownerId: createdUser.id,
+					},
+				];
+			}, []),
+		});
+
+		return createdUser;
 	});
 
 	const today = new Date();

@@ -1,9 +1,10 @@
 export const modelExerciseFields = {
 	weight: BigInt(1),
-	reps: BigInt(2),
-	time: BigInt(4),
-	distance: BigInt(8),
-	kcal: BigInt(16),
+	assistWeight: BigInt(2),
+	reps: BigInt(8),
+	time: BigInt(16),
+	distance: BigInt(32),
+	kcal: BigInt(64),
 };
 
 export function hasExerciseField(exerciseFields: bigint, field: keyof typeof modelExerciseFields) {
