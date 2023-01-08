@@ -1,4 +1,5 @@
-import { ComponentProps, ReactNode, forwardRef, useId } from "react";
+import type { ComponentProps, ReactNode } from "react";
+import { forwardRef, useId } from "react";
 
 import { classNames } from "~utils/classNames";
 
@@ -18,8 +19,9 @@ export const Select = forwardRef<HTMLSelectElement, Props>(
 	({ label, required, id, error, children, ...rest }, ref) => {
 		const innerId = useId();
 
-		if (!label)
+		if (!label) {
 			return <InnerSelect ref={ref} required={required} id={id ?? innerId} {...rest} />;
+		}
 
 		const hasError = !!error;
 

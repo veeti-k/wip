@@ -27,11 +27,11 @@ export const Input = forwardRef<HTMLInputElement, Props>(
 		const innerId = useId();
 		const hasError = !!error;
 
-		if (!label)
+		if (!label) {
 			return (
 				<div className="flex flex-col">
 					<InnerInput
-						invalid={invalid || hasError}
+						invalid={invalid ?? hasError}
 						ref={ref}
 						required={required}
 						id={id ?? innerId}
@@ -41,6 +41,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
 					<Error message={error} />
 				</div>
 			);
+		}
 
 		return (
 			<div className="flex flex-col">
@@ -50,7 +51,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
 					</Label>
 
 					<InnerInput
-						invalid={invalid || hasError}
+						invalid={invalid ?? hasError}
 						ref={ref}
 						required={required}
 						id={id ?? innerId}

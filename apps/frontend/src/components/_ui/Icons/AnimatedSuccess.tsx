@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-export const AnimatedSuccessIcon = () => {
+export function AnimatedSuccessIcon() {
 	return (
 		<motion.div
 			className="flex items-center justify-center rounded-full bg-green-600 p-2"
@@ -36,4 +36,4 @@ export const AnimatedSuccessIcon = () => {
 			</svg>
 		</motion.div>
 	);
-};
+}

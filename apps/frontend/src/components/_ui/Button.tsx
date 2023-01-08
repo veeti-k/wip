@@ -1,5 +1,7 @@
-import { VariantProps, cva } from "class-variance-authority";
-import { ComponentProps, ComponentPropsWithoutRef, forwardRef } from "react";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
+import type { ComponentProps, ComponentPropsWithoutRef } from "react";
+import { forwardRef } from "react";
 import { Link } from "react-router-dom";
 
 import { classNames } from "~utils/classNames";

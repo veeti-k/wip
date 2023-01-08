@@ -8,7 +8,7 @@ type Props = {
 	message: string;
 };
 
-export const ErrorCard = ({ message }: Props) => {
+export function ErrorCard({ message }: Props) {
 	return (
 		<Card
 			as={motion.div}
@@ -18,4 +18,4 @@ export const ErrorCard = ({ message }: Props) => {
 			{message}
 		</Card>
 	);
-};
+}

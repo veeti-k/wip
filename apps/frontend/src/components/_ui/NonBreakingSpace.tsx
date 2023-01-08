@@ -1,3 +1,3 @@
-export const NonBreakingSpace = () => {
+export function NonBreakingSpace() {
 	return <>&nbsp;</>;
-};
+}

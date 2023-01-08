@@ -11,7 +11,7 @@ type Props = {
 	className?: string;
 };
 
-export const Error = ({ message, htmlFor, className }: Props) => {
+export function Error({ message, htmlFor, className }: Props) {
 	const hasError = !!message;
 
 	return (
@@ -30,4 +30,4 @@ export const Error = ({ message, htmlFor, className }: Props) => {
 			)}
 		</AnimatePresence>
 	);
-};
+}

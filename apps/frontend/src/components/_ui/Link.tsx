@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
-export const Link = (props: ComponentProps<typeof RouterLink>) => {
+export function Link(props: ComponentProps<typeof RouterLink>) {
 	return (
 		<RouterLink
 			{...props}
@@ -12,4 +12,4 @@ export const Link = (props: ComponentProps<typeof RouterLink>) => {
 			</span>
 		</RouterLink>
 	);
-};
+}

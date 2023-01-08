@@ -8,7 +8,7 @@ type Props = {
 	message: string;
 };
 
-export const LoadingCard = ({ message }: Props) => {
+export function LoadingCard({ message }: Props) {
 	return (
 		<Card
 			as={motion.div}
@@ -18,4 +18,4 @@ export const LoadingCard = ({ message }: Props) => {
 			{message}
 		</Card>
 	);
-};
+}

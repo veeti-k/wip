@@ -1,5 +1,6 @@
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, MouseEvent, ReactNode } from "react";
+import type { MouseEvent, ReactNode } from "react";
+import { Fragment } from "react";
 
 import { Button } from "./Button";
 import { DotsVertical } from "./Icons/DotsVertical";
@@ -8,7 +9,7 @@ type DropdownProps = {
 	children: ReactNode;
 };
 
-export const Dropdown = ({ children }: DropdownProps) => {
+export function Dropdown({ children }: DropdownProps) {
 	return (
 		<Menu as="div" className="relative inline-block text-left">
 			<div>
@@ -31,14 +32,14 @@ export const Dropdown = ({ children }: DropdownProps) => {
 			</Transition>
 		</Menu>
 	);
-};
+}
 
 type DropdownMenuItemProps = {
 	children: ReactNode;
 	onClick?: (event: MouseEvent) => void;
 };
 
-export const DropdownMenuItem = ({ onClick, children }: DropdownMenuItemProps) => {
+export function DropdownMenuItem({ onClick, children }: DropdownMenuItemProps) {
 	return (
 		<Menu.Item>
 			{({ active }) => (
@@ -46,11 +47,13 @@ export const DropdownMenuItem = ({ onClick, children }: DropdownMenuItemProps) =
 					className={`${
 						active && "bg-primary-700"
 					} group flex w-full items-center px-4 py-2 text-sm`}
-					onClick={(e) => onClick && onClick(e)}
+					onClick={(e) => {
+						return onClick?.(e);
+					}}
 				>
 					{children}
 				</button>
 			)}
 		</Menu.Item>
 	);
-};
+}

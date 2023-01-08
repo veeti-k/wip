@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 import { Trash as Icon } from "tabler-icons-react";
 
-export const RemoveIcon = (props: Omit<ComponentProps<typeof Icon>, "size">) => {
+export function RemoveIcon(props: Omit<ComponentProps<typeof Icon>, "size">) {
 	return <Icon size={18} {...props} />;
-};
+}

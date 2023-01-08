@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 
 import { formatDate } from "~utils/formatDate";
 
-export const ShowDate = ({ date }: { date: Date }) => {
+export function ShowDate({ date }: { date: Date }) {
 	const formattedDateForDateTimeAttr = formatISO(date, {
 		format: "extended",
 		representation: "complete",
@@ -29,4 +29,4 @@ export const ShowDate = ({ date }: { date: Date }) => {
 			{formatDate(date)}
 		</time>
 	);
-};
+}

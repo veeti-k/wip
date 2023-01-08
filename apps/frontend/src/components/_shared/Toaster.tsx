@@ -2,7 +2,7 @@ import { Toaster as ActualToaster } from "react-hot-toast";
 
 import { colors } from "~utils/colors";
 
-export const Toaster = () => {
+export function Toaster() {
 	return (
 		<ActualToaster
 			reverseOrder
@@ -24,4 +24,4 @@ export const Toaster = () => {
 			}}
 		/>
 	);
-};
+}

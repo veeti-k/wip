@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, ReactNode, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import { Fragment, useRef, useState } from "react";
 
 type Props = {
 	title: string;
@@ -8,7 +9,7 @@ type Props = {
 	isOpen: boolean;
 };
 
-export const Modal = ({ title, children, closeModal, isOpen }: Props) => {
+export function Modal({ title, children, closeModal, isOpen }: Props) {
 	const initialFocusRef = useRef(null);
 
 	return (
@@ -59,7 +60,7 @@ export const Modal = ({ title, children, closeModal, isOpen }: Props) => {
 			</Dialog>
 		</Transition>
 	);
-};
+}
 
 export const useModal = () => {
 	const [isModalOpen, setIsOpen] = useState(false);
