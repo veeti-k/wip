@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ComponentProps, Suspense } from "react";
+import type { ComponentProps } from "react";
+import { Suspense } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { useAuth } from "~Auth/Auth";
@@ -42,7 +43,7 @@ export const AppPageWrapper = ({
 		<motion.main
 			key={location.pathname}
 			className={classNames(
-				"max-w-page mx-auto h-max px-3 pb-[11rem] pt-[5rem] sm:pt-[7rem]",
+				"max-w-page z-10 mx-auto h-max px-3 pb-[11rem] pt-[5rem] sm:pt-[7rem]",
 				className
 			)}
 			{...animateOpacityProps}
