@@ -16,7 +16,7 @@ export function Modal({ title, children, closeModal, isOpen }: Props) {
 		<Transition appear show={isOpen} as={Fragment}>
 			<Dialog
 				as="div"
-				className="relative z-10"
+				className="relative z-40"
 				onClose={closeModal}
 				initialFocus={initialFocusRef}
 			>
@@ -29,10 +29,10 @@ export function Modal({ title, children, closeModal, isOpen }: Props) {
 					leaveFrom="opacity-100"
 					leaveTo="opacity-0"
 				>
-					<div className="fixed inset-0 bg-black/40" />
+					<div className="fixed inset-0 z-40 bg-black/40" />
 				</Transition.Child>
 
-				<div className="fixed inset-0 overflow-y-auto">
+				<div className="fixed inset-0 z-40 overflow-y-auto">
 					<div className="flex min-h-full items-center justify-center p-3">
 						<Transition.Child
 							as={Fragment}
@@ -43,7 +43,7 @@ export function Modal({ title, children, closeModal, isOpen }: Props) {
 							leaveFrom="opacity-100 scale-100"
 							leaveTo="opacity-0 scale-[96%]"
 						>
-							<Dialog.Panel className="border-primary-800 bg-primary-1100 w-full max-w-sm overflow-hidden rounded-xl border shadow-xl">
+							<Dialog.Panel className="border-primary-800 bg-primary-1100 z-50 w-full max-w-sm overflow-hidden rounded-xl border shadow-xl">
 								<Dialog.Title
 									as="h1"
 									className="px-4 pt-4 text-lg font-medium leading-6"
@@ -62,20 +62,20 @@ export function Modal({ title, children, closeModal, isOpen }: Props) {
 	);
 }
 
-export const useModal = () => {
+export function useModal() {
 	const [isModalOpen, setIsOpen] = useState(false);
 
-	const openModal = () => {
+	function openModal() {
 		setIsOpen(true);
-	};
+	}
 
-	const closeModal = () => {
+	function closeModal() {
 		setIsOpen(false);
-	};
+	}
 
 	return {
 		isModalOpen,
 		openModal,
 		closeModal,
 	};
-};
+}
