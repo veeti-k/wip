@@ -42,7 +42,6 @@ module.exports = {
 		"@typescript-eslint/no-unnecessary-condition": "error",
 		"@typescript-eslint/no-unnecessary-type-constraint": "error",
 		"@typescript-eslint/no-unsafe-declaration-merging": "error",
-		"@typescript-eslint/no-unsafe-return": "error",
 		"@typescript-eslint/no-useless-empty-export": "error",
 		"@typescript-eslint/non-nullable-type-assertion-style": "error",
 		"@typescript-eslint/prefer-as-const": "error",
