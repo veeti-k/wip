@@ -1,30 +1,17 @@
-import format from "date-fns/format";
 import { forwardRef, useId } from "react";
-import type { ComponentProps, ReactNode, Ref } from "react";
+import type { ComponentProps, ComponentPropsWithoutRef, ReactNode, Ref } from "react";
 
 import { classNames } from "~utils/classNames";
 
 import { Error } from "./Error";
 import { Label } from "./Label";
 
-type InputValueType<Type> = Type extends "datetime-local"
-	? Date
-	: Type extends "datetime"
-	? Date
-	: string;
+type InputReactProps = Omit<ComponentPropsWithoutRef<"input">, "defaultValue" | "className">;
 
-type InputReactProps = Omit<
-	ComponentProps<"input">,
-	"ref" | "value" | "defaultValue" | "className"
->;
-
-type InputProps<Type extends string> = InputReactProps & {
-	ref?: Ref<HTMLInputElement>;
+type InputProps = InputReactProps & {
+	inputRef?: Ref<HTMLInputElement>;
 	label?: string;
 	required?: boolean;
-	value?: InputValueType<Type>;
-	defaultValue?: InputValueType<Type>;
-	type?: Type;
 } & (
 		| {
 				error?: string | ReactNode;
@@ -36,63 +23,46 @@ type InputProps<Type extends string> = InputReactProps & {
 		  }
 	);
 
-export function Input<Type extends string>({
-	label,
-	required,
-	id,
-	error,
-	invalid,
-	value,
-	defaultValue,
-	ref,
-	...rest
-}: InputProps<Type>) {
-	const innerId = useId();
-	const hasError = !!error;
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+	({ id, error, invalid, required, label, ...rest }, ref) => {
+		const generatedId = useId();
+		const innerId = id ?? generatedId;
 
-	const innerValue = getInputValue(value);
-	const innerDefaultValue = getInputValue(defaultValue);
+		const hasError = !!error;
 
-	if (!label) {
+		const innerInputProps = {
+			invalid: invalid ?? hasError,
+			ref,
+			required,
+			id: innerId,
+			...rest,
+		};
+
+		if (!label) {
+			return (
+				<div className="flex flex-col">
+					<InnerInput {...innerInputProps} />
+
+					<Error message={error} />
+				</div>
+			);
+		}
+
 		return (
 			<div className="flex flex-col">
-				<InnerInput
-					invalid={invalid ?? hasError}
-					ref={ref}
-					required={required}
-					id={id ?? innerId}
-					value={innerValue}
-					defaultValue={innerDefaultValue}
-					{...rest}
-				/>
+				<div className="flex flex-col gap-[6px]">
+					<Label htmlFor={innerId} required={required}>
+						{label}
+					</Label>
+
+					<InnerInput {...innerInputProps} />
+				</div>
 
 				<Error message={error} />
 			</div>
 		);
 	}
-
-	return (
-		<div className="flex flex-col">
-			<div className="flex flex-col gap-[6px]">
-				<Label htmlFor={id ?? innerId} required={required}>
-					{label}
-				</Label>
-
-				<InnerInput
-					invalid={invalid ?? hasError}
-					ref={ref}
-					required={required}
-					id={id ?? innerId}
-					value={innerValue}
-					defaultValue={innerDefaultValue}
-					{...rest}
-				/>
-			</div>
-
-			<Error message={error} />
-		</div>
-	);
-}
+);
 
 type InnerInputProps = Omit<ComponentProps<"input">, "className" | "ref"> & { invalid?: boolean };
 
@@ -113,18 +83,3 @@ const InnerInput = forwardRef<HTMLInputElement, InnerInputProps>(({ invalid, ...
 
 Input.displayName = "Input";
 InnerInput.displayName = "InnerInput";
-
-function getInputValue<ValueType>(value: ValueType) {
-	return value ? (isDate(value) ? getHtmlDate(value) : value) : undefined;
-}
-
-function getHtmlDate(date: Date) {
-	return `${format(date, "yyyy-MM-dd")}T${format(date, "HH:mm")}`;
-}
-
-function isDate(thing: unknown): thing is Date {
-	return (
-		thing instanceof Date ||
-		(typeof thing === "object" && Object.prototype.toString.call(thing) === "[object Date]")
-	);
-}
