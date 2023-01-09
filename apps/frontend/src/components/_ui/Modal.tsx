@@ -43,7 +43,7 @@ export function Modal({ title, children, closeModal, isOpen }: Props) {
 							leaveFrom="opacity-100 scale-100"
 							leaveTo="opacity-0 scale-[96%]"
 						>
-							<Dialog.Panel className="border-primary-800 bg-primary-1100 w-full max-w-sm transform overflow-hidden rounded-xl border shadow-xl transition-all">
+							<Dialog.Panel className="border-primary-800 bg-primary-1100 w-full max-w-sm overflow-hidden rounded-xl border shadow-xl">
 								<Dialog.Title
 									as="h1"
 									className="px-4 pt-4 text-lg font-medium leading-6"
