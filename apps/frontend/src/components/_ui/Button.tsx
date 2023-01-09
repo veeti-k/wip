@@ -42,18 +42,20 @@ const buttonStyles = cva(
 
 type Props = ComponentPropsWithoutRef<"button"> & VariantProps<typeof buttonStyles>;
 
-export const Button = forwardRef<HTMLButtonElement, Props>(({ className, ...props }, ref) => {
-	return (
-		<button
-			ref={ref}
-			className={classNames(buttonStyles(props), !!className && className)}
-			{...props}
-			type={props.type ?? "button"}
-		>
-			{props.children}
-		</button>
-	);
-});
+export const Button = forwardRef<HTMLButtonElement, Props>(
+	({ className, type, intent, ...props }, ref) => {
+		return (
+			<button
+				ref={ref}
+				className={classNames(buttonStyles({ ...props, intent }), !!className && className)}
+				type={type ?? intent === "submit" ? "submit" : "button"}
+				{...props}
+			>
+				{props.children}
+			</button>
+		);
+	}
+);
 
 export const SkeletonButton = forwardRef<HTMLButtonElement, Props>(({ className }, ref) => {
 	return (
