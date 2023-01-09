@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+import type { RouterOutputs } from "@gym/api";
+
 import { Card } from "~components/_ui/Cards/Card";
 import { ErrorCard } from "~components/_ui/Cards/ErrorCard";
 import { LoadingCard } from "~components/_ui/Cards/LoadingCard";
@@ -29,13 +31,7 @@ export function AddExerciseSlide() {
 		!isLoading && !error && exerciseCategories.length && addExerciseSearchQuery;
 
 	const innerCategories = queryAndCategories
-		? exerciseCategories?.filter(
-				(category) =>
-					category.name.toLowerCase().includes(addExerciseSearchQuery.toLowerCase()) ||
-					category.modelExercises.some((me) =>
-						me.name.toLowerCase().includes(addExerciseSearchQuery.toLowerCase())
-					)
-		  )
+		? categorySearch({ categories: exerciseCategories, query: addExerciseSearchQuery })
 		: exerciseCategories;
 
 	const noCategoriesAndQuery =
@@ -54,7 +50,7 @@ export function AddExerciseSlide() {
 				}
 			/>
 
-			<div className="mt-4 flex max-h-[300px] flex-col gap-2 overflow-auto">
+			<div className="mt-4 flex max-h-[300px] flex-col gap-2 overflow-auto" tabIndex={-1}>
 				{isLoading ? (
 					<LoadingCard message="Getting exercises..." />
 				) : error ? (
@@ -98,4 +94,26 @@ export function AddExerciseSlide() {
 			</div>
 		</div>
 	);
+}
+
+function categorySearch({
+	categories,
+	query,
+}: {
+	categories?: RouterOutputs["exercise"]["getModelExercises"];
+	query: string;
+}) {
+	const parsedQuery = query.trim().toLocaleLowerCase();
+
+	return categories
+		?.filter(
+			(category) =>
+				category.name.toLowerCase().includes(parsedQuery) ||
+				category.modelExercises.some((me) => me.name.toLowerCase().includes(parsedQuery))
+		)
+		.map((c) => ({
+			...c,
+			modelExercises: c.modelExercises.sort((a, b) => a.name.localeCompare(b.name)),
+		}))
+		.sort((a, b) => a.name.localeCompare(b.name));
 }
