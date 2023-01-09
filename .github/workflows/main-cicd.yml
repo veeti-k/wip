@@ -64,7 +64,7 @@ jobs:
               -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
               -e G_CLIENT_ID=${{ secrets.G_CLIENT_ID }} \
               -e G_CLIENT_SECRET=${{ secrets.G_CLIENT_SECRET }} \
-              -e G_CLIENT_REDIRECT_URI=${{ env.API_BASE_URL }}/google-auth/callback \
+              -e G_REDIRECT_URI=${{ env.API_BASE_URL }}/google-auth/callback \
               -e JWT_AUDIENCE=h-prod \
               -e JWT_ISSUER=h-api-prod \
               -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
