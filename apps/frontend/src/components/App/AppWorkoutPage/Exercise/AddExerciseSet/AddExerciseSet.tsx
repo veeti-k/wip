@@ -13,8 +13,6 @@ type Props = {
 export function AddExerciseSet({ exercise, lastSetRef }: Props) {
 	const mutation = useAddExerciseSetMutation();
 
-	console.log(lastSetRef);
-
 	function addSet() {
 		return mutation
 			.mutateAsync({
