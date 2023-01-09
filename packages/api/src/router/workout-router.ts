@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { updateExercise, updateExerciseSet, updateWorkout } from "@gym/validation";
+import { editWorkout, editWorkoutInfo, updateExercise, updateExerciseSet } from "@gym/validation";
 
 import { protectedProcedure, router } from "../trpc.js";
 
@@ -72,9 +72,37 @@ export const workoutRouter = router({
 			};
 		}),
 
-	updateWorkout: protectedProcedure
-		.input(updateWorkout.input)
+	editWorkout: protectedProcedure.input(editWorkout.input).mutation(async ({ ctx, input }) => {
+		const workout = await ctx.prisma.workout.findFirst({
+			where: {
+				id: input.workoutId,
+				ownerId: ctx.auth.userId,
+			},
+		});
+
+		if (!workout) {
+			throw new TRPCError({
+				code: "BAD_REQUEST",
+				message: "Workout not found",
+			});
+		}
+
+		const updatedWorkout = await ctx.prisma.workout.update({
+			where: { id: workout.id },
+			data: {
+				notes: input.notes,
+				bodyWeight: input.bodyWeight,
+			},
+		});
+
+		return updatedWorkout;
+	}),
+
+	editWorkoutInfo: protectedProcedure
+		.input(editWorkoutInfo.input)
 		.mutation(async ({ ctx, input }) => {
+			console.log({ input });
+
 			const workout = await ctx.prisma.workout.findFirst({
 				where: {
 					id: input.workoutId,
@@ -92,8 +120,9 @@ export const workoutRouter = router({
 			const updatedWorkout = await ctx.prisma.workout.update({
 				where: { id: workout.id },
 				data: {
-					notes: input.notes,
-					bodyWeight: input.bodyWeight,
+					name: input.name,
+					createdAt: input.createdAt,
+					stoppedAt: input.stoppedAt,
 				},
 			});
 

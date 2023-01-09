@@ -13,6 +13,7 @@ import { AppPageWrapper } from "../App";
 import { AddExerciseModal } from "./AddExercise/AddExercise";
 import { AddExerciseProvider } from "./AddExercise/AddExerciseContext";
 import { DeleteWorkout } from "./DeleteWorkout/DeleteWorkout";
+import { EditWorkoutInfo } from "./EditWorkoutInfo/EditWorkoutInfo";
 import { Exercise } from "./Exercise/Exercise";
 import { FinishWorkout } from "./FinishWorkout/FinishWorkout";
 import { Times } from "./Times/Times";
@@ -42,15 +43,18 @@ export function AppWorkoutPage() {
 				<ErrorCard message="Error getting workout" />
 			) : workout ? (
 				<>
-					<div className="mb-4 flex flex-col gap-2">
-						<h1 className="text-2xl">{workout.name}</h1>
+					<Card className="mb-4 flex flex-col gap-2 p-3">
+						<div className="flex justify-between gap-3">
+							<h1 className="text-2xl">{workout.name}</h1>
+
+							<EditWorkoutInfo workout={workout} />
+						</div>
 
 						<Times workout={workout} />
-					</div>
+						<WorkoutInputs workout={workout} />
+					</Card>
 
 					<div className="flex flex-col gap-4">
-						<WorkoutInputs workout={workout} />
-
 						<Card className="flex flex-col gap-3 rounded-xl p-3">
 							{inProgress && <FinishWorkout workout={workout} />}
 							<Button>Save as a workout</Button>

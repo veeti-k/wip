@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const form = z.object({
 	notes: z.string().nullable(),
-	bodyWeight: z.number({ invalid_type_error: "Invalid number" }).nullable(),
+	bodyWeight: z.number({ invalid_type_error: "Numbers only!" }).nullable(),
 });
 
 export const input = form.and(

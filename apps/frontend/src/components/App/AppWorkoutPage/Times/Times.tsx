@@ -14,7 +14,7 @@ export function Times({ workout }: Props) {
 	}
 
 	return (
-		<div className="flex flex-col font-light">
+		<div className="flex flex-col text-sm font-light">
 			<span>
 				Started <ShowDate date={workout.createdAt} />
 			</span>

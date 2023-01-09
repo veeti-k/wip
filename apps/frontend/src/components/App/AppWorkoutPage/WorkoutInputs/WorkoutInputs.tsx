@@ -4,10 +4,11 @@ import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 
 import type { RouterOutputs } from "@gym/api";
-import { updateWorkout } from "@gym/validation";
+import { editWorkout } from "@gym/validation";
 
 import { Input } from "~components/_ui/Input";
 import { errorMsg } from "~utils/errorMsg";
+import { valueAsNumber } from "~utils/valueAsNumber";
 
 import { useUpdateWorkoutMutation } from "./useUpdateWorkoutMutation";
 
@@ -18,8 +19,8 @@ type Props = {
 export function WorkoutInputs({ workout }: Props) {
 	const mutation = useUpdateWorkoutMutation();
 
-	const form = useForm<updateWorkout.FormType>({
-		resolver: zodResolver(updateWorkout.form),
+	const form = useForm<editWorkout.FormType>({
+		resolver: zodResolver(editWorkout.form),
 		defaultValues: {
 			notes: workout.notes,
 			bodyWeight: workout.bodyWeight,
@@ -44,7 +45,9 @@ export function WorkoutInputs({ workout }: Props) {
 			<Input
 				label="Notes"
 				error={form.formState.errors.notes?.message}
-				{...form.register("notes", { onChange: debouncedUpdateData })}
+				{...form.register("notes", {
+					onChange: debouncedUpdateData,
+				})}
 			/>
 
 			<Input
@@ -52,7 +55,7 @@ export function WorkoutInputs({ workout }: Props) {
 				error={form.formState.errors.bodyWeight?.message}
 				{...form.register("bodyWeight", {
 					onChange: debouncedUpdateData,
-					valueAsNumber: true,
+					setValueAs: valueAsNumber,
 				})}
 			/>
 		</div>

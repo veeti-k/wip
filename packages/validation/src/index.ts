@@ -5,4 +5,5 @@ export * as createCategory from "./exercise/createCategory.js";
 
 export * as updateExerciseSet from "./workout/updateExerciseSet.js";
 export * as updateExercise from "./workout/updateExercise.js";
-export * as updateWorkout from "./workout/updateWorkout.js";
+export * as editWorkout from "./workout/editWorkout.js";
+export * as editWorkoutInfo from "./workout/editWorkoutInfo.js";

@@ -32,7 +32,7 @@ export function AppWorkoutsPage() {
 					<LoadingCard message="Getting workouts..." />
 				) : error ? (
 					<ErrorCard message="Error getting workouts" />
-				) : data.length ? (
+				) : Object.keys(data).length ? (
 					<motion.div {...animateOpacityProps}>
 						{Object.entries(data).map(([month, workouts]) => (
 							<div key={month}>
