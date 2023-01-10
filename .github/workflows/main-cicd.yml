@@ -57,13 +57,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: yarn
+          cache-dependency-path: ./yarn.lock
 
       - name: Install deps
         run: yarn --frozen-lockfile
 
       - name: Update database
         run: |
-          yarn prisma db-push --url ${{ secrets.DATABASE_URL }}
+          yarn db-push --url ${{ secrets.DATABASE_URL }}
 
   api-deploy-prod:
     name: "Api: Deploy to Production"
