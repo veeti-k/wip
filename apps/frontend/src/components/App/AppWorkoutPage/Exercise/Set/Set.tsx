@@ -46,6 +46,7 @@ export function Set({ set, exercise, setRef, isLast }: Props) {
 		defaultValues: {
 			reps: set.reps,
 			weight: set.weight,
+			assistedWeight: set.assistedWeight,
 			time: set.time,
 			distance: set.distance,
 			kcal: set.kcal,
@@ -72,11 +73,14 @@ export function Set({ set, exercise, setRef, isLast }: Props) {
 		updateData();
 	};
 
-	const repsEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "reps");
-	const weightEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "weight");
-	const timeEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "time");
-	const distanceEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "distance");
-	const kcalEnabled = hasExerciseField(exercise.modelExercise.enabledFields, "kcal");
+	const fields = exercise.modelExercise.enabledFields;
+
+	const repsEnabled = hasExerciseField(fields, "reps");
+	const weightEnabled = hasExerciseField(fields, "weight");
+	const timeEnabled = hasExerciseField(fields, "time");
+	const distanceEnabled = hasExerciseField(fields, "distance");
+	const kcalEnabled = hasExerciseField(fields, "kcal");
+	const assistedWeightEnabled = hasExerciseField(fields, "assistWeight");
 
 	const inputProps = {
 		onChange: debouncedUpdateData,
@@ -124,7 +128,7 @@ export function Set({ set, exercise, setRef, isLast }: Props) {
 								/>
 							)}
 
-							{weightEnabled && (
+							{weightEnabled ? (
 								<Input
 									type="number"
 									step=".01"
@@ -132,7 +136,15 @@ export function Set({ set, exercise, setRef, isLast }: Props) {
 									invalid={!!form.formState.errors.weight?.message}
 									{...form.register("weight", inputProps)}
 								/>
-							)}
+							) : assistedWeightEnabled ? (
+								<Input
+									type="number"
+									step=".01"
+									label="(kg) -Weight"
+									invalid={!!form.formState.errors.weight?.message}
+									{...form.register("assistedWeight", inputProps)}
+								/>
+							) : null}
 						</div>
 					)}
 

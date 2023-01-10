@@ -3,6 +3,7 @@ import { z } from "zod";
 export const form = z.object({
 	reps: z.number().nullable(),
 	weight: z.number().nullable(),
+	assistedWeight: z.number().nullable(),
 	time: z.number().nullable(),
 	distance: z.number().nullable(),
 	kcal: z.number().nullable(),
