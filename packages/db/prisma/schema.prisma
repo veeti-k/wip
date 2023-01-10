@@ -123,11 +123,12 @@ model Set {
     updatedAt  DateTime @updatedAt
     type       SetType  @default(Normal)
 
-    weight   Float?
-    reps     Float?
-    time     Float?
-    distance Float?
-    kcal     Float?
+    weight         Float?
+    assistedWeight Float?
+    reps           Float?
+    time           Float?
+    distance       Float?
+    kcal           Float?
 
     exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
     exerciseId String
