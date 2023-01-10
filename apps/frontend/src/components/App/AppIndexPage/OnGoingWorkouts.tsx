@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 import { Card } from "~components/_ui/Cards/Card";
@@ -31,25 +31,35 @@ export function OnGoingWorkouts() {
 
 	data.length && AppWorkoutPage.preload();
 
-	return data.length ? (
-		<motion.div {...animateOpacityProps} className="flex flex-col gap-2">
-			<h2 className="text-lg font-light">On going workouts</h2>
+	return (
+		<AnimatePresence initial={false}>
+			{data.length ? (
+				<motion.div {...animateOpacityProps} className="flex flex-col gap-2">
+					<h2 className="text-lg font-light">On going workouts</h2>
 
-			{data.map((workout) => (
-				<Card as={Link} to={`workouts/${workout.id}`} className="rounded-md">
-					<div className="flex flex-col gap-2 p-2">
-						<div className="flex justify-between gap-2">
-							<h3 className="font-light">{workout.name}</h3>
+					{data.map((workout) => (
+						<Card as={Link} to={`workouts/${workout.id}`} className="rounded-md">
+							<div className="flex flex-col gap-2 p-2">
+								<div className="flex justify-between gap-2 font-light">
+									<h3>{workout.name}</h3>
 
-							<h4 className="font-light transition-[color] duration-200">
-								<Duration workout={workout} />
-							</h4>
-						</div>
-					</div>
+									<h4 className="transition-[color] duration-200">
+										<Duration workout={workout} />
+									</h4>
+								</div>
+							</div>
+						</Card>
+					))}
+				</motion.div>
+			) : (
+				<Card
+					as={motion.div}
+					{...animateOpacityProps}
+					className="px-4 py-5 text-center font-light"
+				>
+					No on going workouts
 				</Card>
-			))}
-		</motion.div>
-	) : (
-		<Card className="px-4 py-5 text-center font-light">No on going workouts</Card>
+			)}
+		</AnimatePresence>
 	);
 }
