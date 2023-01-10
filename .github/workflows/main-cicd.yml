@@ -76,7 +76,7 @@ jobs:
     name: "Frontend: Deploy to Production"
     environment: front__prod
     runs-on: ubuntu-latest
-    needs: [checks]
+    needs: [checks, api-deploy-prod]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
