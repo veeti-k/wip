@@ -1,8 +1,0 @@
-{
-	"extends": "@gym/tsconfig/node16.json",
-	"include": ["src"],
-	"compilerOptions": {
-		"outDir": "dist",
-		"rootDir": "src"
-	}
-}

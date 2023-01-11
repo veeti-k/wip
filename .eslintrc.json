@@ -1,0 +1,24 @@
+{
+	"overrides": [
+		{
+			"extends": ["plugin:@typescript-eslint/recommended-requiring-type-checking"],
+			"files": ["*.ts", "*.tsx"],
+			"parserOptions": {
+				"project": "tsconfig.json"
+			},
+			"rules": {
+				"@typescript-eslint/no-floating-promises": "off",
+				"@typescript-eslint/no-misused-promises": "off",
+				"@typescript-eslint/restrict-template-expressions": "off",
+				"@typescript-eslint/no-unsafe-member-access": "off",
+				"@typescript-eslint/no-unsafe-argument": "off"
+			}
+		}
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"project": "./tsconfig.json"
+	},
+	"plugins": ["@typescript-eslint"],
+	"extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"]
+}

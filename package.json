@@ -1,38 +1,59 @@
 {
-	"name": "2tasks",
-	"version": "0.0.0",
+	"name": "wip2",
+	"version": "0.1.0",
 	"private": true,
-	"workspaces": [
-		"apps/*",
-		"packages/*"
-	],
 	"scripts": {
-		"build": "turbo build",
-		"clean": "rm -rf ./node_modules ./**/**/node_modules ./**/**/dist ./**/**/build ./**/**/.turbo",
-		"db-generate": "turbo db-generate",
-		"db-push": "yarn dotenv -e ./.env -- turbo db-push",
-		"db-studio": "yarn dotenv -e ./.env -- turbo db-studio",
-		"db-reset": "yarn dotenv -e ./.env -- turbo db-reset",
-		"db": "docker run -d --name gym-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=gym -p 3306:3306 mysql",
-		"dev": "yarn dotenv -e ./.env -- turbo dev --parallel",
-		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
-		"checks": "turbo checks",
-		"lint": "turbo lint"
+		"build": "next build",
+		"dev": "next dev",
+		"postinstall": "prisma generate",
+		"lint": "next lint",
+		"start": "next start"
 	},
-	"engines": {
-		"node": ">=16.0.0"
+	"dependencies": {
+		"@headlessui/react": "^1.7.7",
+		"@hookform/resolvers": "^2.9.10",
+		"@prisma/client": "^4.8.0",
+		"@radix-ui/react-collapsible": "^1.0.1",
+		"@tanstack/react-query": "^4.20.0",
+		"@trpc/client": "^10.8.1",
+		"@trpc/next": "^10.8.1",
+		"@trpc/react-query": "^10.8.1",
+		"@trpc/server": "^10.8.1",
+		"class-variance-authority": "^0.4.0",
+		"date-fns": "^2.29.3",
+		"framer-motion": "^8.4.2",
+		"googleapis": "^110.0.0",
+		"jose": "^4.11.2",
+		"lodash.debounce": "^4.0.8",
+		"next": "13.1.1",
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
+		"react-hook-form": "^7.41.5",
+		"react-hot-toast": "^2.4.0",
+		"superjson": "1.9.1",
+		"tabler-icons-react": "^1.56.0",
+		"zod": "^3.20.2"
 	},
 	"devDependencies": {
 		"@trivago/prettier-plugin-sort-imports": "^4.0.0",
-		"@types/eslint": "^8.4.10",
-		"@typescript-eslint/eslint-plugin": "^5.45.0",
-		"@typescript-eslint/parser": "^5.45.0",
-		"dotenv-cli": "^6.0.0",
-		"eslint": "^8.28.0",
-		"prettier": "^2.8.0",
-		"prettier-plugin-tailwindcss": "^0.2.0",
-		"turbo": "^1.4.4",
-		"typescript": "^4.9.3"
+		"@types/lodash.debounce": "^4.0.7",
+		"@types/node": "^18.11.18",
+		"@types/prettier": "^2.7.2",
+		"@types/react": "^18.0.26",
+		"@types/react-dom": "^18.0.10",
+		"@typescript-eslint/eslint-plugin": "^5.47.1",
+		"@typescript-eslint/parser": "^5.47.1",
+		"autoprefixer": "^10.4.7",
+		"eslint": "^8.30.0",
+		"eslint-config-next": "13.1.1",
+		"postcss": "^8.4.14",
+		"prettier": "^2.8.1",
+		"prettier-plugin-tailwindcss": "^0.2.1",
+		"prisma": "^4.8.0",
+		"tailwindcss": "^3.2.0",
+		"typescript": "^4.9.4"
 	},
-	"packageManager": "yarn@1.22.19"
+	"ct3aMetadata": {
+		"initVersion": "7.2.0"
+	}
 }
