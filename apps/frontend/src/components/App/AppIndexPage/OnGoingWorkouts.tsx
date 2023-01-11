@@ -38,7 +38,12 @@ export function OnGoingWorkouts() {
 					<h2 className="text-lg font-light">On going workouts</h2>
 
 					{data.map((workout) => (
-						<Card as={Link} to={`workouts/${workout.id}`} className="rounded-md">
+						<Card
+							as={Link}
+							key={workout.id}
+							to={`workouts/${workout.id}`}
+							className="rounded-md"
+						>
 							<div className="flex flex-col gap-2 p-2">
 								<div className="flex justify-between gap-2 font-light">
 									<h3>{workout.name}</h3>
