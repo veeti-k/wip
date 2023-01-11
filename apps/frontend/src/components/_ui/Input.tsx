@@ -6,7 +6,7 @@ import { classNames } from "~utils/classNames";
 import { Error } from "./Error";
 import { Label } from "./Label";
 
-type InputReactProps = Omit<ComponentPropsWithoutRef<"input">, "defaultValue" | "className">;
+type InputReactProps = Omit<ComponentPropsWithoutRef<"input">, "className">;
 
 type InputProps = InputReactProps & {
 	inputRef?: Ref<HTMLInputElement>;
