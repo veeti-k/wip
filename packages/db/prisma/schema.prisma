@@ -9,14 +9,15 @@ datasource db {
 }
 
 model User {
-    id        String   @id @default(cuid())
-    username  String?  @unique
-    email     String   @unique
-    isAdmin   Boolean  @default(false)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id           String    @id @default(cuid())
+    username     String?   @unique
+    email        String    @unique
+    isAdmin      Boolean   @default(false)
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+    lastOnlineAt DateTime?
 
-    workouts Workout[]
+    sessions Session[]
 
     exercises Exercise[]
 
@@ -24,27 +25,7 @@ model User {
 
     modelExercises ModelExercise[]
 
-    sessions Session[]
-
     categories Category[]
-}
-
-model Verification {
-    id         String    @id @default(cuid())
-    expiresAt  DateTime
-    createdAt  DateTime  @default(now())
-    updatedAt  DateTime  @updatedAt
-    verifiedAt DateTime?
-}
-
-model Session {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    expiresAt DateTime
-
-    userId String
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Category {
@@ -57,6 +38,8 @@ model Category {
     owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
     modelExercises ModelExercise[]
+
+    @@index([ownerId])
 }
 
 model ModelExercise {
@@ -69,13 +52,16 @@ model ModelExercise {
     ownerId String
     owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-    category   Category @relation(fields: [categoryId], references: [id])
     categoryId String
+    category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
     exercises Exercise[]
+
+    @@index([ownerId])
+    @@index([categoryId])
 }
 
-model Workout {
+model Session {
     id         String    @id @default(cuid())
     name       String
     notes      String?
@@ -85,10 +71,12 @@ model Workout {
     stoppedAt  DateTime?
 
     ownerId String
-    owner   User   @relation(fields: [ownerId], references: [id])
+    owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
     exercises Exercise[]
     sets      Set[]
+
+    @@index([ownerId])
 }
 
 model Exercise {
@@ -100,13 +88,17 @@ model Exercise {
     ownerId String
     owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-    workoutId String
-    workout   Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+    sessionId String
+    session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
     modelExerciseId String
     modelExercise   ModelExercise @relation(fields: [modelExerciseId], references: [id], onDelete: Cascade)
 
     sets Set[]
+
+    @@index([ownerId])
+    @@index([sessionId])
+    @@index([modelExerciseId])
 }
 
 enum SetType {
@@ -130,14 +122,18 @@ model Set {
     distance       Float?
     kcal           Float?
 
-    exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
-    exerciseId String
-
-    workoutId String
-    workout   Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
-
     ownerId String
     owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+    sessionId String
+    session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+    exerciseId String
+    exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+    @@index([ownerId])
+    @@index([sessionId])
+    @@index([exerciseId])
 }
 
 enum LogAction {
@@ -148,7 +144,7 @@ enum LogAction {
 
 enum LogActorType {
     User
-    Workout
+    Session
     Exercise
     Set
 }
@@ -164,8 +160,11 @@ model LogActor {
     actorId      String
     actorType    LogActorType
     sequenceType LogActorSequenceType
-    log          Log                  @relation(fields: [logId], references: [id], onDelete: Cascade)
-    logId        String
+
+    logId String
+    log   Log    @relation(fields: [logId], references: [id], onDelete: Cascade)
+
+    @@index([logId])
 }
 
 model Log {
