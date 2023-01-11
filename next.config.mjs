@@ -6,5 +6,8 @@
 const config = {
 	reactStrictMode: true,
 	swcMinify: true,
+	experimental: {
+		runtime: "experimental-edge",
+	},
 };
 export default config;
