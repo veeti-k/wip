@@ -8,9 +8,9 @@ import { Minus, Plus } from "tabler-icons-react";
 import { Button } from "~components/Ui/Button";
 import { Card } from "~components/Ui/Cards/Card";
 import { Input } from "~components/Ui/Input";
-import { hasExerciseField } from "~server/_defaultUserStuff";
 import { animateHeightProps } from "~utils/animations";
 import { errorMsg } from "~utils/errorMsg";
+import { hasExerciseField } from "~utils/modelExerciseFields";
 import type { RouterOutputs } from "~utils/trpc";
 import {
 	UpdateExerciseSetFormType,

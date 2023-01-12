@@ -1,9 +1,12 @@
+import { timingSafeEqual } from "crypto";
 import NextAuth, { NextAuthOptions } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~env/server.mjs";
-import { defaultUserCategories, defaultUserModelExercises } from "~server/_defaultUserStuff";
 import { prisma } from "~server/db";
+import { upsertUser } from "~server/serverUtils/upsertUser";
+import { previewLoginFormSchema } from "~validation/previewLogin";
 
 export const authOptions: NextAuthOptions = {
 	pages: { signIn: "/auth", error: "/auth" },
@@ -13,73 +16,60 @@ export const authOptions: NextAuthOptions = {
 		updateAge: 30 * 60, // 30 minutes
 	},
 	providers: [
-		GoogleProvider({
-			clientId: env.G_CLIENT_ID,
-			clientSecret: env.G_CLIENT_SECRET,
-			authorization: {
-				params: {
-					scope: "email",
-					prompt: "select_account",
-				},
-			},
-		}),
+		env.ENV === "production"
+			? GoogleProvider({
+					clientId: env.G_CLIENT_ID,
+					clientSecret: env.G_CLIENT_SECRET,
+					authorization: {
+						params: {
+							scope: "email",
+							prompt: "select_account",
+						},
+					},
+			  })
+			: Credentials({
+					name: "username",
+					type: "credentials",
+					credentials: {
+						username: {
+							label: "Username",
+							type: "text",
+							placeholder: "tester",
+						},
+					},
+					async authorize(credentials) {
+						if (!credentials) {
+							throw new Error("No credentials provided");
+						}
+
+						if (!env.PREVIEW_PASSWORD) {
+							throw new Error("PREVIEW_PASSWORD not set");
+						}
+
+						const result = await previewLoginFormSchema.safeParseAsync(credentials);
+						if (!result.success) {
+							throw new Error("Invalid credentials");
+						}
+
+						const { username, password } = result.data;
+
+						const validPassword = safeEqual(env.PREVIEW_PASSWORD, password);
+						if (!validPassword) {
+							throw new Error("Invalid password");
+						}
+
+						const user = await upsertUser({ email: `${username}@dev.local` });
+
+						return user;
+					},
+			  }),
 	],
 	callbacks: {
 		async signIn({ user }) {
 			const { email } = user;
 			if (!email) return "/auth";
 
-			await prisma.$transaction(async () => {
-				const existingUser = await prisma.user.findUnique({ where: { email } });
-
-				if (existingUser) {
-					return existingUser;
-				}
-
-				const createdUser = await prisma.user.create({
-					data: { email },
-				});
-
-				await prisma.category.createMany({
-					data: defaultUserCategories.map((categoryName) => ({
-						name: categoryName,
-						ownerId: createdUser.id,
-					})),
-				});
-
-				const createdCategories = await prisma.category.findMany({
-					where: { ownerId: createdUser.id },
-				});
-
-				await prisma.modelExercise.createMany({
-					data: defaultUserModelExercises.reduce<
-						{
-							name: string;
-							enabledFields: bigint;
-							categoryId: string;
-							ownerId: string;
-						}[]
-					>((acc, modelExercise) => {
-						const category = createdCategories.find(
-							(category) => category.name === modelExercise.categoryName
-						);
-
-						if (!category) {
-							return acc;
-						}
-
-						return [
-							...acc,
-							{
-								name: modelExercise.name,
-								enabledFields: modelExercise.enabledFields,
-								categoryId: category.id,
-								ownerId: createdUser.id,
-							},
-						];
-					}, []),
-				});
-			});
+			await upsertUser({ email });
 
 			return true;
 		},
@@ -111,3 +101,10 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default NextAuth(authOptions);
+
+function safeEqual(a: string, b: string) {
+	const aBuff = Buffer.from(a);
+	const bBuff = Buffer.from(b);
+
+	return aBuff.length === bBuff.length && timingSafeEqual(aBuff, bBuff);
+}

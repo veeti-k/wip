@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { modelExerciseFields } from "~server/_defaultUserStuff";
+import { modelExerciseFields } from "~utils/modelExerciseFields";
 
 const fieldArray = Object.keys(modelExerciseFields);
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
