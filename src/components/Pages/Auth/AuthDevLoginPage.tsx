@@ -22,7 +22,7 @@ export function AuthDevLoginPage() {
 	});
 
 	function onSubmit(values: PreviewLoginFormType) {
-		signIn("credentials", values);
+		return signIn("credentials", values);
 	}
 
 	return (
@@ -36,6 +36,7 @@ export function AuthDevLoginPage() {
 					<div className="flex flex-col gap-3">
 						<Input
 							placeholder="Username"
+							autoComplete="username"
 							required
 							error={form.formState.errors.username?.message}
 							{...form.register("username")}
@@ -43,14 +44,15 @@ export function AuthDevLoginPage() {
 
 						<Input
 							placeholder="Password"
+							type="password"
 							required
 							error={form.formState.errors.password?.message}
 							{...form.register("password")}
 						/>
 					</div>
 
-					<Button className="w-full" type="submit">
-						Dev login
+					<Button className="w-full" type="submit" disabled={form.formState.isSubmitting}>
+						{form.formState.isSubmitting ? "Logging in..." : "Login"}
 					</Button>
 				</form>
 			</div>
