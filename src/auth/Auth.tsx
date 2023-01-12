@@ -1,15 +1,16 @@
+import type { Session } from "next-auth";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 
 import { createCtx } from "~utils/context";
-import { RouterOutputs, trpc } from "~utils/trpc";
 import { useIsMounted } from "~utils/useIsMounted";
 
 import { clearAuth } from "./authUtils";
 
 type ContextType = {
 	state: "loading" | "authenticated" | "unauthenticated";
-	info?: RouterOutputs["auth"]["info"];
+	info?: Session | null;
 
 	logout: () => void;
 };
@@ -24,9 +25,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	const router = useRouter();
 	const isMounted = useIsMounted();
 
-	const { data, isLoading, error } = trpc.auth.info.useQuery(undefined, {
-		retry: false,
-	});
+	const { data, status } = useSession();
+
+	if (data?.signout) signOut();
 
 	function logout() {
 		clearAuth();
@@ -38,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	return (
 		<Context.Provider
 			value={{
-				state: isLoading ? "loading" : error ? "unauthenticated" : "authenticated",
+				state: status,
 
 				info: data,
 

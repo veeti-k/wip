@@ -1,10 +1,11 @@
-import { useAuth } from "~auth/Auth";
+import { signOut, useSession } from "next-auth/react";
+
 import { AppLayout } from "~components/Layouts/AppLayout/AppLayout";
 import { Button } from "~components/Ui/Button";
 import { Card } from "~components/Ui/Cards/Card";
 
 export function AppSettingsPage() {
-	const { info, logout } = useAuth();
+	const { data } = useSession();
 
 	return (
 		<AppLayout title="Settings">
@@ -13,10 +14,10 @@ export function AppSettingsPage() {
 
 				<div className="flex flex-col gap-3">
 					<Card className="flex flex-col gap-3 rounded-xl p-3 font-light">
-						<h2>{info?.email}</h2>
+						<h2>{data?.user?.email}</h2>
 					</Card>
 
-					<Button onClick={logout}>Logout</Button>
+					<Button onClick={() => signOut()}>Logout</Button>
 				</div>
 			</div>
 		</AppLayout>

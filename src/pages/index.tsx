@@ -1,18 +1,18 @@
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import { useAuth } from "~auth/Auth";
 import { useIsMounted } from "~utils/useIsMounted";
 
 export default function Index() {
-	const { state } = useAuth();
+	const { status } = useSession();
 	const isMounted = useIsMounted();
 	const router = useRouter();
 
-	if (state === "authenticated") {
+	if (status === "authenticated") {
 		if (isMounted) {
 			router.push("/app");
 		}
-	} else if (state === "unauthenticated") {
+	} else if (status === "unauthenticated") {
 		if (isMounted) {
 			router.push("/auth");
 		}

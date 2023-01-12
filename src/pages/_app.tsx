@@ -1,15 +1,19 @@
+import type { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import { Toaster } from "react-hot-toast";
 
-import { AuthProvider } from "~auth/Auth";
 import { colors } from "~utils/colors";
 import { trpc } from "~utils/trpc";
 
 import "../styles/globals.css";
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+const MyApp: AppType<{ session: Session }> = ({
+	Component,
+	pageProps: { session, ...pageProps },
+}) => {
 	return (
-		<AuthProvider>
+		<SessionProvider session={session}>
 			<Toaster
 				reverseOrder
 				toastOptions={{
@@ -31,7 +35,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 			/>
 
 			<Component {...pageProps} />
-		</AuthProvider>
+		</SessionProvider>
 	);
 };
 

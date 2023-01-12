@@ -1,25 +1,14 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import type { CreateNextContextOptions } from "@trpc/server/adapters/next";
-import * as jose from "jose";
+import type { Session } from "next-auth";
 import superjson from "superjson";
-import { z } from "zod";
 
-import { env } from "~env/server.mjs";
+import { getServerAuthSession } from "~server/auth";
 
 import { prisma } from "../db";
 
-const payloadSchema = z.object({
-	userId: z.string(),
-	email: z.string().email(),
-	isAdmin: z.boolean(),
-});
-
 type CreateContextOptions = {
-	auth: {
-		userId: string;
-		email: string;
-		isAdmin: boolean;
-	} | null;
+	auth: Session["user"] | null;
 };
 
 const createInnerTRPCContext = ({ auth }: CreateContextOptions) => {
@@ -29,27 +18,10 @@ const createInnerTRPCContext = ({ auth }: CreateContextOptions) => {
 	};
 };
 
-export const createTRPCContext = async ({ req }: CreateNextContextOptions) => {
-	const accessToken = req.headers.authorization?.replace("Bearer ", "");
-	const { payload } = await jose
-		.jwtVerify(accessToken ?? "", env.JWT_SECRET, {
-			issuer: env.JWT_ISSUER,
-			audience: env.JWT_AUDIENCE,
-		})
-		.catch((err) => {
-			console.error("Failed to verify JWT - Cause: ", err);
+export const createTRPCContext = async (props: CreateNextContextOptions) => {
+	const session = await getServerAuthSession(props);
 
-			return { payload: null };
-		});
-
-	const auth = payload
-		? await payloadSchema
-				.safeParseAsync(payload)
-				.then((res) => (res.success ? res.data : null))
-				.catch(() => null)
-		: null;
-
-	return createInnerTRPCContext({ auth });
+	return createInnerTRPCContext({ auth: session?.user });
 };
 
 const t = initTRPC.context<typeof createTRPCContext>().create({

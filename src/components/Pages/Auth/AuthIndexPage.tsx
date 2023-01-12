@@ -1,14 +1,25 @@
+import { signIn } from "next-auth/react";
+
 import { AuthLayout } from "~components/Layouts/AuthLayout/AuthLayout";
-import { ButtonA } from "~components/Ui/Button";
+import { Button } from "~components/Ui/Button";
+import { ErrorCard } from "~components/Ui/Cards/ErrorCard";
+
+import { useNextAuthError } from "./useNextAuthError";
 
 export function AuthIndexPage() {
+	const error = useNextAuthError();
+
 	return (
 		<AuthLayout title="Login">
-			<h1 className="mb-10 text-center text-5xl font-bold">Gym / Login</h1>
+			<div className="flex flex-col gap-10">
+				<h1 className="text-center text-5xl font-bold">Gym / Login</h1>
 
-			<ButtonA href={`/api/google-auth/init`} className="w-full">
-				Login with Google
-			</ButtonA>
+				{error && <ErrorCard message={error} />}
+
+				<Button onClick={() => signIn("google")} className="w-full">
+					Login with Google
+				</Button>
+			</div>
 		</AuthLayout>
 	);
 }
