@@ -39,14 +39,6 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
 		});
 	}
 
-	ctx.prisma.user
-		.update({
-			where: { id: ctx.auth.userId },
-			data: { lastOnlineAt: new Date() },
-		})
-		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-		.catch((err) => console.error(`Db call failed at isAuthed middleware: ${err}`));
-
 	return next({
 		ctx: { auth: ctx.auth },
 	});
