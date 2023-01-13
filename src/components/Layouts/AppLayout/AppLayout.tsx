@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
@@ -12,7 +12,7 @@ type Props = { children: ReactNode; title: string };
 
 export function AppLayout({ children, title }: Props) {
 	const router = useRouter();
-	const { status } = useSession({ required: true });
+	const { status, data } = useSession({ required: true });
 
 	if (status === "loading") {
 		return (
@@ -21,6 +21,8 @@ export function AppLayout({ children, title }: Props) {
 			</Head>
 		);
 	}
+
+	if (data?.signout) signOut();
 
 	return (
 		<>
