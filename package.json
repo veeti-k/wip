@@ -7,7 +7,9 @@
 		"dev": "next dev",
 		"postinstall": "prisma generate",
 		"lint": "next lint",
-		"start": "next start"
+		"start": "next start",
+		"db:reset": "prisma migrate reset && prisma db push",
+		"db:g": "prisma generate"
 	},
 	"dependencies": {
 		"@headlessui/react": "^1.7.7",
