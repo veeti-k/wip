@@ -2,7 +2,6 @@
 import { z } from "zod";
 
 export const serverSchema = z.object({
-	DATABASE_URL: z.string().url(),
 	MONGODB_URI: z.string().url(),
 	ENV: z.enum(["development", "test", "production"]),
 
@@ -16,7 +15,6 @@ export const serverSchema = z.object({
 
 /** @type {{ [k in keyof z.infer<typeof serverSchema>]: string | undefined }} */
 export const serverEnv = {
-	DATABASE_URL: process.env.DATABASE_URL,
 	MONGODB_URI: process.env.MONGODB_URI,
 	ENV: process.env.ENV,
 

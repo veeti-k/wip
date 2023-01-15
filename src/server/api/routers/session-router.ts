@@ -71,11 +71,9 @@ export const sessionRouter = router({
 		}),
 
 	edit: protectedProcedure.input(editSessionInputSchema).mutation(async ({ ctx, input }) => {
-		const session = await ctx.prisma.session.findFirst({
-			where: {
-				id: input.sessionId,
-				ownerId: ctx.auth.userId,
-			},
+		const session = await ctx.mongo.sessions.findOne({
+			_id: new ObjectId(input.sessionId),
+			userId: ctx.auth.userId,
 		});
 
 		if (!session) {
@@ -85,15 +83,28 @@ export const sessionRouter = router({
 			});
 		}
 
-		const updatedSession = await ctx.prisma.session.update({
-			where: { id: session.id },
-			data: {
-				notes: input.notes,
-				bodyWeight: input.bodyWeight,
+		const updatedSession = await ctx.mongo.sessions.findOneAndUpdate(
+			{
+				_id: new ObjectId(input.sessionId),
+				userId: ctx.auth.userId,
 			},
-		});
+			{
+				$set: {
+					bodyWeight: input.bodyWeight,
+					notes: input.notes,
+				},
+			},
+			{ returnDocument: "after" }
+		);
 
-		return updatedSession;
+		if (!updatedSession.ok) {
+			throw new TRPCError({
+				code: "INTERNAL_SERVER_ERROR",
+				message: "Db error",
+			});
+		}
+
+		return updatedSession.value;
 	}),
 
 	editSessionInfo: protectedProcedure
@@ -123,13 +134,14 @@ export const sessionRouter = router({
 						stoppedAt: input.stoppedAt,
 					},
 				},
+
 				{ returnDocument: "after" }
 			);
 
 			if (!updatedSession.ok) {
 				throw new TRPCError({
-					code: "BAD_REQUEST",
-					message: "Could not update session",
+					code: "INTERNAL_SERVER_ERROR",
+					message: "Db error",
 				});
 			}
 
@@ -173,22 +185,9 @@ export const sessionRouter = router({
 	delete: protectedProcedure
 		.input(z.object({ sessionId: z.string() }))
 		.mutation(async ({ ctx, input }) => {
-			const existingSession = await ctx.prisma.session.findFirst({
-				where: {
-					id: input.sessionId,
-					ownerId: ctx.auth.userId,
-				},
-			});
-
-			if (!existingSession) {
-				throw new TRPCError({
-					code: "BAD_REQUEST",
-					message: "Session not found",
-				});
-			}
-
-			await ctx.prisma.session.delete({
-				where: { id: existingSession.id },
+			await ctx.mongo.sessions.deleteOne({
+				_id: new ObjectId(input.sessionId),
+				userId: ctx.auth.userId,
 			});
 		}),
 
