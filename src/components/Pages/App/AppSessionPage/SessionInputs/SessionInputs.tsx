@@ -30,7 +30,7 @@ export function SessionInputs({ session }: Props) {
 		return form.handleSubmit((values) =>
 			mutation
 				.mutateAsync({
-					sessionId: session.id,
+					sessionId: session._id.toString(),
 					...values,
 				})
 				.catch(errorMsg("Failed to update session"))

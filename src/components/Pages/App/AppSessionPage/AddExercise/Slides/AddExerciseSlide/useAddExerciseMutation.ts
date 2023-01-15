@@ -1,32 +1,13 @@
 import { trpc } from "~utils/trpc";
 
-type Props = {
-	sessionId: string;
-};
-
-export function useAddExerciseMutation({ sessionId }: Props) {
+export function useAddExerciseMutation() {
 	const trpcCtx = trpc.useContext();
 	return trpc.session.addExercise.useMutation({
-		onSuccess: (createdExercise) => {
-			trpcCtx.session.getOne.setData({ id: sessionId }, (oldData) => {
-				if (!oldData) {
-					return null;
-				}
-
-				return {
-					...oldData,
-					exercises: [
-						...oldData.exercises,
-						{
-							...createdExercise,
-							sets: [],
-						},
-					],
-				};
-			});
+		onSuccess: (updatedSession, { sessionId }) => {
+			trpcCtx.session.getOne.setData({ sessionId: sessionId }, updatedSession);
 		},
-		onSettled: () => {
-			trpcCtx.session.getOne.invalidate({ id: sessionId });
+		onSettled: (_, __, { sessionId }) => {
+			trpcCtx.session.getOne.invalidate({ sessionId: sessionId });
 		},
 	});
 }

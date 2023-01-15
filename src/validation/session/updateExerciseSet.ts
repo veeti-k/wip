@@ -12,6 +12,8 @@ export const updateExerciseSetFormSchema = z.object({
 
 export const updateExerciseSetInputSchema = updateExerciseSetFormSchema.and(
 	z.object({
+		sessionId: z.string(),
+		exerciseId: z.string(),
 		setId: z.string(),
 	})
 );

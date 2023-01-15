@@ -4,6 +4,7 @@ import type { Session } from "next-auth";
 import superjson from "superjson";
 
 import { getServerAuthSession } from "~server/auth";
+import clientPromise from "~server/db/db";
 
 import { prisma } from "../db";
 
@@ -11,10 +12,11 @@ type CreateContextOptions = {
 	auth: Session["user"] | null;
 };
 
-const createInnerTRPCContext = ({ auth }: CreateContextOptions) => {
+const createInnerTRPCContext = async ({ auth }: CreateContextOptions) => {
 	return {
 		auth,
 		prisma,
+		mongo: await clientPromise,
 	};
 };
 

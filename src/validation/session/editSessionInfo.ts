@@ -2,14 +2,14 @@ import { z } from "zod";
 
 export const editSessionInfoFormSchema = z.object({
 	name: z.string(),
-	createdAt: z.string(),
+	startedAt: z.string(),
 	stoppedAt: z.string().nullable(),
 });
 
 export const editSessionInfoInputSchema = z.object({
 	sessionId: z.string(),
 	name: z.string(),
-	createdAt: z.date(),
+	startedAt: z.date(),
 	stoppedAt: z.date().nullable(),
 });
 

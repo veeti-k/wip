@@ -19,7 +19,7 @@ export function StartSession() {
 
 	const mutation = useCreateSessionMutation();
 
-	async function onSubmit(values: RouterInputs["session"]["createSession"]) {
+	async function onSubmit(values: RouterInputs["session"]["create"]) {
 		return mutation
 			.mutateAsync(values)
 			.then(() => {

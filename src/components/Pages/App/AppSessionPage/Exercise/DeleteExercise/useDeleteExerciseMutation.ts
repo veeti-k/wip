@@ -4,18 +4,9 @@ export function useDeleteExerciseMutation() {
 	const trpcCtx = trpc.useContext();
 
 	return trpc.session.deleteExercise.useMutation({
-		onSuccess: (_, { sessionId, exerciseId }) => {
-			trpcCtx.session.getOne.setData({ id: sessionId }, (oldData) => {
-				if (!oldData) {
-					return null;
-				}
-
-				return {
-					...oldData,
-					exercises: oldData.exercises.filter((exercise) => exercise.id !== exerciseId),
-				};
-			});
+		onSuccess: (updatedSession, { sessionId }) => {
+			trpcCtx.session.getOne.setData({ sessionId }, updatedSession);
 		},
-		onSettled: () => trpcCtx.session.getOnGoing.invalidate(),
+		onSettled: () => trpcCtx.session.invalidate(),
 	});
 }

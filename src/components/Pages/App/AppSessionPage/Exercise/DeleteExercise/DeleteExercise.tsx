@@ -7,18 +7,19 @@ import type { RouterOutputs } from "~utils/trpc";
 import { useDeleteExerciseMutation } from "./useDeleteExerciseMutation";
 
 type Props = {
+	session: NonNullable<RouterOutputs["session"]["getOne"]>;
 	exercise: NonNullable<RouterOutputs["session"]["getOne"]>["exercises"][number];
 };
 
-export function DeleteExercise({ exercise }: Props) {
+export function DeleteExercise({ session, exercise }: Props) {
 	const { closeModal, isModalOpen, openModal } = useModal();
 	const mutation = useDeleteExerciseMutation();
 
 	function onSubmit() {
 		return mutation
 			.mutateAsync({
-				exerciseId: exercise.id,
-				sessionId: exercise.sessionId,
+				exerciseId: exercise._id.toString(),
+				sessionId: session._id.toString(),
 			})
 			.then(() => closeModal())
 			.catch(errorMsg("Failed to delete exercise"));

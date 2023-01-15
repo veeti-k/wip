@@ -60,7 +60,10 @@ export const authOptions: NextAuthOptions = {
 
 						const user = await upsertUser({ email: `${username}@dev.local` });
 
-						return user;
+						return {
+							...user,
+							id: user._id.toString(),
+						};
 					},
 			  }),
 	],

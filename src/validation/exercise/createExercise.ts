@@ -1,33 +1,33 @@
 import { z } from "zod";
 
-import { modelExerciseFields } from "~utils/modelExerciseFields";
-
-const fieldArray = Object.keys(modelExerciseFields);
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const acceptedFields = z.enum([fieldArray.at(0)!, ...fieldArray.slice(1)]);
+import { DbModelExerciseEnabledField, dbModelExerciseEnabledFields } from "~server/db/types";
 
 export const createExerciseFormSchema = z.object({
 	name: z.string().min(1, { message: "Required" }),
-	categoryId: z.string().min(1, { message: "Required" }),
+	categoryName: z.string().min(1, { message: "Required" }),
 	enabledFields: z
-		.array(acceptedFields)
+		.array(z.string())
 		.min(1, { message: "Required" })
-		.max(fieldArray.length, { message: "Too many fields" }),
+		.max(dbModelExerciseEnabledFields.length, { message: "Too many fields" })
+		// @ts-expect-error - i just want to check if includes
+		.refine((fields) => fields.forEach((f) => dbModelExerciseEnabledFields.includes(f)), {
+			message: "Invalid enabled fields",
+		})
+		.transform((f) => f as DbModelExerciseEnabledField[]),
 });
 
 export const createExerciseInputSchema = z.object({
 	name: z.string().min(1, { message: "Required" }),
-	categoryId: z.string().min(1, { message: "Required" }),
+	categoryName: z.string().min(1, { message: "Required" }),
 	enabledFields: z
-		.array(acceptedFields)
+		.array(z.string())
 		.min(1, { message: "Required" })
-		.max(fieldArray.length, { message: "Too many fields" })
-		.transform((arr) =>
-			arr.reduce(
-				(acc, curr) => acc | modelExerciseFields[curr as keyof typeof modelExerciseFields],
-				BigInt(0)
-			)
-		),
+		.max(dbModelExerciseEnabledFields.length, { message: "Too many fields" })
+		// @ts-expect-error - i just want to check if includes
+		.refine((fields) => fields.forEach((f) => dbModelExerciseEnabledFields.includes(f)), {
+			message: "Invalid enabled fields",
+		})
+		.transform((f) => f as DbModelExerciseEnabledField[]),
 });
 
 export type CreateExerciseFormType = z.infer<typeof createExerciseFormSchema>;

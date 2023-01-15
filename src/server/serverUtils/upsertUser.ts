@@ -1,62 +1,44 @@
-import { prisma } from "~server/db";
-import { defaultUserCategories, defaultUserModelExercises } from "~utils/modelExerciseFields";
+import clientPromise from "~server/db/db";
+import { defaultExercises } from "~server/db/defaultModelExercises";
+
+export const defaultUserModelExercises = Object.entries(defaultExercises).flatMap(
+	([categoryName, exercises]) =>
+		exercises.map((exercise) => ({
+			...exercise,
+			categoryName,
+			enabledFields: exercise.enabledFields,
+		}))
+);
 
 type Props = {
 	email: string;
 };
 
 export async function upsertUser({ email }: Props) {
-	return prisma.$transaction(async () => {
-		const existingUser = await prisma.user.findUnique({ where: { email } });
+	const mongo = await clientPromise;
 
-		if (existingUser) {
-			return existingUser;
-		}
+	const mongoUser = await mongo.users.findOneAndUpdate(
+		{ email },
+		{
+			$setOnInsert: {
+				email,
+				isAdmin: false,
+				createdAt: new Date(),
+			},
+		},
+		{ upsert: true, returnDocument: "after" }
+	);
 
-		const createdUser = await prisma.user.create({
-			data: { email },
-		});
+	if (!mongoUser.value) throw new Error("MongoDB error");
 
-		await prisma.category.createMany({
-			data: defaultUserCategories.map((categoryName) => ({
-				name: categoryName,
-				ownerId: createdUser.id,
-			})),
-		});
+	await mongo.modelExercises.insertMany(
+		defaultUserModelExercises.map((d) => ({
+			...d,
+			enabledFields: d.enabledFields,
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			userId: mongoUser.value!._id.toString(),
+		}))
+	);
 
-		const createdCategories = await prisma.category.findMany({
-			where: { ownerId: createdUser.id },
-		});
-
-		await prisma.modelExercise.createMany({
-			data: defaultUserModelExercises.reduce<
-				{
-					name: string;
-					enabledFields: bigint;
-					categoryId: string;
-					ownerId: string;
-				}[]
-			>((acc, modelExercise) => {
-				const category = createdCategories.find(
-					(category) => category.name === modelExercise.categoryName
-				);
-
-				if (!category) {
-					return acc;
-				}
-
-				return [
-					...acc,
-					{
-						name: modelExercise.name,
-						enabledFields: modelExercise.enabledFields,
-						categoryId: category.id,
-						ownerId: createdUser.id,
-					},
-				];
-			}, []),
-		});
-
-		return createdUser;
-	});
+	return mongoUser.value;
 }

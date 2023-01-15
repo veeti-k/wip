@@ -20,7 +20,7 @@ export function DeleteSession({ session }: Props) {
 
 	function onSubmit() {
 		return mutation
-			.mutateAsync({ sessionId: session.id })
+			.mutateAsync({ sessionId: session._id.toString() })
 			.then(() => {
 				closeModal();
 				toast.success("Session deleted");
