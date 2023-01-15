@@ -6,8 +6,6 @@ import superjson from "superjson";
 import { getServerAuthSession } from "~server/auth";
 import clientPromise from "~server/db/db";
 
-import { prisma } from "../db";
-
 type CreateContextOptions = {
 	auth: Session["user"] | null;
 };
@@ -15,7 +13,6 @@ type CreateContextOptions = {
 const createInnerTRPCContext = async ({ auth }: CreateContextOptions) => {
 	return {
 		auth,
-		prisma,
 		mongo: await clientPromise,
 	};
 };
