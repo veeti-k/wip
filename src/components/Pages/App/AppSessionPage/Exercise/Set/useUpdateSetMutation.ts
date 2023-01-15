@@ -22,14 +22,14 @@ export function useUpdateSetMutation({ exerciseId, sessionId }: Props) {
 				return {
 					...oldData,
 					exercises: oldData.exercises.map((exercise) => {
-						if (exercise.id !== exerciseId) {
+						if (exercise._id.toString() !== exerciseId) {
 							return exercise;
 						}
 
 						return {
 							...exercise,
 							sets: exercise.sets.map((set) => {
-								if (set.id !== vars.setId) {
+								if (set._id.toString() !== vars.setId) {
 									return set;
 								}
 

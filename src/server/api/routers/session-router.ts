@@ -219,6 +219,7 @@ export const sessionRouter = router({
 							userId: ctx.auth.userId,
 							modelExercise,
 							sets: [],
+							notes: null,
 						},
 					},
 				},
@@ -376,6 +377,7 @@ export const sessionRouter = router({
 			const newSet: DbExerciseSet = {
 				_id: new ObjectId(),
 				type: DbExerciseSetType.Normal,
+				duplicates: 1,
 				weight: null,
 				reps: null,
 				assistedWeight: null,
