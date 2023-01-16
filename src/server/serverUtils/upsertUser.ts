@@ -23,6 +23,7 @@ export async function upsertUser({ email }: Props) {
 		{ email },
 		{
 			$setOnInsert: {
+				id: uuid(),
 				email,
 				isAdmin: false,
 				createdAt: new Date(),
