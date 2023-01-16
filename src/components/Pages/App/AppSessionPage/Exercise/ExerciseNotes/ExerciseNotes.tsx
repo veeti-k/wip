@@ -14,10 +14,11 @@ import {
 import { useUpdateExerciseMutation } from "./useUpdateExerciseMutation";
 
 type Props = {
+	session: NonNullable<RouterOutputs["session"]["getOne"]>;
 	exercise: NonNullable<RouterOutputs["session"]["getOne"]>["exercises"][number];
 };
 
-export function ExerciseNotes({ exercise }: Props) {
+export function ExerciseNotes({ session, exercise }: Props) {
 	const mutation = useUpdateExerciseMutation();
 
 	const form = useForm<UpdateExerciseFormType>({
@@ -29,7 +30,7 @@ export function ExerciseNotes({ exercise }: Props) {
 		return form.handleSubmit((values) =>
 			mutation
 				.mutateAsync({
-					sessionId: exercise.sessionId,
+					sessionId: session.id,
 					exerciseId: exercise.id,
 					...values,
 				})

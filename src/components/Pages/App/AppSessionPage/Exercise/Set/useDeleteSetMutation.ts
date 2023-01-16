@@ -10,11 +10,11 @@ export function useDeleteSetMutation({ exerciseId, sessionId }: Props) {
 
 	return trpc.session.deleteExerciseSet.useMutation({
 		onMutate: async (vars) => {
-			await trpcCtx.session.getOne.cancel({ id: sessionId });
+			await trpcCtx.session.getOne.cancel({ sessionId: sessionId });
 
-			const oldData = trpcCtx.session.getOne.getData({ id: sessionId });
+			const oldData = trpcCtx.session.getOne.getData({ sessionId: sessionId });
 
-			trpcCtx.session.getOne.setData({ id: sessionId }, (oldData) => {
+			trpcCtx.session.getOne.setData({ sessionId: sessionId }, (oldData) => {
 				if (!oldData) {
 					return undefined;
 				}
@@ -37,9 +37,10 @@ export function useDeleteSetMutation({ exerciseId, sessionId }: Props) {
 			return { oldData };
 		},
 		onError: (error, vars, context) => {
-			context?.oldData && trpcCtx.session.getOne.setData({ id: sessionId }, context.oldData);
+			context?.oldData &&
+				trpcCtx.session.getOne.setData({ sessionId: sessionId }, context.oldData);
 
-			trpcCtx.session.getOne.invalidate({ id: sessionId });
+			trpcCtx.session.getOne.invalidate({ sessionId: sessionId });
 		},
 	});
 }

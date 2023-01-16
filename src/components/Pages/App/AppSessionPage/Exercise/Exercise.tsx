@@ -11,10 +11,11 @@ import { ExerciseNotes } from "./ExerciseNotes/ExerciseNotes";
 import { Set } from "./Set/Set";
 
 type Props = {
+	session: NonNullable<RouterOutputs["session"]["getOne"]>;
 	exercise: NonNullable<RouterOutputs["session"]["getOne"]>["exercises"][number];
 };
 
-export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) => {
+export const Exercise = forwardRef<HTMLDivElement, Props>(({ session, exercise }, ref) => {
 	const amountOfSets = exercise.sets.reduce((acc, set) => acc + set.duplicates, 0);
 	const setsPlural = amountOfSets === 1 ? "" : "s";
 	const lastSetRef = useRef<HTMLDivElement>(null);
@@ -28,10 +29,10 @@ export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) =>
 		>
 			<div className="flex items-center justify-between gap-2">
 				<h2 className="text-lg font-medium">{exercise.modelExercise.name}</h2>
-				<DeleteExercise exercise={exercise} />
+				<DeleteExercise session={session} exercise={exercise} />
 			</div>
 
-			<ExerciseNotes exercise={exercise} />
+			<ExerciseNotes session={session} exercise={exercise} />
 
 			<div className="flex flex-col">
 				<div className="flex flex-col">
@@ -46,6 +47,7 @@ export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) =>
 									key={index}
 									isLast={index === exercise.sets.length - 1}
 									setRef={lastSetRef}
+									session={session}
 									exercise={exercise}
 									set={set}
 								/>
@@ -55,7 +57,7 @@ export const Exercise = forwardRef<HTMLDivElement, Props>(({ exercise }, ref) =>
 				</div>
 
 				<div className="mt-3 flex gap-2">
-					<AddExerciseSet lastSetRef={lastSetRef} exercise={exercise} />
+					<AddExerciseSet session={session} exercise={exercise} lastSetRef={lastSetRef} />
 
 					{/* <Dropdown>
 						<div>

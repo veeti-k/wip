@@ -16,14 +16,10 @@ import { useAddExerciseMutation } from "./useAddExerciseMutation";
 export function AddExerciseSlide() {
 	const { addExerciseSearchQuery, setAddExerciseSearchQuery, setSlide, sessionId, closeModal } =
 		useAddExerciseContext();
-	const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
-	const {
-		data: exerciseCategories,
-		isLoading,
-		error,
-	} = trpc.exercise.getModelExercises.useQuery();
+	const [openCategoryName, setOpenCategoryName] = useState<string | null>(null);
+	const { data: exerciseCategories, isLoading, error } = trpc.modelExercise.getAll.useQuery();
 
-	const mutation = useAddExerciseMutation({ sessionId });
+	const mutation = useAddExerciseMutation();
 
 	const queryAndCategories =
 		!isLoading && !error && exerciseCategories.length && addExerciseSearchQuery;
@@ -62,16 +58,16 @@ export function AddExerciseSlide() {
 						{...animateOpacityProps}
 						onClick={() => setSlide("createExercise")}
 					>
-						{`Create "{addExerciseSearchQuery}"`}
+						{`Create "{${addExerciseSearchQuery}}"`}
 					</Card>
 				) : innerCategories?.length ? (
 					innerCategories.map((category) => (
 						<ExerciseCategory
-							key={category.id}
+							key={category.categoryName}
 							category={category}
 							allOpen={!!queryAndCategories}
-							openCategoryId={openCategoryId}
-							setOpenCategoryId={setOpenCategoryId}
+							openCategoryName={openCategoryName}
+							setOpenCategoryName={setOpenCategoryName}
 							onClick={(modelExerciseId) =>
 								mutation
 									.mutateAsync({ modelExerciseId, sessionId })
@@ -99,7 +95,7 @@ function categorySearch({
 	categories,
 	query,
 }: {
-	categories?: RouterOutputs["exercise"]["getModelExercises"];
+	categories?: RouterOutputs["modelExercise"]["getAll"];
 	query: string;
 }) {
 	const parsedQuery = query.trim().toLocaleLowerCase();
@@ -107,12 +103,12 @@ function categorySearch({
 	return categories
 		?.filter(
 			(category) =>
-				category.name.toLowerCase().includes(parsedQuery) ||
+				category.categoryName.toLowerCase().includes(parsedQuery) ||
 				category.modelExercises.some((me) => me.name.toLowerCase().includes(parsedQuery))
 		)
 		.map((c) => ({
 			...c,
 			modelExercises: c.modelExercises.sort((a, b) => a.name.localeCompare(b.name)),
 		}))
-		.sort((a, b) => a.name.localeCompare(b.name));
+		.sort((a, b) => a.categoryName.localeCompare(b.categoryName));
 }

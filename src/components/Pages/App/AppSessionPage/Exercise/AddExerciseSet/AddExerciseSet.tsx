@@ -5,18 +5,19 @@ import type { RouterOutputs } from "~utils/trpc";
 import { useAddExerciseSetMutation } from "./useAddExerciseSetMutation";
 
 type Props = {
+	session: NonNullable<RouterOutputs["session"]["getOne"]>;
 	exercise: NonNullable<RouterOutputs["session"]["getOne"]>["exercises"][number];
 	lastSetRef: React.RefObject<HTMLDivElement>;
 };
 
-export function AddExerciseSet({ exercise, lastSetRef }: Props) {
+export function AddExerciseSet({ session, exercise, lastSetRef }: Props) {
 	const mutation = useAddExerciseSetMutation();
 
 	function addSet() {
 		return mutation
 			.mutateAsync({
 				exerciseId: exercise.id,
-				sessionId: exercise.sessionId,
+				sessionId: session.id,
 			})
 			.then(() =>
 				setTimeout(

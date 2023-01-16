@@ -12,8 +12,7 @@ import {
 } from "~validation/exercise/createExercise";
 
 import { AddExerciseSlide } from "./Slides/AddExerciseSlide/AddExerciseSlide";
-import { CreateCategorySlide } from "./Slides/CreateCategorySlide/CreateCategorySlide";
-import { CreateExerciseSlide } from "./Slides/CreateExerciseSlide";
+import { CreateModelExerciseSlide } from "./Slides/CreateModelExerciseSlide/CreateModelExerciseSlide";
 
 const slideIndexes = {
 	addExercise: 0,
@@ -62,11 +61,7 @@ export function AddExerciseProvider({
 			},
 			{
 				modalTitle: "Create exercise",
-				component: <CreateExerciseSlide />,
-			},
-			{
-				modalTitle: "Create category",
-				component: <CreateCategorySlide />,
+				component: <CreateModelExerciseSlide />,
 			},
 		],
 	});

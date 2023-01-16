@@ -21,10 +21,10 @@ export function Session({ session }: Props) {
 			<div className="flex gap-4">
 				<div className="flex flex-col items-center">
 					<span className="text-sm text-primary-300">
-						{format(session.createdAt, "EEE")}
+						{format(session.startedAt, "EEE")}
 					</span>
 					<span className="text-xl font-medium leading-5">
-						{format(session.createdAt, "d")}
+						{format(session.startedAt, "d")}
 					</span>
 				</div>
 
@@ -50,7 +50,7 @@ export function Session({ session }: Props) {
 
 			{session.stoppedAt ? (
 				<span className="flex w-full justify-end text-sm leading-3 text-primary-300">
-					{differenceInMinutes(session.stoppedAt, session.createdAt)} min
+					{differenceInMinutes(session.stoppedAt, session.startedAt)} min
 				</span>
 			) : (
 				<span className="text-end text-sm leading-3 text-primary-300">

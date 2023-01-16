@@ -10,7 +10,6 @@ import { Card } from "~components/Ui/Cards/Card";
 import { Input } from "~components/Ui/Input";
 import { animateHeightProps } from "~utils/animations";
 import { errorMsg } from "~utils/errorMsg";
-import { hasExerciseField } from "~utils/modelExerciseFields";
 import type { RouterOutputs } from "~utils/trpc";
 import {
 	UpdateExerciseSetFormType,
@@ -23,23 +22,28 @@ import { useUpdateSetMutation } from "./useUpdateSetMutation";
 type Props = {
 	set: NonNullable<RouterOutputs["session"]["getOne"]>["exercises"][number]["sets"][number];
 	exercise: NonNullable<RouterOutputs["session"]["getOne"]>["exercises"][number];
+	session: NonNullable<RouterOutputs["session"]["getOne"]>;
 	setRef?: React.RefObject<HTMLDivElement>;
 	isLast: boolean;
 };
 
-export function Set({ set, exercise, setRef, isLast }: Props) {
+export function Set({ set, exercise, session, setRef, isLast }: Props) {
 	const updateMutation = useUpdateSetMutation({
-		exerciseId: set.exerciseId,
-		sessionId: set.sessionId,
+		exerciseId: exercise.id,
+		sessionId: session.id,
 	});
 	const removeMutation = useDeleteSetMutation({
-		exerciseId: set.exerciseId,
-		sessionId: set.sessionId,
+		exerciseId: exercise.id,
+		sessionId: session.id,
 	});
 
 	function deleteSet() {
 		return removeMutation
-			.mutateAsync({ setId: set.id })
+			.mutateAsync({
+				setId: set.id,
+				exerciseId: exercise.id,
+				sessionId: session.id,
+			})
 			.catch(errorMsg("Failed to delete set"));
 	}
 
@@ -58,7 +62,14 @@ export function Set({ set, exercise, setRef, isLast }: Props) {
 	const duplicates = form.watch("duplicates");
 
 	const updateData = () =>
-		form.handleSubmit((values) => updateMutation.mutateAsync({ setId: set.id, ...values }))();
+		form.handleSubmit((values) =>
+			updateMutation.mutateAsync({
+				setId: set.id,
+				exerciseId: exercise.id,
+				sessionId: session.id,
+				...values,
+			})
+		)();
 
 	const debouncedUpdateData = useCallback(debounce(updateData, 300), []);
 
@@ -77,12 +88,12 @@ export function Set({ set, exercise, setRef, isLast }: Props) {
 
 	const fields = exercise.modelExercise.enabledFields;
 
-	const repsEnabled = hasExerciseField(fields, "reps");
-	const weightEnabled = hasExerciseField(fields, "weight");
-	const timeEnabled = hasExerciseField(fields, "time");
-	const distanceEnabled = hasExerciseField(fields, "distance");
-	const kcalEnabled = hasExerciseField(fields, "kcal");
-	const assistedWeightEnabled = hasExerciseField(fields, "assistWeight");
+	const repsEnabled = fields.includes("reps");
+	const weightEnabled = fields.includes("weight");
+	const timeEnabled = fields.includes("time");
+	const distanceEnabled = fields.includes("distance");
+	const kcalEnabled = fields.includes("kcal");
+	const assistWeightEnabled = fields.includes("assistWeight");
 
 	const inputProps = {
 		onChange: debouncedUpdateData,
@@ -138,7 +149,7 @@ export function Set({ set, exercise, setRef, isLast }: Props) {
 									invalid={!!form.formState.errors.weight?.message}
 									{...form.register("weight", inputProps)}
 								/>
-							) : assistedWeightEnabled ? (
+							) : assistWeightEnabled ? (
 								<Input
 									type="number"
 									step=".01"

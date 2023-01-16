@@ -9,25 +9,25 @@ import { animateHeightProps } from "~utils/animations";
 import type { RouterOutputs } from "~utils/trpc";
 
 type Props = {
-	category: RouterOutputs["exercise"]["getModelExercises"][number];
-	openCategoryId: string | null;
-	setOpenCategoryId: (category: string | null) => void;
+	category: RouterOutputs["modelExercise"]["getAll"][number];
+	openCategoryName: string | null;
+	setOpenCategoryName: (category: string | null) => void;
 	allOpen: boolean;
 	onClick: (modelExerciseId: string) => void;
 };
 
 export function ExerciseCategory({
 	category,
-	openCategoryId,
-	setOpenCategoryId,
+	openCategoryName,
+	setOpenCategoryName,
 	allOpen,
 	onClick,
 }: Props) {
-	const [isOpen, setIsOpen] = useState(openCategoryId === category.id || allOpen);
+	const [isOpen, setIsOpen] = useState(openCategoryName === category.categoryName || allOpen);
 
 	useEffect(() => {
-		setIsOpen(openCategoryId === category.id || allOpen);
-	}, [openCategoryId, allOpen, category.id]);
+		setIsOpen(openCategoryName === category.categoryName || allOpen);
+	}, [openCategoryName, allOpen, category.categoryName]);
 
 	return (
 		<Collapsible.Root
@@ -36,12 +36,16 @@ export function ExerciseCategory({
 			onClick={() =>
 				allOpen
 					? setIsOpen(!isOpen)
-					: setOpenCategoryId(openCategoryId === category.id ? null : category.id)
+					: setOpenCategoryName(
+							openCategoryName === category.categoryName
+								? null
+								: category.categoryName
+					  )
 			}
 		>
 			<Card variant={2} className="flex flex-col rounded-md p-3">
 				<div className="flex items-center justify-between gap-2">
-					<h3 className="text-lg font-semibold">{category.name}</h3>
+					<h3 className="text-lg font-semibold">{category.categoryName}</h3>
 
 					<Collapsible.Trigger asChild>
 						<Button className="!p-1">
@@ -57,8 +61,8 @@ export function ExerciseCategory({
 								<div className="mt-1" />
 								{category.modelExercises.map((modelExercise) => (
 									<Button
-										key={modelExercise.id}
-										onClick={() => onClick(modelExercise.id)}
+										key={modelExercise.name}
+										onClick={() => onClick(String(modelExercise._id))}
 										className="!justify-start"
 									>
 										<h4>{modelExercise.name}</h4>

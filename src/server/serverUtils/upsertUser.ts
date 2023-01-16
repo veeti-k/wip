@@ -1,62 +1,50 @@
-import { prisma } from "~server/db";
-import { defaultUserCategories, defaultUserModelExercises } from "~utils/modelExerciseFields";
+import clientPromise from "~server/db/db";
+import { defaultExercises } from "~server/db/defaultModelExercises";
+
+import { uuid } from "./uuid";
+
+export const defaultUserModelExercises = Object.entries(defaultExercises).flatMap(
+	([categoryName, exercises]) =>
+		exercises.map((exercise) => ({
+			...exercise,
+			categoryName,
+		}))
+);
 
 type Props = {
 	email: string;
 };
 
 export async function upsertUser({ email }: Props) {
-	return prisma.$transaction(async () => {
-		const existingUser = await prisma.user.findUnique({ where: { email } });
+	const mongo = await clientPromise;
 
-		if (existingUser) {
-			return existingUser;
-		}
-
-		const createdUser = await prisma.user.create({
-			data: { email },
-		});
-
-		await prisma.category.createMany({
-			data: defaultUserCategories.map((categoryName) => ({
-				name: categoryName,
-				ownerId: createdUser.id,
-			})),
-		});
-
-		const createdCategories = await prisma.category.findMany({
-			where: { ownerId: createdUser.id },
-		});
-
-		await prisma.modelExercise.createMany({
-			data: defaultUserModelExercises.reduce<
-				{
-					name: string;
-					enabledFields: bigint;
-					categoryId: string;
-					ownerId: string;
-				}[]
-			>((acc, modelExercise) => {
-				const category = createdCategories.find(
-					(category) => category.name === modelExercise.categoryName
-				);
-
-				if (!category) {
-					return acc;
-				}
-
-				return [
-					...acc,
-					{
-						name: modelExercise.name,
-						enabledFields: modelExercise.enabledFields,
-						categoryId: category.id,
-						ownerId: createdUser.id,
-					},
-				];
-			}, []),
-		});
-
-		return createdUser;
+	const existingUser = await mongo.users.findOne({
+		email,
 	});
+
+	if (existingUser) return existingUser;
+
+	const newUserId = uuid();
+
+	await mongo.users.insertOne({
+		id: newUserId,
+		email,
+		isAdmin: false,
+		createdAt: new Date(),
+	});
+
+	await mongo.modelExercises.insertMany(
+		defaultUserModelExercises.map((d) => ({
+			id: uuid(),
+			...d,
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			userId: newUserId,
+		}))
+	);
+
+	const mongoUser = await mongo.users.findOne({
+		id: newUserId,
+	});
+
+	return mongoUser;
 }

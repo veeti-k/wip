@@ -1,26 +1,14 @@
-export const modelExerciseFields = {
-	weight: BigInt(1),
-	assistWeight: BigInt(2),
-	reps: BigInt(8),
-	time: BigInt(16),
-	distance: BigInt(32),
-	kcal: BigInt(64),
-};
+import type { DbModelExerciseEnabledField } from "./types";
 
-export function hasExerciseField(exerciseFields: bigint, field: keyof typeof modelExerciseFields) {
-	const fieldAsBigInt = modelExerciseFields[field];
+type DefaultExercises = Record<
+	string,
+	{
+		name: string;
+		enabledFields: DbModelExerciseEnabledField[];
+	}[]
+>;
 
-	return (exerciseFields & fieldAsBigInt) === fieldAsBigInt;
-}
-
-type DefaultExercise = {
-	name: string;
-	enabledFields: (keyof typeof modelExerciseFields)[];
-};
-
-type DefaultExercises = Record<string, DefaultExercise[]>;
-
-const defaultExercises: DefaultExercises = {
+export const defaultExercises: DefaultExercises = {
 	Abs: [
 		{
 			name: "Crunches",
@@ -222,16 +210,3 @@ const defaultExercises: DefaultExercises = {
 		},
 	],
 };
-
-export const defaultUserCategories = Object.entries(defaultExercises).map(([name]) => name);
-export const defaultUserModelExercises = Object.entries(defaultExercises).flatMap(
-	([categoryName, exercises]) =>
-		exercises.map((exercise) => ({
-			...exercise,
-			categoryName,
-			enabledFields: exercise.enabledFields.reduce(
-				(acc, curr) => acc | modelExerciseFields[curr],
-				BigInt(0)
-			),
-		}))
-);

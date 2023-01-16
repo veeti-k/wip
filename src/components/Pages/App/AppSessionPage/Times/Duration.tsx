@@ -12,7 +12,7 @@ export function Duration({ session }: Props) {
 	const [duration, setDuration] = useState(0);
 
 	useSetInterval(
-		() => session && setDuration(differenceInSeconds(new Date(), session.createdAt)),
+		() => session && setDuration(differenceInSeconds(new Date(), session.startedAt)),
 		500
 	);
 

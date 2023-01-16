@@ -4,6 +4,6 @@ export function useUpdateExerciseMutation() {
 	const trpcCtx = trpc.useContext();
 
 	return trpc.session.updateExercise.useMutation({
-		onSettled: () => trpcCtx.session.getOnGoing.invalidate(),
+		onSettled: () => trpcCtx.session.invalidate(),
 	});
 }

@@ -12,7 +12,7 @@ export function OnGoingSession() {
 	const { data, isLoading, error } = trpc.session.getOnGoing.useQuery();
 
 	const trpcCtx = trpc.useContext();
-	data?.forEach((s) => trpcCtx.session.getOne.prefetch({ id: s.id }));
+	data?.forEach((s) => trpcCtx.session.getOne.prefetch({ sessionId: s.id }));
 
 	if (isLoading) {
 		return <LoadingCard message="Getting on going sessions..." />;
@@ -39,7 +39,7 @@ export function OnGoingSession() {
 									<h3>{session.name}</h3>
 
 									<h4 className="transition-[color] duration-200">
-										<Duration date={session.createdAt} />
+										<Duration date={session.startedAt} />
 									</h4>
 								</div>
 							</div>

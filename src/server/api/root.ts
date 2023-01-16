@@ -1,12 +1,12 @@
 import { authRouter } from "./routers/auth-router";
-import { exerciseRouter } from "./routers/exercise-router";
+import { modelExerciseRouter } from "./routers/model-exercise-router";
 import { sessionRouter } from "./routers/session-router";
 import { router } from "./trpc";
 
 export const appRouter = router({
 	auth: authRouter,
 	session: sessionRouter,
-	exercise: exerciseRouter,
+	modelExercise: modelExerciseRouter,
 });
 
 export type AppRouter = typeof appRouter;

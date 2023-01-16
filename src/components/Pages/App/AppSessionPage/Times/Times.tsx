@@ -15,7 +15,7 @@ export function Times({ session }: Props) {
 	return (
 		<div className="flex flex-col text-sm font-light">
 			<span>
-				Started <ShowDate date={session.createdAt} />
+				Started <ShowDate date={session.startedAt} />
 			</span>
 
 			{!!!session.stoppedAt ? (

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "~components/Ui/Button";
 import { Input } from "~components/Ui/Input";
@@ -7,10 +7,27 @@ import { errorMsg } from "~utils/errorMsg";
 import { trpc } from "~utils/trpc";
 import type { CreateExerciseFormType } from "~validation/exercise/createExercise";
 
-import { useAddExerciseContext } from "../AddExerciseContext";
-import { useAddExerciseMutation } from "./AddExerciseSlide/useAddExerciseMutation";
+import { useAddExerciseContext } from "../../AddExerciseContext";
+import { useAddExerciseMutation } from "../AddExerciseSlide/useAddExerciseMutation";
+import { CategorySelect } from "./CategorySelect";
 
-export function CreateExerciseSlide() {
+export function CreateModelExerciseSlide() {
+	const {
+		data: exerciseCategories,
+		isLoading: exerciseCategoriesLoading,
+		error: exerciseCategoriesError,
+	} = trpc.modelExercise.getAll.useQuery();
+
+	const [categoryState, setCategoryState] = useState<"create" | "select" | "loading" | "error">(
+		exerciseCategoriesLoading
+			? "loading"
+			: exerciseCategoriesError
+			? "error"
+			: exerciseCategories?.length
+			? "select"
+			: "create"
+	);
+
 	const {
 		addExerciseSearchQuery,
 		createExerciseForm: form,
@@ -19,22 +36,16 @@ export function CreateExerciseSlide() {
 		sessionId,
 	} = useAddExerciseContext();
 
-	const {
-		data: exerciseCategories,
-		isLoading: exerciseCategoriesLoading,
-		error: exerciseCategoriesError,
-	} = trpc.exercise.getModelExercises.useQuery();
+	const addExerciseMutation = useAddExerciseMutation();
 
-	const addExerciseMutation = useAddExerciseMutation({ sessionId });
-
-	const mutation = trpc.exercise.createExercise.useMutation();
+	const mutation = trpc.modelExercise.create.useMutation();
 
 	function onSubmit(values: CreateExerciseFormType) {
 		return mutation
 			.mutateAsync(values)
-			.then((createdExercise) =>
+			.then((createdExerciseId) =>
 				addExerciseMutation
-					.mutateAsync({ sessionId, modelExerciseId: createdExercise.id })
+					.mutateAsync({ sessionId, modelExerciseId: createdExerciseId })
 					.then(() => {
 						closeModal();
 						form.reset();
@@ -57,37 +68,37 @@ export function CreateExerciseSlide() {
 			/>
 
 			<div className="flex flex-col gap-2">
-				<Select
-					label="Category"
-					required
-					disabled={!!exerciseCategoriesLoading || !!exerciseCategoriesError}
-					error={form.formState.errors.categoryId?.message}
-					{...form.register("categoryId")}
-				>
-					<option value="">Select category</option>
-
-					{exerciseCategoriesLoading ? (
+				{categoryState === "loading" ? (
+					<Select multiple disabled label="Category">
 						<option value="" disabled>
 							Loading...
 						</option>
-					) : exerciseCategoriesError ? (
+					</Select>
+				) : categoryState === "error" ? (
+					<Select multiple disabled label="Category">
 						<option value="" disabled>
-							Error getting categories
+							Error loading categories
 						</option>
-					) : (
-						exerciseCategories.map((category) => (
-							<option key={category.id} value={category.id}>
-								{category.name}
-							</option>
-						))
-					)}
-				</Select>
+					</Select>
+				) : categoryState === "create" && exerciseCategories ? (
+					<CategorySelect exerciseCategories={exerciseCategories} />
+				) : (
+					<Input label="Category" {...form.register("categoryName")} />
+				)}
 
 				<Button
-					onClick={() => setSlide("createCategory")}
-					disabled={!!exerciseCategoriesLoading || !!exerciseCategoriesError}
+					disabled={categoryState !== "loading" && categoryState !== "error"}
+					onClick={() =>
+						setCategoryState((prev) => (prev === "create" ? "select" : "create"))
+					}
 				>
-					Create a category
+					{categoryState === "loading"
+						? "Loading..."
+						: categoryState === "error"
+						? "Error loading categories"
+						: categoryState === "create"
+						? "Select category"
+						: "Create category"}
 				</Button>
 			</div>
 

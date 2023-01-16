@@ -23,7 +23,7 @@ export function EditSessionInfo({ session }: Props) {
 	const form = useForm<EditSessionInfoFormType>({
 		defaultValues: {
 			name: session.name,
-			createdAt: getHtmlDate(session.createdAt),
+			startedAt: getHtmlDate(session.startedAt),
 			stoppedAt: session.stoppedAt ? getHtmlDate(session.stoppedAt) : null,
 		},
 	});
@@ -33,7 +33,7 @@ export function EditSessionInfo({ session }: Props) {
 			.mutateAsync({
 				sessionId: session.id,
 				name: values.name,
-				createdAt: new Date(values.createdAt),
+				startedAt: new Date(values.startedAt),
 				stoppedAt: values.stoppedAt ? new Date(values.stoppedAt) : null,
 			})
 			.then(() => closeModal())
@@ -58,7 +58,7 @@ export function EditSessionInfo({ session }: Props) {
 						<Input
 							label="Started at"
 							type="datetime-local"
-							{...form.register("createdAt")}
+							{...form.register("startedAt")}
 						/>
 
 						{session.stoppedAt ? (
@@ -68,7 +68,16 @@ export function EditSessionInfo({ session }: Props) {
 								{...form.register("stoppedAt")}
 							/>
 						) : (
-							<FinishSession session={session} />
+							<FinishSession
+								onFinished={(updatedSession) =>
+									updatedSession?.stoppedAt &&
+									form.setValue(
+										"stoppedAt",
+										getHtmlDate(updatedSession.stoppedAt)
+									)
+								}
+								session={session}
+							/>
 						)}
 					</div>
 

@@ -15,8 +15,8 @@ import { DeleteSession } from "./DeleteSession/DeleteSession";
 import { EditSessionInfo } from "./EditSessionInfo/EditSessionInfo";
 import { Exercise } from "./Exercise/Exercise";
 import { FinishSession } from "./FinishWorkout/FinishWorkout";
+import { SessionInputs } from "./SessionInputs/SessionInputs";
 import { Times } from "./Times/Times";
-import { SessionInputs } from "./WorkoutInputs/WorkoutInputs";
 
 export function AppSessionPage() {
 	const router = useRouter();
@@ -27,7 +27,7 @@ export function AppSessionPage() {
 		isLoading,
 		error,
 	} = trpc.session.getOne.useQuery({
-		id: sessionId && typeof sessionId === "string" ? sessionId : "",
+		sessionId: sessionId && typeof sessionId === "string" ? sessionId : "",
 	});
 
 	const inProgress = !!!session?.stoppedAt;
@@ -67,7 +67,11 @@ export function AppSessionPage() {
 							<AnimatePresence initial={false} mode="popLayout">
 								{hasExercises ? (
 									session.exercises.map((exercise) => (
-										<Exercise key={exercise.id} exercise={exercise} />
+										<Exercise
+											key={exercise.id}
+											session={session}
+											exercise={exercise}
+										/>
 									))
 								) : (
 									<Card

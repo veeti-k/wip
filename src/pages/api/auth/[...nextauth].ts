@@ -4,7 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~env/server.mjs";
-import { prisma } from "~server/db";
+import clientPromise from "~server/db/db";
 import { upsertUser } from "~server/serverUtils/upsertUser";
 import { previewLoginFormSchema } from "~validation/previewLogin";
 
@@ -60,7 +60,12 @@ export const authOptions: NextAuthOptions = {
 
 						const user = await upsertUser({ email: `${username}@dev.local` });
 
-						return user;
+						if (!user) throw new Error("Db error");
+
+						return {
+							...user,
+							id: user.id,
+						};
 					},
 			  }),
 	],
@@ -78,7 +83,9 @@ export const authOptions: NextAuthOptions = {
 			const { email } = token;
 			if (!email) return { ...token, signout: true };
 
-			const user = await prisma.user.findUnique({ where: { email } });
+			const mongo = await clientPromise;
+
+			const user = await mongo.users.findOne({ email });
 			if (!user) return { ...token, signout: true };
 
 			// signout if isAdmin has changed, so the token gets updated
