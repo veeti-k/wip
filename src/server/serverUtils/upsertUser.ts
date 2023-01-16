@@ -8,7 +8,6 @@ export const defaultUserModelExercises = Object.entries(defaultExercises).flatMa
 		exercises.map((exercise) => ({
 			...exercise,
 			categoryName,
-			enabledFields: exercise.enabledFields,
 		}))
 );
 
@@ -19,30 +18,33 @@ type Props = {
 export async function upsertUser({ email }: Props) {
 	const mongo = await clientPromise;
 
-	const mongoUser = await mongo.users.findOneAndUpdate(
-		{ email },
-		{
-			$setOnInsert: {
-				id: uuid(),
-				email,
-				isAdmin: false,
-				createdAt: new Date(),
-			},
-		},
-		{ upsert: true, returnDocument: "after" }
-	);
+	const existingUser = await mongo.users.findOne({
+		email,
+	});
 
-	if (!mongoUser.value) throw new Error("MongoDB error");
+	if (existingUser) return existingUser;
+
+	const newUserId = uuid();
+
+	await mongo.users.insertOne({
+		id: newUserId,
+		email,
+		isAdmin: false,
+		createdAt: new Date(),
+	});
 
 	await mongo.modelExercises.insertMany(
 		defaultUserModelExercises.map((d) => ({
 			id: uuid(),
 			...d,
-			enabledFields: d.enabledFields,
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			userId: mongoUser.value!.id,
+			userId: newUserId,
 		}))
 	);
 
-	return mongoUser.value;
+	const mongoUser = await mongo.users.findOne({
+		id: newUserId,
+	});
+
+	return mongoUser;
 }
