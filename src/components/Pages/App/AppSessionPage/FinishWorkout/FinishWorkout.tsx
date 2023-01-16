@@ -7,7 +7,7 @@ import { useFinishSessionMutation } from "./useFinishWorkoutMutation";
 
 type Props = {
 	session: NonNullable<RouterOutputs["session"]["getOne"]>;
-	onFinished: (updatedSession: RouterOutputs["session"]["getOne"]) => void;
+	onFinished?: (updatedSession: RouterOutputs["session"]["getOne"]) => void;
 };
 
 export function FinishSession({ session, onFinished }: Props) {
@@ -19,7 +19,7 @@ export function FinishSession({ session, onFinished }: Props) {
 			.mutateAsync({ sessionId: session.id })
 			.then((updatedSession) => {
 				closeModal();
-				onFinished(updatedSession);
+				onFinished?.(updatedSession);
 			})
 			.catch(errorMsg("Failed to finish session"));
 	}
