@@ -60,6 +60,8 @@ export const authOptions: NextAuthOptions = {
 
 						const user = await upsertUser({ email: `${username}@dev.local` });
 
+						if (!user) throw new Error("Db error");
+
 						return {
 							...user,
 							id: user.id,
