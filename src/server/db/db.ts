@@ -33,9 +33,9 @@ function initializeMongo(mongo: ReturnType<typeof db>) {
 
 	console.log("Initializing MongoDB");
 
-	mongo.users.createIndex({ email: 1 }, { unique: true });
-	mongo.modelExercises.createIndex({ userId: 1, categoryName: 1, name: 1 });
-	mongo.sessions.createIndex({ userId: 1, startedAt: 1, stoppedAt: 1, name: 1 });
+	mongo.users.createIndex({ id: 1, email: 1 }, { unique: true });
+	mongo.modelExercises.createIndex({ id: 1, userId: 1, categoryName: 1, name: 1 });
+	mongo.sessions.createIndex({ id: 1, userId: 1, startedAt: 1, stoppedAt: 1, name: 1 });
 
 	global.mongoInitialized = true;
 	console.log("MongoDB initialized");

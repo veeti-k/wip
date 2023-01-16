@@ -68,7 +68,7 @@ export function AppSessionPage() {
 								{hasExercises ? (
 									session.exercises.map((exercise) => (
 										<Exercise
-											key={exercise._id.toString()}
+											key={exercise.id}
 											session={session}
 											exercise={exercise}
 										/>
@@ -85,7 +85,7 @@ export function AppSessionPage() {
 								)}
 							</AnimatePresence>
 
-							<AddExerciseProvider sessionId={session._id.toString()}>
+							<AddExerciseProvider sessionId={session.id}>
 								<AddExerciseModal />
 							</AddExerciseProvider>
 						</div>

@@ -29,20 +29,20 @@ type Props = {
 
 export function Set({ set, exercise, session, setRef, isLast }: Props) {
 	const updateMutation = useUpdateSetMutation({
-		exerciseId: exercise._id.toString(),
-		sessionId: session._id.toString(),
+		exerciseId: exercise.id,
+		sessionId: session.id,
 	});
 	const removeMutation = useDeleteSetMutation({
-		exerciseId: exercise._id.toString(),
-		sessionId: session._id.toString(),
+		exerciseId: exercise.id,
+		sessionId: session.id,
 	});
 
 	function deleteSet() {
 		return removeMutation
 			.mutateAsync({
-				setId: set._id.toString(),
-				exerciseId: exercise._id.toString(),
-				sessionId: session._id.toString(),
+				setId: set.id,
+				exerciseId: exercise.id,
+				sessionId: session.id,
 			})
 			.catch(errorMsg("Failed to delete set"));
 	}
@@ -64,9 +64,9 @@ export function Set({ set, exercise, session, setRef, isLast }: Props) {
 	const updateData = () =>
 		form.handleSubmit((values) =>
 			updateMutation.mutateAsync({
-				setId: set._id.toString(),
-				exerciseId: exercise._id.toString(),
-				sessionId: session._id.toString(),
+				setId: set.id,
+				exerciseId: exercise.id,
+				sessionId: session.id,
 				...values,
 			})
 		)();

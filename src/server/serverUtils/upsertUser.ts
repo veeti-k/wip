@@ -1,6 +1,8 @@
 import clientPromise from "~server/db/db";
 import { defaultExercises } from "~server/db/defaultModelExercises";
 
+import { uuid } from "./uuid";
+
 export const defaultUserModelExercises = Object.entries(defaultExercises).flatMap(
 	([categoryName, exercises]) =>
 		exercises.map((exercise) => ({
@@ -33,10 +35,11 @@ export async function upsertUser({ email }: Props) {
 
 	await mongo.modelExercises.insertMany(
 		defaultUserModelExercises.map((d) => ({
+			id: uuid(),
 			...d,
 			enabledFields: d.enabledFields,
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			userId: mongoUser.value!._id.toString(),
+			userId: mongoUser.value!.id,
 		}))
 	);
 

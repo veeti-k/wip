@@ -15,7 +15,7 @@ export function Session({ session }: Props) {
 	return (
 		<Card
 			as={NextLink}
-			href={`/app/sessions/${session._id.toString()}`}
+			href={`/app/sessions/${session.id}`}
 			className="flex flex-col gap-4 rounded-xl p-3"
 		>
 			<div className="flex gap-4">
@@ -38,7 +38,7 @@ export function Session({ session }: Props) {
 						);
 
 						return (
-							<div className="flex flex-col gap-1" key={exercise._id.toString()}>
+							<div className="flex flex-col gap-1" key={exercise.id}>
 								<span className="max-w-[200px] truncate text-sm font-light">
 									{amountOfSets}x {exercise.modelExercise.name}
 								</span>

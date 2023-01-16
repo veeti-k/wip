@@ -31,7 +31,7 @@ export function EditSessionInfo({ session }: Props) {
 	function onSubmit(values: EditSessionInfoFormType) {
 		mutation
 			.mutateAsync({
-				sessionId: session._id.toString(),
+				sessionId: session.id,
 				name: values.name,
 				startedAt: new Date(values.startedAt),
 				stoppedAt: values.stoppedAt ? new Date(values.stoppedAt) : null,

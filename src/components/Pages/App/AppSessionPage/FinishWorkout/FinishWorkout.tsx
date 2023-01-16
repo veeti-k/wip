@@ -15,7 +15,7 @@ export function FinishSession({ session }: Props) {
 
 	function onSubmit() {
 		return mutation
-			.mutateAsync({ sessionId: session._id.toString() })
+			.mutateAsync({ sessionId: session.id })
 			.then(() => closeModal())
 			.catch(errorMsg("Failed to finish session"));
 	}

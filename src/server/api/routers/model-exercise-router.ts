@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
+import { uuid } from "~server/serverUtils/uuid";
 import { createExerciseInputSchema } from "~validation/exercise/createExercise";
 
 import { protectedProcedure } from "../trpc";
@@ -19,14 +20,17 @@ export const modelExerciseRouter = router({
 			});
 		}
 
-		const createdExercise = await ctx.mongo.modelExercises.insertOne({
+		const id = uuid();
+
+		await ctx.mongo.modelExercises.insertOne({
+			id,
 			userId: ctx.auth.userId,
 			name: input.name,
 			enabledFields: input.enabledFields,
 			categoryName: input.categoryName,
 		});
 
-		return createdExercise.insertedId.toString();
+		return id;
 	}),
 
 	getAll: protectedProcedure.query(async ({ ctx }) => {

@@ -62,7 +62,7 @@ export const authOptions: NextAuthOptions = {
 
 						return {
 							...user,
-							id: user._id.toString(),
+							id: user.id,
 						};
 					},
 			  }),
@@ -90,7 +90,7 @@ export const authOptions: NextAuthOptions = {
 			if (typeof token.isAdmin === "boolean" && user.isAdmin !== token.isAdmin)
 				return { ...token, signout: true };
 
-			return { ...token, dbUserId: user._id.toString(), isAdmin: user.isAdmin };
+			return { ...token, dbUserId: user.id, isAdmin: user.isAdmin };
 		},
 
 		session({ session, token }) {

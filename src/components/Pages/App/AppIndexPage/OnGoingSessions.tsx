@@ -12,7 +12,7 @@ export function OnGoingSession() {
 	const { data, isLoading, error } = trpc.session.getOnGoing.useQuery();
 
 	const trpcCtx = trpc.useContext();
-	data?.forEach((s) => trpcCtx.session.getOne.prefetch({ sessionId: s._id.toString() }));
+	data?.forEach((s) => trpcCtx.session.getOne.prefetch({ sessionId: s.id }));
 
 	if (isLoading) {
 		return <LoadingCard message="Getting on going sessions..." />;
@@ -30,8 +30,8 @@ export function OnGoingSession() {
 					{data.map((session) => (
 						<Card
 							as={NextLink}
-							key={session._id.toString()}
-							href={`/app/sessions/${session._id.toString()}`}
+							key={session.id}
+							href={`/app/sessions/${session.id}`}
 							className="rounded-md"
 						>
 							<div className="flex flex-col gap-2 p-2">

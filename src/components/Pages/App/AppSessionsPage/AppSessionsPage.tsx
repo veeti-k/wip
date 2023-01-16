@@ -29,7 +29,7 @@ export function AppSessionsPage() {
 
 								<div className="flex flex-col justify-start gap-2">
 									{sessions.map((session) => (
-										<Session key={session._id.toString()} session={session} />
+										<Session key={session.id} session={session} />
 									))}
 								</div>
 							</div>

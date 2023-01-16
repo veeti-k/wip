@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { z } from "zod";
 
 import { DbExerciseSet, DbExerciseSetType } from "~server/db/types";
+import { uuid } from "~server/serverUtils/uuid";
 import { editSessionInputSchema } from "~validation/session/editSession";
 import { editSessionInfoInputSchema } from "~validation/session/editSessionInfo";
 import { updateExerciseInputSchema } from "~validation/session/updateExercise";
@@ -51,7 +52,7 @@ export const sessionRouter = router({
 		.input(z.object({ sessionId: z.string() }))
 		.query(async ({ ctx, input }) => {
 			return ctx.mongo.sessions.findOne({
-				_id: new ObjectId(input.sessionId),
+				id: input.sessionId,
 				userId: ctx.auth.userId,
 			});
 		}),
@@ -60,6 +61,7 @@ export const sessionRouter = router({
 		.input(z.object({ name: z.string() }))
 		.mutation(async ({ ctx, input }) => {
 			await ctx.mongo.sessions.insertOne({
+				id: uuid(),
 				userId: ctx.auth.userId,
 				name: input.name,
 				startedAt: new Date(),
@@ -72,7 +74,7 @@ export const sessionRouter = router({
 
 	edit: protectedProcedure.input(editSessionInputSchema).mutation(async ({ ctx, input }) => {
 		const session = await ctx.mongo.sessions.findOne({
-			_id: new ObjectId(input.sessionId),
+			id: input.sessionId,
 			userId: ctx.auth.userId,
 		});
 
@@ -85,7 +87,7 @@ export const sessionRouter = router({
 
 		const updatedSession = await ctx.mongo.sessions.findOneAndUpdate(
 			{
-				_id: new ObjectId(input.sessionId),
+				id: input.sessionId,
 				userId: ctx.auth.userId,
 			},
 			{
@@ -111,7 +113,7 @@ export const sessionRouter = router({
 		.input(editSessionInfoInputSchema)
 		.mutation(async ({ ctx, input }) => {
 			const session = await ctx.mongo.sessions.findOne({
-				_id: new ObjectId(input.sessionId),
+				id: input.sessionId,
 				userId: ctx.auth.userId,
 			});
 
@@ -124,7 +126,7 @@ export const sessionRouter = router({
 
 			const updatedSession = await ctx.mongo.sessions.findOneAndUpdate(
 				{
-					_id: new ObjectId(input.sessionId),
+					id: input.sessionId,
 					userId: ctx.auth.userId,
 				},
 				{
@@ -152,7 +154,7 @@ export const sessionRouter = router({
 		.input(z.object({ sessionId: z.string() }))
 		.mutation(async ({ ctx, input }) => {
 			const session = await ctx.mongo.sessions.findOne({
-				_id: new ObjectId(input.sessionId),
+				id: input.sessionId,
 				userId: ctx.auth.userId,
 			});
 
@@ -165,7 +167,7 @@ export const sessionRouter = router({
 
 			const updatedSession = await ctx.mongo.sessions.findOneAndUpdate(
 				{
-					_id: new ObjectId(input.sessionId),
+					id: input.sessionId,
 					userId: ctx.auth.userId,
 				},
 				{ $set: { stoppedAt: new Date() } },
@@ -186,7 +188,7 @@ export const sessionRouter = router({
 		.input(z.object({ sessionId: z.string() }))
 		.mutation(async ({ ctx, input }) => {
 			await ctx.mongo.sessions.deleteOne({
-				_id: new ObjectId(input.sessionId),
+				id: input.sessionId,
 				userId: ctx.auth.userId,
 			});
 		}),
@@ -208,13 +210,13 @@ export const sessionRouter = router({
 
 			const response = await ctx.mongo.sessions.findOneAndUpdate(
 				{
-					_id: new ObjectId(input.sessionId),
+					id: input.sessionId,
 					userId: ctx.auth.userId,
 				},
 				{
 					$push: {
 						exercises: {
-							_id: new ObjectId(),
+							id: uuid(),
 							userId: ctx.auth.userId,
 							modelExercise,
 							sets: [],
@@ -239,7 +241,7 @@ export const sessionRouter = router({
 		.input(updateExerciseInputSchema)
 		.mutation(async ({ ctx, input }) => {
 			const session = await ctx.mongo.sessions.findOne({
-				_id: new ObjectId(input.sessionId),
+				id: input.sessionId,
 				userId: ctx.auth.userId,
 			});
 
@@ -250,9 +252,7 @@ export const sessionRouter = router({
 				});
 			}
 
-			const exercise = session.exercises.find(
-				(exercise) => exercise._id.toString() === input.exerciseId
-			);
+			const exercise = session.exercises.find((exercise) => exercise.id === input.exerciseId);
 
 			if (!exercise) {
 				throw new TRPCError({
@@ -268,9 +268,9 @@ export const sessionRouter = router({
 
 			const response = await ctx.mongo.sessions.findOneAndUpdate(
 				{
-					_id: new ObjectId(input.sessionId),
+					id: input.sessionId,
 					userId: ctx.auth.userId,
-					"exercises._id": new ObjectId(input.exerciseId),
+					"exercises.id": input.exerciseId,
 				},
 				{ $set: { "exercises.$": updatedExercise } },
 				{ returnDocument: "after" }
@@ -298,7 +298,7 @@ export const sessionRouter = router({
 		.input(z.object({ sessionId: z.string(), exerciseId: z.string() }))
 		.mutation(async ({ ctx, input }) => {
 			const session = await ctx.mongo.sessions.findOne({
-				_id: new ObjectId(input.sessionId),
+				id: input.sessionId,
 				userId: ctx.auth.userId,
 			});
 
@@ -309,9 +309,7 @@ export const sessionRouter = router({
 				});
 			}
 
-			const exercise = session.exercises.find(
-				(exercise) => exercise._id.toString() === input.exerciseId
-			);
+			const exercise = session.exercises.find((exercise) => exercise.id === input.exerciseId);
 
 			if (!exercise) {
 				throw new TRPCError({
@@ -322,10 +320,10 @@ export const sessionRouter = router({
 
 			const response = await ctx.mongo.sessions.findOneAndUpdate(
 				{
-					_id: new ObjectId(input.sessionId),
+					id: input.sessionId,
 					userId: ctx.auth.userId,
 				},
-				{ $pull: { exercises: { _id: new ObjectId(input.exerciseId) } } },
+				{ $pull: { exercises: { id: input.exerciseId } } },
 				{ returnDocument: "after" }
 			);
 
@@ -351,7 +349,7 @@ export const sessionRouter = router({
 		.input(z.object({ sessionId: z.string(), exerciseId: z.string() }))
 		.mutation(async ({ ctx, input }) => {
 			const session = await ctx.mongo.sessions.findOne({
-				_id: new ObjectId(input.sessionId),
+				id: input.sessionId,
 				userId: ctx.auth.userId,
 			});
 
@@ -362,9 +360,7 @@ export const sessionRouter = router({
 				});
 			}
 
-			const exercise = session.exercises.find(
-				(exercise) => exercise._id.toString() === input.exerciseId
-			);
+			const exercise = session.exercises.find((exercise) => exercise.id === input.exerciseId);
 
 			if (!exercise) {
 				throw new TRPCError({
@@ -374,7 +370,7 @@ export const sessionRouter = router({
 			}
 
 			const newSet: DbExerciseSet = {
-				_id: new ObjectId(),
+				id: uuid(),
 				type: DbExerciseSetType.Normal,
 				duplicates: 1,
 				weight: null,
@@ -392,9 +388,9 @@ export const sessionRouter = router({
 
 			const response = await ctx.mongo.sessions.findOneAndUpdate(
 				{
-					_id: new ObjectId(input.sessionId),
+					id: input.sessionId,
 					userId: ctx.auth.userId,
-					"exercises._id": new ObjectId(input.exerciseId),
+					"exercises.id": input.exerciseId,
 				},
 				{ $set: { "exercises.$": updatedExercise } },
 				{ returnDocument: "after" }
@@ -422,7 +418,7 @@ export const sessionRouter = router({
 		.input(updateExerciseSetInputSchema)
 		.mutation(async ({ ctx, input }) => {
 			const session = await ctx.mongo.sessions.findOne({
-				_id: new ObjectId(input.sessionId),
+				id: input.sessionId,
 				userId: ctx.auth.userId,
 			});
 
@@ -433,9 +429,7 @@ export const sessionRouter = router({
 				});
 			}
 
-			const exercise = session.exercises.find(
-				(exercise) => exercise._id.toString() === input.exerciseId
-			);
+			const exercise = session.exercises.find((exercise) => exercise.id === input.exerciseId);
 
 			if (!exercise) {
 				throw new TRPCError({
@@ -444,7 +438,7 @@ export const sessionRouter = router({
 				});
 			}
 
-			const set = exercise.sets.find((set) => set._id.toString() === input.setId);
+			const set = exercise.sets.find((set) => set.id === input.setId);
 
 			if (!set) {
 				throw new TRPCError({
@@ -462,16 +456,14 @@ export const sessionRouter = router({
 
 			const updatedExercise = {
 				...exercise,
-				sets: exercise.sets.map((set) =>
-					set._id.toString() === input.setId ? updatedSet : set
-				),
+				sets: exercise.sets.map((set) => (set.id === input.setId ? updatedSet : set)),
 			};
 
 			const response = await ctx.mongo.sessions.findOneAndUpdate(
 				{
-					_id: new ObjectId(input.sessionId),
+					id: input.sessionId,
 					userId: ctx.auth.userId,
-					"exercises._id": new ObjectId(input.exerciseId),
+					"exercises.id": input.exerciseId,
 				},
 				{ $set: { "exercises.$": updatedExercise } },
 				{ returnDocument: "after" }
@@ -505,7 +497,7 @@ export const sessionRouter = router({
 		)
 		.mutation(async ({ ctx, input }) => {
 			const session = await ctx.mongo.sessions.findOne({
-				_id: new ObjectId(input.sessionId),
+				id: input.sessionId,
 				userId: ctx.auth.userId,
 			});
 
@@ -516,9 +508,7 @@ export const sessionRouter = router({
 				});
 			}
 
-			const exercise = session.exercises.find(
-				(exercise) => exercise._id.toString() === input.exerciseId
-			);
+			const exercise = session.exercises.find((exercise) => exercise.id === input.exerciseId);
 
 			if (!exercise) {
 				throw new TRPCError({
@@ -527,7 +517,7 @@ export const sessionRouter = router({
 				});
 			}
 
-			const set = exercise.sets.find((set) => set._id.toString() === input.setId);
+			const set = exercise.sets.find((set) => set.id === input.setId);
 
 			if (!set) {
 				throw new TRPCError({
@@ -538,14 +528,14 @@ export const sessionRouter = router({
 
 			const updatedExercise = {
 				...exercise,
-				sets: exercise.sets.filter((set) => set._id.toString() !== input.setId),
+				sets: exercise.sets.filter((set) => set.id !== input.setId),
 			};
 
 			const response = await ctx.mongo.sessions.findOneAndUpdate(
 				{
-					_id: new ObjectId(input.sessionId),
+					id: input.sessionId,
 					userId: ctx.auth.userId,
-					"exercises._id": new ObjectId(input.exerciseId),
+					"exercises.id": input.exerciseId,
 				},
 				{ $set: { "exercises.$": updatedExercise } },
 				{ returnDocument: "after" }

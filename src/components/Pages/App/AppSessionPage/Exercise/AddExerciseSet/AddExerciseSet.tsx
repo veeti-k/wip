@@ -16,8 +16,8 @@ export function AddExerciseSet({ session, exercise, lastSetRef }: Props) {
 	function addSet() {
 		return mutation
 			.mutateAsync({
-				exerciseId: exercise._id.toString(),
-				sessionId: session._id.toString(),
+				exerciseId: exercise.id,
+				sessionId: session.id,
 			})
 			.then(() =>
 				setTimeout(

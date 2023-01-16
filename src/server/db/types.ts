@@ -1,5 +1,3 @@
-import type { ObjectId } from "mongodb";
-
 export const dbName = "health";
 
 export const dbCollections = {
@@ -9,6 +7,7 @@ export const dbCollections = {
 };
 
 export type DbUser = {
+	id: string;
 	email: string;
 	isAdmin: boolean;
 	createdAt: Date;
@@ -26,6 +25,7 @@ export const dbModelExerciseEnabledFields = [
 export type DbModelExerciseEnabledField = (typeof dbModelExerciseEnabledFields)[number];
 
 export type DbModelExercise = {
+	id: string;
 	name: string;
 	categoryName: string;
 	enabledFields: DbModelExerciseEnabledField[];
@@ -40,7 +40,7 @@ export const DbExerciseSetType = {
 };
 
 export type DbExerciseSet = {
-	_id: ObjectId;
+	id: string;
 	/**
 	 * One of `DbExerciseSetType`
 	 */
@@ -55,7 +55,7 @@ export type DbExerciseSet = {
 };
 
 export type DbExercise = {
-	_id: ObjectId;
+	id: string;
 	notes: string | null;
 	modelExercise: DbModelExercise;
 	userId: string;
@@ -63,6 +63,7 @@ export type DbExercise = {
 };
 
 export type DbSession = {
+	id: string;
 	userId: string;
 	name: string;
 	notes: string | null;

@@ -22,13 +22,13 @@ export function useDeleteSetMutation({ exerciseId, sessionId }: Props) {
 				return {
 					...oldData,
 					exercises: oldData.exercises.map((exercise) => {
-						if (exercise._id.toString() !== exerciseId) {
+						if (exercise.id !== exerciseId) {
 							return exercise;
 						}
 
 						return {
 							...exercise,
-							sets: exercise.sets.filter((set) => set._id.toString() !== vars.setId),
+							sets: exercise.sets.filter((set) => set.id !== vars.setId),
 						};
 					}),
 				};

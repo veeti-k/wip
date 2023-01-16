@@ -30,8 +30,8 @@ export function ExerciseNotes({ session, exercise }: Props) {
 		return form.handleSubmit((values) =>
 			mutation
 				.mutateAsync({
-					sessionId: session._id.toString(),
-					exerciseId: exercise._id.toString(),
+					sessionId: session.id,
+					exerciseId: exercise.id,
 					...values,
 				})
 				.catch(errorMsg(`Failed to update ${exercise.modelExercise.name} notes`))
