@@ -68,7 +68,16 @@ export function EditSessionInfo({ session }: Props) {
 								{...form.register("stoppedAt")}
 							/>
 						) : (
-							<FinishSession session={session} />
+							<FinishSession
+								onFinished={(updatedSession) =>
+									updatedSession?.stoppedAt &&
+									form.setValue(
+										"stoppedAt",
+										getHtmlDate(updatedSession.stoppedAt)
+									)
+								}
+								session={session}
+							/>
 						)}
 					</div>
 

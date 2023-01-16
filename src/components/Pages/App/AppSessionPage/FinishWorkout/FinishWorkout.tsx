@@ -7,16 +7,20 @@ import { useFinishSessionMutation } from "./useFinishWorkoutMutation";
 
 type Props = {
 	session: NonNullable<RouterOutputs["session"]["getOne"]>;
+	onFinished: (updatedSession: RouterOutputs["session"]["getOne"]) => void;
 };
 
-export function FinishSession({ session }: Props) {
+export function FinishSession({ session, onFinished }: Props) {
 	const mutation = useFinishSessionMutation();
 	const { closeModal, isModalOpen, openModal } = useModal();
 
 	function onSubmit() {
 		return mutation
 			.mutateAsync({ sessionId: session.id })
-			.then(() => closeModal())
+			.then((updatedSession) => {
+				closeModal();
+				onFinished(updatedSession);
+			})
 			.catch(errorMsg("Failed to finish session"));
 	}
 
