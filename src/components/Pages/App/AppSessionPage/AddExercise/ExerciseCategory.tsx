@@ -62,7 +62,7 @@ export function ExerciseCategory({
 								{category.modelExercises.map((modelExercise) => (
 									<Button
 										key={modelExercise.name}
-										onClick={() => onClick(String(modelExercise._id))}
+										onClick={() => onClick(modelExercise.id)}
 										className="!justify-start"
 									>
 										<h4>{modelExercise.name}</h4>

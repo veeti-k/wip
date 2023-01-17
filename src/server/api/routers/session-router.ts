@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { ObjectId } from "mongodb";
 import { z } from "zod";
 
 import { DbExerciseSet, DbExerciseSetType } from "~server/db/types";
@@ -197,7 +196,7 @@ export const sessionRouter = router({
 		.input(z.object({ sessionId: z.string(), modelExerciseId: z.string() }))
 		.mutation(async ({ ctx, input }) => {
 			const modelExercise = await ctx.mongo.modelExercises.findOne({
-				_id: new ObjectId(input.modelExerciseId),
+				id: input.modelExerciseId,
 				userId: ctx.auth.userId,
 			});
 
