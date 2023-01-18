@@ -9,10 +9,12 @@ export const createExerciseFormSchema = z.object({
 		.array(z.string())
 		.min(1, { message: "Required" })
 		.max(dbModelExerciseEnabledFields.length, { message: "Too many fields" })
-		// @ts-expect-error - i just want to check if includes
-		.refine((fields) => fields.forEach((f) => dbModelExerciseEnabledFields.includes(f)), {
-			message: "Invalid enabled fields",
-		})
+		.refine(
+			(fields) =>
+				// @ts-expect-error - i just want to check if includes
+				!!fields.map((f) => dbModelExerciseEnabledFields.includes(f)).find((v) => v),
+			{ message: "Invalid enabled fields" }
+		)
 		.transform((f) => f as DbModelExerciseEnabledField[]),
 });
 
@@ -23,10 +25,12 @@ export const createExerciseInputSchema = z.object({
 		.array(z.string())
 		.min(1, { message: "Required" })
 		.max(dbModelExerciseEnabledFields.length, { message: "Too many fields" })
-		// @ts-expect-error - i just want to check if includes
-		.refine((fields) => fields.forEach((f) => dbModelExerciseEnabledFields.includes(f)), {
-			message: "Invalid enabled fields",
-		})
+		.refine(
+			(fields) =>
+				// @ts-expect-error - i just want to check if includes
+				!!fields.map((f) => dbModelExerciseEnabledFields.includes(f)).find((v) => v),
+			{ message: "Invalid enabled fields" }
+		)
 		.transform((f) => f as DbModelExerciseEnabledField[]),
 });
 

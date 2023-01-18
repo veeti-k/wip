@@ -371,7 +371,7 @@ export const sessionRouter = router({
 			const newSet: DbExerciseSet = {
 				id: uuid(),
 				type: DbExerciseSetType.Normal,
-				duplicates: 1,
+				count: 1,
 				weight: null,
 				reps: null,
 				assistedWeight: null,
@@ -450,7 +450,7 @@ export const sessionRouter = router({
 				...set,
 				weight: input.weight,
 				reps: input.reps,
-				duplicates: input.duplicates,
+				count: input.count,
 			};
 
 			const updatedExercise = {

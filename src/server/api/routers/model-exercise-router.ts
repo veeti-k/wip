@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
 
-import { defaultUserModelExercises } from "~server/serverUtils/upsertUser";
 import { uuid } from "~server/serverUtils/uuid";
 import { createExerciseInputSchema } from "~validation/exercise/createExercise";
 
@@ -43,8 +42,6 @@ export const modelExerciseRouter = router({
 			categoryName: string;
 			modelExercises: typeof modelExercises;
 		}[] = [];
-
-		console.log(defaultUserModelExercises.length);
 
 		for (const modelExercise of modelExercises) {
 			const categoryIndex = byCategory.findIndex(

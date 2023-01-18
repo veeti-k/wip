@@ -14,7 +14,7 @@ export function AppSessionsPage() {
 
 	return (
 		<AppLayout title="Sessions">
-			<h1 className="mb-10 text-2xl font-light">Sessions</h1>
+			<h1 className="mb-5 text-2xl font-medium">Sessions</h1>
 
 			<AnimatePresence initial={false}>
 				{isLoading ? (

@@ -7,7 +7,7 @@ export const updateExerciseSetFormSchema = z.object({
 	time: z.number().nullable(),
 	distance: z.number().nullable(),
 	kcal: z.number().nullable(),
-	duplicates: z.number(),
+	count: z.number(),
 });
 
 export const updateExerciseSetInputSchema = updateExerciseSetFormSchema.and(

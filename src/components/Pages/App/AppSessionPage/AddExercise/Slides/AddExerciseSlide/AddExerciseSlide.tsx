@@ -58,7 +58,7 @@ export function AddExerciseSlide() {
 						{...animateOpacityProps}
 						onClick={() => setSlide("createExercise")}
 					>
-						{`Create "{${addExerciseSearchQuery}}"`}
+						{`Create "${addExerciseSearchQuery}"`}
 					</Card>
 				) : innerCategories?.length ? (
 					innerCategories.map((category) => (
@@ -108,7 +108,12 @@ function categorySearch({
 		)
 		.map((c) => ({
 			...c,
-			modelExercises: c.modelExercises.sort((a, b) => a.name.localeCompare(b.name)),
+			// sort modelExercises by if they include the query and then alphabetically
+			modelExercises: c.modelExercises.sort((a, b) => {
+				const aIncludes = a.name.toLowerCase().includes(parsedQuery);
+				const bIncludes = b.name.toLowerCase().includes(parsedQuery);
+				return aIncludes === bIncludes ? a.name.localeCompare(b.name) : aIncludes ? -1 : 1;
+			}),
 		}))
 		.sort((a, b) => a.categoryName.localeCompare(b.categoryName));
 }

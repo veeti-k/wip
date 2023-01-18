@@ -24,8 +24,8 @@ export function CreateModelExerciseSlide() {
 			: exerciseCategoriesError
 			? "error"
 			: exerciseCategories?.length
-			? "select"
-			: "create"
+			? "create"
+			: "select"
 	);
 
 	const {
@@ -83,11 +83,11 @@ export function CreateModelExerciseSlide() {
 				) : categoryState === "create" && exerciseCategories ? (
 					<CategorySelect exerciseCategories={exerciseCategories} />
 				) : (
-					<Input label="Category" {...form.register("categoryName")} />
+					<Input required label="Category" {...form.register("categoryName")} />
 				)}
 
 				<Button
-					disabled={categoryState !== "loading" && categoryState !== "error"}
+					disabled={categoryState === "loading" || categoryState === "error"}
 					onClick={() =>
 						setCategoryState((prev) => (prev === "create" ? "select" : "create"))
 					}
@@ -97,8 +97,8 @@ export function CreateModelExerciseSlide() {
 						: categoryState === "error"
 						? "Error loading categories"
 						: categoryState === "create"
-						? "Select category"
-						: "Create category"}
+						? "Create a category instead"
+						: "Select a category instead"}
 				</Button>
 			</div>
 

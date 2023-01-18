@@ -40,7 +40,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
 		if (!label) {
 			return (
-				<div className="flex flex-col">
+				<div className="flex w-full flex-col">
 					<InnerInput {...innerInputProps} />
 
 					<Error message={error} />
@@ -49,8 +49,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 		}
 
 		return (
-			<div className="flex flex-col">
-				<div className="flex flex-col gap-[6px]">
+			<div className="flex w-full flex-col">
+				<div className="flex w-full flex-col gap-[6px]">
 					<Label htmlFor={innerId} required={required}>
 						{label}
 					</Label>

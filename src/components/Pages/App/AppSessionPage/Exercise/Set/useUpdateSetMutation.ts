@@ -37,7 +37,7 @@ export function useUpdateSetMutation({ exerciseId, sessionId }: Props) {
 									...set,
 									weight: vars.weight,
 									reps: vars.reps,
-									duplicates: vars.duplicates,
+									count: vars.count,
 								};
 							}),
 						};
