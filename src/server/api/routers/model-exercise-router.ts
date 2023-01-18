@@ -44,8 +44,6 @@ export const modelExerciseRouter = router({
 			modelExercises: typeof modelExercises;
 		}[] = [];
 
-		console.log(defaultUserModelExercises.length);
-
 		for (const modelExercise of modelExercises) {
 			const categoryIndex = byCategory.findIndex(
 				(category) => category.categoryName === modelExercise.categoryName

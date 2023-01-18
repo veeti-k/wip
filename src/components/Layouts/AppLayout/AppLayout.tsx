@@ -32,13 +32,15 @@ export function AppLayout({ children, title }: Props) {
 
 			<NavBar />
 
-			<motion.main
-				key={router.pathname}
-				className="z-10 mx-auto h-max max-w-page px-3 pb-[11rem] pt-[5rem] sm:pt-[7rem]"
-				{...animateOpacityProps}
-			>
-				{children}
-			</motion.main>
+			<main className="px-3">
+				<motion.div
+					key={router.pathname}
+					className="z-10 mx-auto h-max max-w-page pb-[11rem] pt-[5rem] sm:pt-[7rem]"
+					{...animateOpacityProps}
+				>
+					{children}
+				</motion.div>
+			</main>
 		</>
 	);
 }

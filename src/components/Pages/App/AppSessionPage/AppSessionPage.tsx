@@ -2,7 +2,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 
 import { AppLayout } from "~components/Layouts/AppLayout/AppLayout";
-import { Button } from "~components/Ui/Button";
 import { Card } from "~components/Ui/Cards/Card";
 import { ErrorCard } from "~components/Ui/Cards/ErrorCard";
 import { LoadingCard } from "~components/Ui/Cards/LoadingCard";
@@ -15,6 +14,7 @@ import { DeleteSession } from "./DeleteSession/DeleteSession";
 import { EditSessionInfo } from "./EditSessionInfo/EditSessionInfo";
 import { Exercise } from "./Exercise/Exercise";
 import { FinishSession } from "./FinishWorkout/FinishWorkout";
+import { SaveAsAWorkout } from "./SaveAsAWorkout";
 import { SessionInputs } from "./SessionInputs/SessionInputs";
 import { Times } from "./Times/Times";
 
@@ -35,6 +35,8 @@ export function AppSessionPage() {
 
 	return (
 		<AppLayout title="Session">
+			<h1 className="mb-5 text-2xl font-medium">Session</h1>
+
 			{isLoading ? (
 				<LoadingCard message="Getting session info..." />
 			) : error ? (
@@ -55,16 +57,16 @@ export function AppSessionPage() {
 					<div className="flex flex-col gap-4">
 						<Card className="flex flex-col gap-3 rounded-xl p-3">
 							{inProgress && <FinishSession session={session} />}
-							<Button>Save as a session</Button>
+							{!inProgress && <SaveAsAWorkout session={session} />}
 							<DeleteSession session={session} />
 						</Card>
 					</div>
 
 					<div className="mt-4 flex flex-col gap-4">
-						<div className="flex flex-col gap-2">
-							<h1 className="text-xl font-light">Exercises</h1>
+						<div className="flex flex-col">
+							<h1 className="mb-2 text-xl font-light">Exercises</h1>
 
-							<AnimatePresence initial={false} mode="popLayout">
+							<AnimatePresence initial={false}>
 								{hasExercises ? (
 									session.exercises.map((exercise) => (
 										<Exercise

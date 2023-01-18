@@ -2,7 +2,7 @@ import { MongoClient, MongoClientOptions } from "mongodb";
 
 import { env } from "~env/server.mjs";
 
-import { DbModelExercise, DbSession, DbUser, dbCollections, dbName } from "./types";
+import { DbModelExercise, DbSession, DbUser, DbWorkout, dbCollections, dbName } from "./types";
 
 const uri = env.MONGODB_URI;
 const options: MongoClientOptions = {};
@@ -33,9 +33,14 @@ function initializeMongo(mongo: ReturnType<typeof db>) {
 
 	console.log("Initializing MongoDB");
 
-	mongo.users.createIndex({ id: 1, email: 1 }, { unique: true });
-	mongo.modelExercises.createIndex({ id: 1, userId: 1, categoryName: 1, name: 1 });
-	mongo.sessions.createIndex({ id: 1, userId: 1, startedAt: 1, stoppedAt: 1, name: 1 });
+	mongo.users.createIndex({ id: 1 }, { unique: true });
+	mongo.users.createIndex({ email: 1 }, { unique: true });
+
+	mongo.modelExercises.createIndex({ id: 1 }, { unique: true });
+
+	mongo.sessions.createIndex({ id: 1 }, { unique: true });
+
+	mongo.workouts.createIndex({ id: 1 }, { unique: true });
 
 	global.mongoInitialized = true;
 	console.log("MongoDB initialized");
@@ -50,6 +55,7 @@ function db(mongo: MongoClient) {
 		users: db.collection<DbUser>(dbCollections.users),
 		modelExercises: db.collection<DbModelExercise>(dbCollections.modelExercises),
 		sessions: db.collection<DbSession>(dbCollections.sessions),
+		workouts: db.collection<DbWorkout>(dbCollections.workouts),
 	};
 }
 

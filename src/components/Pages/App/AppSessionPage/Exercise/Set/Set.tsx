@@ -56,10 +56,10 @@ export function Set({ set, exercise, session, setRef, isLast }: Props) {
 			time: set.time,
 			distance: set.distance,
 			kcal: set.kcal,
-			duplicates: set.duplicates,
+			count: set.count,
 		},
 	});
-	const duplicates = form.watch("duplicates");
+	const count = form.watch("count");
 
 	const updateData = () =>
 		form.handleSubmit((values) =>
@@ -74,15 +74,15 @@ export function Set({ set, exercise, session, setRef, isLast }: Props) {
 	const debouncedUpdateData = useCallback(debounce(updateData, 300), []);
 
 	const minusSet = () => {
-		if (duplicates > 1) {
-			form.setValue("duplicates", duplicates - 1);
+		if (count > 1) {
+			form.setValue("count", count - 1);
 			updateData();
 		} else {
 			deleteSet();
 		}
 	};
 	const plusSet = () => {
-		form.setValue("duplicates", duplicates + 1);
+		form.setValue("count", count + 1);
 		updateData();
 	};
 
@@ -110,7 +110,7 @@ export function Set({ set, exercise, session, setRef, isLast }: Props) {
 					<AnimatePresence initial={false} mode="wait">
 						<motion.div {...animateHeightProps}>
 							<div className="flex items-center justify-between gap-2 pb-2">
-								<h3 className="mb-2">{duplicates}x</h3>
+								<h3 className="mb-2">{count}x</h3>
 
 								<div className="flex gap-1">
 									<Button onClick={plusSet} className="px-2">
@@ -119,7 +119,7 @@ export function Set({ set, exercise, session, setRef, isLast }: Props) {
 									<Button
 										onClick={minusSet}
 										className="px-2"
-										intent={duplicates === 1 ? "danger" : "primary"}
+										intent={count === 1 ? "danger" : "primary"}
 									>
 										<Minus size={15} />
 									</Button>

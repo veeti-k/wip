@@ -12,6 +12,27 @@ export const animateOpacityProps = {
 	transition: { duration: 0.2 },
 };
 
+export const animateListItemProps = {
+	initial: { opacity: 0, height: 0 },
+	animate: {
+		opacity: 1,
+		height: "auto",
+		transition: {
+			type: "spring",
+			bounce: 0.3,
+			opacity: { duration: 0.1 },
+			duration: 0.4,
+		},
+	},
+	exit: { opacity: 0, height: 0 },
+	transition: {
+		duration: 0.4,
+		type: "spring",
+		bounce: 0,
+		opacity: { duration: 0.12 },
+	},
+};
+
 export const errorCardStuff = {
 	initial: { opacity: 0 },
 	animate: {

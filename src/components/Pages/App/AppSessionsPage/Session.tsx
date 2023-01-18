@@ -32,10 +32,7 @@ export function Session({ session }: Props) {
 					<h2 className="mb-1 leading-4">{session.name}</h2>
 
 					{session.exercises.map((exercise) => {
-						const amountOfSets = exercise.sets.reduce(
-							(acc, set) => acc + set.duplicates,
-							0
-						);
+						const amountOfSets = exercise.sets.reduce((acc, set) => acc + set.count, 0);
 
 						return (
 							<div className="flex flex-col gap-1" key={exercise.id}>

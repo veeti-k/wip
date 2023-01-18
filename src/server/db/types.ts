@@ -4,6 +4,7 @@ export const dbCollections = {
 	users: "users",
 	modelExercises: "model-exercises",
 	sessions: "sessions",
+	workouts: "workouts",
 };
 
 export type DbUser = {
@@ -45,7 +46,7 @@ export type DbExerciseSet = {
 	 * One of `DbExerciseSetType`
 	 */
 	type: number;
-	duplicates: number;
+	count: number;
 	weight: number | null;
 	assistedWeight: number | null;
 	reps: number | null;
@@ -71,4 +72,29 @@ export type DbSession = {
 	startedAt: Date;
 	stoppedAt: Date | null;
 	exercises: DbExercise[];
+};
+
+export type DbWorkoutSet = {
+	id: string;
+	/**
+	 * One of `DbExerciseSetType`
+	 */
+	type: number;
+	count: number;
+	reps: number | null;
+};
+
+export type DbWorkoutExercise = {
+	id: string;
+	modelExercise: DbModelExercise;
+	sets: DbWorkoutSet[];
+};
+
+export type DbWorkout = {
+	id: string;
+	userId: string;
+	name: string;
+	createdAt: Date;
+	shared: boolean;
+	exercises: DbWorkoutExercise[];
 };

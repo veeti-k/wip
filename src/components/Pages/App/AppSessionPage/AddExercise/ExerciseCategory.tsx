@@ -63,7 +63,7 @@ export function ExerciseCategory({
 									<Button
 										key={modelExercise.name}
 										onClick={() => onClick(modelExercise.id)}
-										className="!justify-start"
+										className="!touch-auto !justify-start"
 									>
 										<h4>{modelExercise.name}</h4>
 									</Button>
