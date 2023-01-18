@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
 
-import { defaultUserModelExercises } from "~server/serverUtils/upsertUser";
 import { uuid } from "~server/serverUtils/uuid";
 import { createExerciseInputSchema } from "~validation/exercise/createExercise";
 

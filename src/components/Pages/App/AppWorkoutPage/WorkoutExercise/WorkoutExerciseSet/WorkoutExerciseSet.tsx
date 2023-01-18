@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import debounce from "lodash.debounce";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -8,7 +8,7 @@ import { Minus, Plus } from "tabler-icons-react";
 import { Button } from "~components/Ui/Button";
 import { Card } from "~components/Ui/Cards/Card";
 import { Input } from "~components/Ui/Input";
-import { animateHeightProps, animateListItemProps } from "~utils/animations";
+import { animateListItemProps } from "~utils/animations";
 import { errorMsg } from "~utils/errorMsg";
 import type { RouterOutputs } from "~utils/trpc";
 import {

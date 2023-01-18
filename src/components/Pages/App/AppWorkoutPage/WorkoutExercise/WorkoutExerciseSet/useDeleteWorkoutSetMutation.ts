@@ -31,11 +31,10 @@ export function useDeleteWorkoutSetMutation() {
 
 			return { oldData };
 		},
-		onError: (error, vars, context) => {
-			context?.oldData &&
-				trpcCtx.workout.getOne.setData({ workoutId: workoutId }, context.oldData);
+		onError: (error, { workoutId }, context) => {
+			context?.oldData && trpcCtx.workout.getOne.setData({ workoutId }, context.oldData);
 
-			trpcCtx.workout.getOne.invalidate({ workoutId: workoutId });
+			trpcCtx.workout.getOne.invalidate({ workoutId });
 		},
 	});
 }
