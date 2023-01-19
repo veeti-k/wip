@@ -3,6 +3,8 @@ import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import { Toaster } from "react-hot-toast";
 
+import { DevMenu } from "~components/DevMenu/DevMenu";
+import { env } from "~env/client.mjs";
 import { colors } from "~utils/colors";
 import { trpc } from "~utils/trpc";
 
@@ -14,6 +16,8 @@ const MyApp: AppType<{ session: Session }> = ({
 }) => {
 	return (
 		<SessionProvider session={session}>
+			{env.NEXT_PUBLIC_ENV !== "production" && <DevMenu />}
+
 			<Toaster
 				reverseOrder
 				toastOptions={{

@@ -3,6 +3,7 @@ import type { CreateNextContextOptions } from "@trpc/server/adapters/next";
 import type { Session } from "next-auth";
 import superjson from "superjson";
 
+import { env } from "~env/server.mjs";
 import { getServerAuthSession } from "~server/auth";
 import clientPromise from "~server/db/db";
 
@@ -58,3 +59,13 @@ export const router = t.router;
 export const publicProcedure = t.procedure;
 export const protectedProcedure = publicProcedure.use(isAuthed);
 export const adminProcedure = protectedProcedure.use(isAdmin);
+export const devProcedure = protectedProcedure.use(({ ctx, next }) => {
+	if (env.ENV === "production") {
+		throw new TRPCError({
+			code: "FORBIDDEN",
+			message: "Can't do that in production",
+		});
+	}
+
+	return next();
+});
