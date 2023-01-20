@@ -10,9 +10,9 @@ import { LoadingCard } from "~components/Ui/Cards/LoadingCard";
 import { animateOpacityProps } from "~utils/animations";
 import { trpc } from "~utils/trpc";
 
-import { AddWorkoutExerciseModal } from "./WorkoutExercise/AddWorkoutExercise/AddWorkoutExercise";
-import { AddWorkoutExerciseProvider } from "./WorkoutExercise/AddWorkoutExercise/AddWorkoutExerciseContext";
-import { DeleteWorkout } from "./WorkoutExercise/DeleteWorkout/DeleteWorkout";
+import { AddWorkoutExerciseModal } from "./AddWorkoutExercise/AddWorkoutExercise";
+import { AddWorkoutExerciseProvider } from "./AddWorkoutExercise/AddWorkoutExerciseContext";
+import { DeleteWorkout } from "./DeleteWorkout/DeleteWorkout";
 import { WorkoutExercise } from "./WorkoutExercise/WorkoutExercise";
 
 export default function AppWorkoutPage() {
@@ -40,8 +40,8 @@ export default function AppWorkoutPage() {
 			) : error ? (
 				<ErrorCard message="Error getting workout" />
 			) : workout ? (
-				<>
-					<Card className="mb-4 flex flex-col gap-2 p-3">
+				<div className="flex flex-col gap-4">
+					<Card className="flex flex-col gap-2 p-3">
 						<div className="flex justify-between gap-3">
 							<h1 className="text-2xl">{workout.name}</h1>
 						</div>
@@ -52,11 +52,11 @@ export default function AppWorkoutPage() {
 						<DeleteWorkout workout={workout} />
 					</Card>
 
-					<div className="mt-4 flex flex-col gap-4">
+					<div className="flex flex-col">
 						<div className="flex flex-col">
 							<h1 className="mb-2 text-xl font-light">Exercises</h1>
 
-							<AnimatePresence initial={false}>
+							<AnimatePresence initial={false} mode="wait">
 								{hasExercises ? (
 									workout.exercises.map((exercise, index) => (
 										<WorkoutExercise
@@ -71,7 +71,7 @@ export default function AppWorkoutPage() {
 									<Card
 										as={motion.div}
 										key="no-exercises"
-										className="flex items-center justify-center px-3 py-5 font-light"
+										className="mb-3 flex items-center justify-center px-3 py-5 font-light"
 										{...animateOpacityProps}
 									>
 										No exercises
@@ -87,7 +87,7 @@ export default function AppWorkoutPage() {
 							</AddWorkoutExerciseProvider>
 						</div>
 					</div>
-				</>
+				</div>
 			) : null}
 		</AppLayout>
 	);

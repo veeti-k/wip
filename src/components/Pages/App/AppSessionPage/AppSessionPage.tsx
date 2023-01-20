@@ -42,8 +42,8 @@ export function AppSessionPage() {
 			) : error ? (
 				<ErrorCard message="Error getting session" />
 			) : session ? (
-				<>
-					<Card className="mb-4 flex flex-col gap-2 p-3">
+				<div className="flex flex-col gap-4">
+					<Card className="flex flex-col gap-2 p-3">
 						<div className="flex justify-between gap-3">
 							<h1 className="text-2xl">{session.name}</h1>
 
@@ -62,37 +62,35 @@ export function AppSessionPage() {
 						</Card>
 					</div>
 
-					<div className="mt-4 flex flex-col gap-4">
-						<div className="flex flex-col">
-							<h1 className="mb-2 text-xl font-light">Exercises</h1>
+					<div className="flex flex-col">
+						<h1 className="mb-2 text-xl font-light">Exercises</h1>
 
-							<AnimatePresence initial={false}>
-								{hasExercises ? (
-									session.exercises.map((exercise) => (
-										<Exercise
-											key={exercise.id}
-											session={session}
-											exercise={exercise}
-										/>
-									))
-								) : (
-									<Card
-										as={motion.div}
-										key="no-exercises"
-										className="flex items-center justify-center px-3 py-5 font-light"
-										{...animateOpacityProps}
-									>
-										No exercises
-									</Card>
-								)}
-							</AnimatePresence>
+						<AnimatePresence initial={false} mode="wait">
+							{hasExercises ? (
+								session.exercises.map((exercise) => (
+									<Exercise
+										key={exercise.id}
+										session={session}
+										exercise={exercise}
+									/>
+								))
+							) : (
+								<Card
+									as={motion.div}
+									key="no-exercises"
+									className="mb-3 flex items-center justify-center px-3 py-5 font-light"
+									{...animateOpacityProps}
+								>
+									No exercises
+								</Card>
+							)}
+						</AnimatePresence>
 
-							<AddExerciseProvider sessionId={session.id}>
-								<AddExerciseModal />
-							</AddExerciseProvider>
-						</div>
+						<AddExerciseProvider sessionId={session.id}>
+							<AddExerciseModal />
+						</AddExerciseProvider>
 					</div>
-				</>
+				</div>
 			) : null}
 		</AppLayout>
 	);
