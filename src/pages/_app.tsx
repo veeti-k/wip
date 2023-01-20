@@ -28,7 +28,7 @@ const MyApp: AppType<{ session: Session }> = ({
 						display: "flex",
 						justifyContent: "center",
 						alignItems: "center",
-						padding: "0.5rem 0.5rem 0.5rem 1rem",
+						padding: "1rem",
 						gap: "0.3rem",
 						fontWeight: 500,
 						lineHeight: 1,

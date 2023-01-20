@@ -30,6 +30,13 @@ export const workoutRouter = router({
 				});
 			}
 
+			if (session.saved) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "Session already saved",
+				});
+			}
+
 			const workoutId = uuid();
 
 			await ctx.mongo.workouts.insertOne({
@@ -50,7 +57,28 @@ export const workoutRouter = router({
 				})),
 			});
 
-			return workoutId;
+			const updateResult = await ctx.mongo.sessions.findOneAndUpdate(
+				{ id: input.sessionId },
+				{ $set: { saved: true } },
+				{ returnDocument: "after" }
+			);
+
+			if (!updateResult.ok) {
+				console.log(
+					`Failed to session exercise for ${ctx.auth.userId}: ${JSON.stringify(
+						updateResult.lastErrorObject,
+						null,
+						2
+					)}`
+				);
+
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: "Db error",
+				});
+			}
+
+			return { createdWorkoutId: workoutId, updatedSession: updateResult.value };
 		}),
 
 	getAll: protectedProcedure.query(async ({ ctx, input }) => {

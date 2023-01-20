@@ -22,6 +22,7 @@ export const devRouter = router({
 		await ctx.mongo.sessions.insertOne({
 			userId: ctx.auth.userId,
 			id: uuid(),
+			saved: false,
 			name: "Dev session",
 			bodyWeight: null,
 			notes: null,

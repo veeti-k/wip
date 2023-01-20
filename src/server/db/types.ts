@@ -66,6 +66,7 @@ export type DbExercise = {
 export type DbSession = {
 	id: string;
 	userId: string;
+	saved: boolean;
 	name: string;
 	notes: string | null;
 	bodyWeight: number | null;

@@ -14,7 +14,7 @@ import { DeleteSession } from "./DeleteSession/DeleteSession";
 import { EditSessionInfo } from "./EditSessionInfo/EditSessionInfo";
 import { Exercise } from "./Exercise/Exercise";
 import { FinishSession } from "./FinishWorkout/FinishWorkout";
-import { SaveAsAWorkout } from "./SaveAsAWorkout";
+import { SaveAsAWorkout } from "./SaveAsAWorkout/SaveAsAWorkout";
 import { SessionInputs } from "./SessionInputs/SessionInputs";
 import { Times } from "./Times/Times";
 

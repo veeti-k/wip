@@ -61,6 +61,7 @@ export const sessionRouter = router({
 		.mutation(async ({ ctx, input }) => {
 			await ctx.mongo.sessions.insertOne({
 				id: uuid(),
+				saved: false,
 				userId: ctx.auth.userId,
 				name: input.name,
 				startedAt: new Date(),

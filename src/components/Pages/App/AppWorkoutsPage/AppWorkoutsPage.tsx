@@ -4,6 +4,7 @@ import { AppLayout } from "~components/Layouts/AppLayout/AppLayout";
 import { Card } from "~components/Ui/Cards/Card";
 import { ErrorCard } from "~components/Ui/Cards/ErrorCard";
 import { LoadingCard } from "~components/Ui/Cards/LoadingCard";
+import { Input } from "~components/Ui/Input";
 import { animateOpacityProps } from "~utils/animations";
 import { trpc } from "~utils/trpc";
 
@@ -14,7 +15,11 @@ export function AppWorkoutsPage() {
 
 	return (
 		<AppLayout title="Workouts">
-			<h1 className="mb-5 text-2xl font-medium">Workouts</h1>
+			<div className="mb-5 flex flex-col gap-5">
+				<h1 className="text-2xl font-medium">Workouts</h1>
+
+				<Input placeholder="Search workouts..." />
+			</div>
 
 			<AnimatePresence initial={false}>
 				{isLoading ? (
