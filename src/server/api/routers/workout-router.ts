@@ -30,8 +30,10 @@ export const workoutRouter = router({
 				});
 			}
 
+			const workoutId = uuid();
+
 			await ctx.mongo.workouts.insertOne({
-				id: uuid(),
+				id: workoutId,
 				userId: ctx.auth.userId,
 				shared: input.share,
 				createdAt: new Date(),
@@ -47,6 +49,8 @@ export const workoutRouter = router({
 					})),
 				})),
 			});
+
+			return workoutId;
 		}),
 
 	getAll: protectedProcedure.query(async ({ ctx, input }) => {

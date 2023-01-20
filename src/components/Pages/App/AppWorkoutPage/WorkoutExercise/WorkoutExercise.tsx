@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { forwardRef, useRef } from "react";
+import { useRef } from "react";
 
 import { Card } from "~components/Ui/Cards/Card";
 import { animateListItemProps } from "~utils/animations";
@@ -12,16 +12,18 @@ import { WorkoutExerciseSet } from "./WorkoutExerciseSet/WorkoutExerciseSet";
 type Props = {
 	workout: NonNullable<RouterOutputs["workout"]["getOne"]>;
 	exercise: NonNullable<RouterOutputs["workout"]["getOne"]>["exercises"][number];
+	isLast?: boolean;
+	exerciseRef?: React.RefObject<HTMLDivElement>;
 };
 
-export const WorkoutExercise = forwardRef<HTMLDivElement, Props>(({ workout, exercise }, ref) => {
+export const WorkoutExercise = ({ workout, exercise, exerciseRef, isLast }: Props) => {
 	const amountOfSets = exercise.sets.reduce((acc, set) => acc + set.count, 0);
 	const setsPlural = amountOfSets === 1 ? "" : "s";
 	const lastSetRef = useRef<HTMLDivElement>(null);
 
 	return (
-		<motion.div {...animateListItemProps}>
-			<Card ref={ref} className="flex flex-col gap-2 rounded-xl p-3">
+		<motion.div {...animateListItemProps} ref={isLast ? exerciseRef : null}>
+			<Card className="mb-3 flex flex-col gap-2 rounded-xl p-3">
 				<div className="flex items-center justify-between gap-2">
 					<h2 className="text-lg font-medium">{exercise.modelExercise.name}</h2>
 					<DeleteExercise workout={workout} exercise={exercise} />
@@ -60,6 +62,6 @@ export const WorkoutExercise = forwardRef<HTMLDivElement, Props>(({ workout, exe
 			</Card>
 		</motion.div>
 	);
-});
+};
 
 WorkoutExercise.displayName = "WorkoutExercise";

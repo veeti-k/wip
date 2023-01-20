@@ -1,4 +1,6 @@
-import { Button } from "~components/Ui/Button";
+import { toast } from "react-hot-toast";
+
+import { Button, ButtonLink } from "~components/Ui/Button";
 import { Modal, useModal } from "~components/Ui/Modal";
 import { RouterOutputs, trpc } from "~utils/trpc";
 
@@ -12,10 +14,22 @@ export function SaveAsAWorkout({ session }: Props) {
 	const mutation = trpc.workout.create.useMutation();
 
 	async function handleSave() {
-		return mutation.mutateAsync({
-			sessionId: session.id,
-			share: false,
-		});
+		return mutation
+			.mutateAsync({
+				sessionId: session.id,
+				share: false,
+			})
+			.then((createdWorkoutId) => {
+				closeModal();
+				toast.success(
+					<div className="flex flex-col gap-3">
+						<b>Session saved as a workout</b>{" "}
+						<ButtonLink href={`/app/workouts/${createdWorkoutId}`}>
+							View workout
+						</ButtonLink>
+					</div>
+				);
+			});
 	}
 
 	return (

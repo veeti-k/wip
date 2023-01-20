@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
+import { useRef } from "react";
 
 import { AppLayout } from "~components/Layouts/AppLayout/AppLayout";
 import { Button } from "~components/Ui/Button";
@@ -9,10 +10,14 @@ import { LoadingCard } from "~components/Ui/Cards/LoadingCard";
 import { animateOpacityProps } from "~utils/animations";
 import { trpc } from "~utils/trpc";
 
+import { AddWorkoutExerciseModal } from "./WorkoutExercise/AddWorkoutExercise/AddWorkoutExercise";
+import { AddWorkoutExerciseProvider } from "./WorkoutExercise/AddWorkoutExercise/AddWorkoutExerciseContext";
 import { DeleteWorkout } from "./WorkoutExercise/DeleteWorkout/DeleteWorkout";
 import { WorkoutExercise } from "./WorkoutExercise/WorkoutExercise";
 
 export default function AppWorkoutPage() {
+	const lastExerciseRef = useRef<HTMLDivElement>(null);
+
 	const router = useRouter();
 	const workoutId = router.query["workoutId"];
 
@@ -48,31 +53,38 @@ export default function AppWorkoutPage() {
 					</Card>
 
 					<div className="mt-4 flex flex-col gap-4">
-						<div className="flex flex-col gap-2">
-							<h1 className="text-xl font-light">Exercises</h1>
+						<div className="flex flex-col">
+							<h1 className="mb-2 text-xl font-light">Exercises</h1>
 
-							<div className="space-y-2">
-								<AnimatePresence initial={false} mode="popLayout">
-									{hasExercises ? (
-										workout.exercises.map((exercise) => (
-											<WorkoutExercise
-												key={exercise.id}
-												workout={workout}
-												exercise={exercise}
-											/>
-										))
-									) : (
-										<Card
-											as={motion.div}
-											key="no-exercises"
-											className="flex items-center justify-center px-3 py-5 font-light"
-											{...animateOpacityProps}
-										>
-											No exercises
-										</Card>
-									)}
-								</AnimatePresence>
-							</div>
+							<AnimatePresence initial={false}>
+								{hasExercises ? (
+									workout.exercises.map((exercise, index) => (
+										<WorkoutExercise
+											key={exercise.id}
+											workout={workout}
+											exercise={exercise}
+											isLast={index === workout.exercises.length - 1}
+											exerciseRef={lastExerciseRef}
+										/>
+									))
+								) : (
+									<Card
+										as={motion.div}
+										key="no-exercises"
+										className="flex items-center justify-center px-3 py-5 font-light"
+										{...animateOpacityProps}
+									>
+										No exercises
+									</Card>
+								)}
+							</AnimatePresence>
+
+							<AddWorkoutExerciseProvider
+								workoutId={workout.id}
+								lastExerciseRef={lastExerciseRef}
+							>
+								<AddWorkoutExerciseModal />
+							</AddWorkoutExerciseProvider>
 						</div>
 					</div>
 				</>

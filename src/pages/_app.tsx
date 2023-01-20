@@ -28,12 +28,13 @@ const MyApp: AppType<{ session: Session }> = ({
 						display: "flex",
 						justifyContent: "center",
 						alignItems: "center",
-						padding: "1rem",
+						padding: "0.5rem 0.5rem 0.5rem 1rem",
 						gap: "0.3rem",
 						fontWeight: 500,
 						lineHeight: 1,
 					},
 
+					duration: 5000,
 					position: "top-right",
 				}}
 			/>

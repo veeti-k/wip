@@ -104,16 +104,11 @@ export function WorkoutExerciseSet({ set, exercise, workout, setRef, isLast }: P
 						<h3 className="mb-2">{count}x</h3>
 
 						<div className="flex gap-1">
-							<Button
-								onClick={plusSet}
-								disabled={updateMutation.isLoading || deleteMutation.isLoading}
-								className="px-2"
-							>
+							<Button onClick={plusSet} className="px-2">
 								<Plus size={15} />
 							</Button>
 							<Button
 								onClick={minusSet}
-								disabled={updateMutation.isLoading || deleteMutation.isLoading}
 								className="px-2"
 								intent={count === 1 ? "danger" : "primary"}
 							>
