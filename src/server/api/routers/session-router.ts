@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { subMonths } from "date-fns";
 import { z } from "zod";
 
 import { DbExerciseSet, DbExerciseSetType } from "~server/db/types";
@@ -348,10 +349,14 @@ export const sessionRouter = router({
 	addExerciseSet: protectedProcedure
 		.input(z.object({ sessionId: z.string(), exerciseId: z.string() }))
 		.mutation(async ({ ctx, input }) => {
-			const session = await ctx.mongo.sessions.findOne({
-				id: input.sessionId,
-				userId: ctx.auth.userId,
-			});
+			const sessions = await ctx.mongo.sessions
+				.find({
+					userId: ctx.auth.userId,
+					startedAt: { $gte: subMonths(new Date(), 2) },
+				})
+				.toArray();
+
+			const session = sessions.find((session) => session.id === input.sessionId);
 
 			if (!session) {
 				throw new TRPCError({
@@ -369,16 +374,26 @@ export const sessionRouter = router({
 				});
 			}
 
+			const lastExercise = sessions
+				.flatMap((session) => session.exercises)
+				.find((e) => e.modelExercise.name === exercise.modelExercise.name);
+
+			const newSetIndex = exercise.sets.length;
+			// TODO: Should be the last set of the same type, when multiple set types are supported
+			const lastSet = lastExercise?.sets.at(newSetIndex - 1) ?? lastExercise?.sets.at(-1);
+
+			const lastSetIsInSameExercise = lastSet && lastExercise?.id === exercise.id;
+
 			const newSet: DbExerciseSet = {
 				id: uuid(),
 				type: DbExerciseSetType.Normal,
 				count: 1,
-				weight: null,
-				reps: null,
-				assistedWeight: null,
-				distance: null,
-				kcal: null,
-				time: null,
+				weight: lastSetIsInSameExercise ? null : lastSet?.weight ?? null,
+				reps: lastSetIsInSameExercise ? null : lastSet?.reps ?? null,
+				assistedWeight: lastSetIsInSameExercise ? null : lastSet?.assistedWeight ?? null,
+				distance: lastSetIsInSameExercise ? null : lastSet?.distance ?? null,
+				kcal: lastSetIsInSameExercise ? null : lastSet?.kcal ?? null,
+				time: lastSetIsInSameExercise ? null : lastSet?.time ?? null,
 			};
 
 			const updatedExercise = {
