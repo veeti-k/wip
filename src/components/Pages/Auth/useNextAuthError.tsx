@@ -10,6 +10,10 @@ const errors = {
 	OAuthAccountNotLinked:
 		"If the email on the account is already linked, but not with this OAuth account",
 	SessionRequired: "You're not signed in",
+	InvalidConfiguration: "Invalid configuration",
+	InvalidCredentials: "Invalid credentials",
+	InvalidPassword: "Invalid password",
+	DbError: "Database error",
 };
 
 const errorCodes = Object.keys(errors);

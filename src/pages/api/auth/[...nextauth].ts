@@ -39,28 +39,28 @@ export const authOptions: NextAuthOptions = {
 					},
 					async authorize(credentials) {
 						if (!credentials) {
-							throw new Error("No credentials provided");
+							throw new Error("InvalidCredentials");
 						}
 
 						if (!env.PREVIEW_PASSWORD) {
-							throw new Error("PREVIEW_PASSWORD not set");
+							throw new Error("InvalidConfiguration");
 						}
 
 						const result = await previewLoginFormSchema.safeParseAsync(credentials);
 						if (!result.success) {
-							throw new Error("Invalid credentials");
+							throw new Error("InvalidCredentials");
 						}
 
 						const { username, password } = result.data;
 
 						const validPassword = safeEqual(env.PREVIEW_PASSWORD, password);
 						if (!validPassword) {
-							throw new Error("Invalid password");
+							throw new Error("InvalidPassword");
 						}
 
 						const user = await upsertUser({ email: `${username}@dev.local` });
 
-						if (!user) throw new Error("Db error");
+						if (!user) throw new Error("DbError");
 
 						return {
 							...user,
