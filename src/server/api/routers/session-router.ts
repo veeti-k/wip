@@ -137,7 +137,6 @@ export const sessionRouter = router({
 						stoppedAt: input.stoppedAt,
 					},
 				},
-
 				{ returnDocument: "after" }
 			);
 
@@ -389,7 +388,7 @@ export const sessionRouter = router({
 				type: DbExerciseSetType.Normal,
 				count: 1,
 				weight: lastSetIsInSameExercise ? null : lastSet?.weight ?? null,
-				reps: lastSetIsInSameExercise ? null : lastSet?.reps ?? null,
+				reps: lastSet?.reps ?? null,
 				assistedWeight: lastSetIsInSameExercise ? null : lastSet?.assistedWeight ?? null,
 				distance: lastSetIsInSameExercise ? null : lastSet?.distance ?? null,
 				kcal: lastSetIsInSameExercise ? null : lastSet?.kcal ?? null,
