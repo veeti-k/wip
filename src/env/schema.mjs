@@ -9,6 +9,9 @@ export const serverSchema = z.object({
 	G_CLIENT_SECRET: z.string(),
 
 	NEXTAUTH_SECRET: z.string(),
+	NEXTAUTH_URL: z.string().url().optional(),
+
+	VERCEL_URL: z.string().url().optional(),
 
 	PREVIEW_PASSWORD: z.string(),
 });
@@ -22,6 +25,9 @@ export const serverEnv = {
 	G_CLIENT_SECRET: process.env.G_CLIENT_SECRET,
 
 	NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+	NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+
+	VERCEL_URL: process.env.VERCEL_URL,
 
 	PREVIEW_PASSWORD: process.env.PREVIEW_PASSWORD,
 };
