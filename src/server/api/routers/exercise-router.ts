@@ -1,3 +1,6 @@
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
 import type { DbExerciseSet } from "~server/db/types";
 
 import { protectedProcedure, router } from "../trpc";
@@ -18,6 +21,7 @@ export const exerciseRouter = router({
 			Record<
 				string,
 				{
+					id: string;
 					name: string;
 					currentOneRepMax: {
 						epley: number;
@@ -38,6 +42,7 @@ export const exerciseRouter = router({
 
 				if (!exercises[e.modelExercise.categoryName]![e.modelExercise.name]) {
 					exercises[e.modelExercise.categoryName]![e.modelExercise.name] = {
+						id: e.modelExercise.id,
 						name: e.modelExercise.name,
 						currentOneRepMax: getOneRepMax(e.sets),
 						lastDoneAt: s.startedAt,
@@ -51,6 +56,7 @@ export const exerciseRouter = router({
 
 			if (!exercises[m.categoryName]![m.name]) {
 				exercises[m.categoryName]![m.name] = {
+					id: m.id,
 					name: m.name,
 					currentOneRepMax: null,
 					lastDoneAt: null,
@@ -58,10 +64,26 @@ export const exerciseRouter = router({
 			}
 		});
 
-		console.log(exercises);
-
 		return exercises;
 	}),
+
+	getOne: protectedProcedure
+		.input(z.object({ modelExerciseId: z.string() }))
+		.query(async ({ ctx, input }) => {
+			const modelExercise = await ctx.mongo.modelExercises.findOne({
+				id: input.modelExerciseId,
+				userId: ctx.auth.userId,
+			});
+
+			if (!modelExercise) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "Model exercise not found",
+				});
+			}
+
+			return modelExercise;
+		}),
 });
 
 function getOneRepMax(sets: DbExerciseSet[]) {
