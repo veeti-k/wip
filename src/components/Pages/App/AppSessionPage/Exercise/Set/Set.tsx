@@ -61,8 +61,8 @@ export function Set({ set, exercise, session, setRef, isLast }: Props) {
 	});
 	const count = form.watch("count");
 
-	const updateData = () =>
-		form.handleSubmit((values) =>
+	function updateData() {
+		return form.handleSubmit((values) =>
 			updateMutation.mutateAsync({
 				setId: set.id,
 				exerciseId: exercise.id,
@@ -70,6 +70,7 @@ export function Set({ set, exercise, session, setRef, isLast }: Props) {
 				...values,
 			})
 		)();
+	}
 
 	const debouncedUpdateData = useCallback(debounce(updateData, 300), []);
 
