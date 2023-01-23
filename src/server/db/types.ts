@@ -94,7 +94,6 @@ export type DbWorkoutSet = {
 	type: number;
 	count: number;
 	reps: number | null;
-	oneRepMax: DbOneRepMax | null;
 };
 
 export type DbWorkoutExercise = {
