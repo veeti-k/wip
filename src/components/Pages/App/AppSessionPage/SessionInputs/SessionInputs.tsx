@@ -7,7 +7,7 @@ import { Input } from "~components/Ui/Input";
 import { errorMsg } from "~utils/errorMsg";
 import type { RouterOutputs } from "~utils/trpc";
 import { valueAsNumber } from "~utils/valueAsNumber";
-import { EditSessionFormType, editSessionInputSchema } from "~validation/session/editSession";
+import { EditSessionFormType, editSessionFormSchema } from "~validation/session/editSession";
 
 import { useUpdateSessionMutation } from "./useUpdateWorkoutMutation";
 
@@ -19,7 +19,7 @@ export function SessionInputs({ session }: Props) {
 	const mutation = useUpdateSessionMutation();
 
 	const form = useForm<EditSessionFormType>({
-		resolver: zodResolver(editSessionInputSchema),
+		resolver: zodResolver(editSessionFormSchema),
 		defaultValues: {
 			notes: session.notes,
 			bodyWeight: session.bodyWeight,

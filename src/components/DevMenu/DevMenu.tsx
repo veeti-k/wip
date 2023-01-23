@@ -6,7 +6,7 @@ import { DevMenuAddSession } from "./AddSession";
 export function DevMenu() {
 	const { closeModal, isModalOpen, openModal } = useModal();
 
-	useHotkeys([["mod+alt+d", openModal]]);
+	useHotkeys([["mod+alt+h", openModal]]);
 
 	return (
 		<>
