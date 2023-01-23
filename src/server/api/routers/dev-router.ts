@@ -1,5 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
+import type { DbExerciseSet } from "~server/db/types";
+import { getOneRepMax } from "~server/serverUtils/getOneRepMax";
 import { uuid } from "~server/serverUtils/uuid";
 
 import { devProcedure, router } from "../trpc";
@@ -28,25 +30,30 @@ export const devRouter = router({
 			notes: null,
 			startedAt: new Date(),
 			stoppedAt: null,
-			exercises: modelExercises.slice(0, 5).map((modelExercise, i) => ({
-				userId: ctx.auth.userId,
-				id: uuid(),
-				notes: null,
-				modelExercise: modelExercise,
-				sets: [
-					{
-						id: uuid(),
-						assistedWeight: null,
-						count: i * 2,
-						distance: null,
-						kcal: null,
-						time: null,
-						type: 1,
-						weight: i * 5,
-						reps: i * 3,
-					},
-				],
-			})),
+			exercises: modelExercises.slice(0, 5).map((modelExercise, i) => {
+				const set: DbExerciseSet = {
+					id: uuid(),
+					assistedWeight: null,
+					count: i * 2,
+					distance: null,
+					kcal: null,
+					time: null,
+					type: 1,
+					weight: i * 5,
+					reps: i * 3,
+					oneRepMax: null,
+				};
+
+				set.oneRepMax = getOneRepMax(set);
+
+				return {
+					userId: ctx.auth.userId,
+					id: uuid(),
+					notes: null,
+					modelExercise: modelExercise,
+					sets: [set],
+				};
+			}),
 		});
 	}),
 });
