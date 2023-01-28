@@ -4,7 +4,7 @@ import { SettingsIcon } from "~components/Ui/Icons/SettingsIcon";
 
 export function NavBar() {
 	return (
-		<nav className="fixed bottom-0 z-20 flex h-[4.8rem] w-full items-center justify-center p-3 backdrop:blur-sm sm:top-0 sm:bottom-[unset]">
+		<nav className="display fixed bottom-0 z-20 flex h-[4.8rem] w-full items-center justify-center p-3 backdrop:blur-sm sm:top-0 sm:bottom-[unset] pwa:mb-7">
 			<Card className="flex h-full w-full max-w-page justify-between gap-2 overflow-hidden rounded-xl p-2 text-sm">
 				<ButtonLink href="/app/sessions" className="w-full !p-2">
 					Sessions

@@ -3,6 +3,9 @@ module.exports = {
 	content: ["./src/**/*.{js,ts,jsx,tsx}"],
 	theme: {
 		extend: {
+			screens: {
+				pwa: { raw: "(display-mode: standalone)" },
+			},
 			colors: {
 				primary: {
 					1200: "#161615",
