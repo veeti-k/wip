@@ -22,10 +22,10 @@ const MyApp: AppType<{ session: Session }> = ({
 					name="viewport"
 					content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
 				/>
-				<link rel="icon" href="/icons/favicon.png" />
+				<link rel="icon" href="/icons/favicon.ico" />
 
 				<link rel="manifest" href="/manifest.json" />
-				<link rel="apple-touch-icon" href="/icon-512x512.png"></link>
+				<link rel="apple-touch-icon" sizes="512x512" href="/icon-512x512.png"></link>
 
 				<meta name="theme-color" content="#161615" />
 			</Head>
