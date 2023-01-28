@@ -11,8 +11,6 @@ export const serverSchema = z.object({
 	NEXTAUTH_SECRET: z.string(),
 	NEXTAUTH_URL: z.string().url().optional(),
 
-	VERCEL_URL: z.string().url().optional(),
-
 	PREVIEW_PASSWORD: z.string(),
 });
 
@@ -26,8 +24,6 @@ export const serverEnv = {
 
 	NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
 	NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-
-	VERCEL_URL: process.env.VERCEL_URL,
 
 	PREVIEW_PASSWORD: process.env.PREVIEW_PASSWORD,
 };

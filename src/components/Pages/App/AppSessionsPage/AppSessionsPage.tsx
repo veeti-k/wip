@@ -24,7 +24,7 @@ export function AppSessionsPage() {
 				) : Object.keys(data).length ? (
 					<motion.div {...animateOpacityProps}>
 						{Object.entries(data).map(([month, sessions]) => (
-							<div key={month}>
+							<div key={month} className="mt-2">
 								<h2 className="mb-2 text-xl font-light">{month}</h2>
 
 								<div className="flex flex-col justify-start gap-2">

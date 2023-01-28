@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRef } from "react";
 
 import { Card } from "~components/Ui/Cards/Card";
+import { Link } from "~components/Ui/Link";
 import { animateListItemProps } from "~utils/animations";
 import type { RouterOutputs } from "~utils/trpc";
 
@@ -25,7 +26,13 @@ export const WorkoutExercise = ({ workout, exercise, exerciseRef, isLast }: Prop
 		<motion.div {...animateListItemProps} ref={isLast ? exerciseRef : null}>
 			<Card className="mb-3 flex flex-col gap-2 rounded-xl p-3">
 				<div className="flex items-center justify-between gap-2">
-					<h2 className="text-lg font-medium">{exercise.modelExercise.name}</h2>
+					<Link
+						className="text-lg font-medium"
+						href={`/app/exercises/${exercise.modelExercise.id}`}
+					>
+						{exercise.modelExercise.name}
+					</Link>
+
 					<DeleteExercise workout={workout} exercise={exercise} />
 				</div>
 

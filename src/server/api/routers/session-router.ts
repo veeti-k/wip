@@ -3,6 +3,7 @@ import { subMonths } from "date-fns";
 import { z } from "zod";
 
 import { DbExerciseSet, DbExerciseSetType } from "~server/db/types";
+import { getOneRepMax } from "~server/serverUtils/getOneRepMax";
 import { uuid } from "~server/serverUtils/uuid";
 import { editSessionInputSchema } from "~validation/session/editSession";
 import { editSessionInfoInputSchema } from "~validation/session/editSessionInfo";
@@ -393,7 +394,10 @@ export const sessionRouter = router({
 				distance: lastSetIsInSameExercise ? null : lastSet?.distance ?? null,
 				kcal: lastSetIsInSameExercise ? null : lastSet?.kcal ?? null,
 				time: lastSetIsInSameExercise ? null : lastSet?.time ?? null,
+				oneRepMax: null,
 			};
+
+			newSet.oneRepMax = getOneRepMax(newSet);
 
 			const updatedExercise = {
 				...exercise,
@@ -461,12 +465,15 @@ export const sessionRouter = router({
 				});
 			}
 
-			const updatedSet = {
+			const updatedSet: DbExerciseSet = {
 				...set,
 				weight: input.weight,
 				reps: input.reps,
 				count: input.count,
+				oneRepMax: null,
 			};
+
+			updatedSet.oneRepMax = getOneRepMax(updatedSet);
 
 			const updatedExercise = {
 				...exercise,

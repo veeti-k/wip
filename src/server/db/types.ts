@@ -53,6 +53,7 @@ export type DbExerciseSet = {
 	time: number | null;
 	distance: number | null;
 	kcal: number | null;
+	oneRepMax: DbOneRepMax | null;
 };
 
 export type DbExercise = {
@@ -73,6 +74,16 @@ export type DbSession = {
 	startedAt: Date;
 	stoppedAt: Date | null;
 	exercises: DbExercise[];
+};
+
+export type DbOneRepMax = {
+	epley: number;
+	brzycki: number;
+	mayhew: number;
+	oconner: number;
+	wathen: number;
+	lander: number;
+	lombardi: number;
 };
 
 export type DbWorkoutSet = {

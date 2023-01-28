@@ -65,7 +65,7 @@ export function AppSessionPage() {
 					<div className="flex flex-col">
 						<h1 className="mb-2 text-xl font-light">Exercises</h1>
 
-						<AnimatePresence initial={false} mode="wait">
+						<AnimatePresence initial={false}>
 							{hasExercises ? (
 								session.exercises.map((exercise) => (
 									<Exercise
