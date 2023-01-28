@@ -133,7 +133,7 @@ const generateSession = ({
 				kcal: null,
 				time: null,
 				type: 1,
-				weight: Math.floor(Math.random() * 10 + 1),
+				weight: Math.floor(Math.random() * 100 + 1),
 				reps: 10,
 				oneRepMax: null,
 			};

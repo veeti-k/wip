@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { subMonths } from "date-fns";
 import { z } from "zod";
 
 import type { DbExerciseSet } from "~server/db/types";
@@ -82,7 +83,29 @@ export const exerciseRouter = router({
 				});
 			}
 
-			return modelExercise;
+			const sessions = await ctx.mongo.sessions
+				.find({
+					startedAt: { $gte: subMonths(new Date(), 12) },
+					userId: ctx.auth.userId,
+					"exercises.modelExercise.id": modelExercise.id,
+				})
+				.toArray();
+
+			const oneRepMaxPossible =
+				modelExercise.enabledFields.includes("weight") &&
+				modelExercise.enabledFields.includes("reps");
+
+			const oneRepMaxes = oneRepMaxPossible
+				? sessions.flatMap((s) => ({
+						startedAt: s.startedAt,
+						oneRepMax: s.exercises
+							.find((e) => e.modelExercise.id === modelExercise.id)
+							?.sets.filter((s) => !!s.oneRepMax)
+							.at(-1)?.oneRepMax,
+				  }))
+				: null;
+
+			return { modelExercise, oneRepMaxes, hasSessions: !!sessions.length };
 		}),
 });
 
