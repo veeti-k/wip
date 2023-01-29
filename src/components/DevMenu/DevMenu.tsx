@@ -3,6 +3,7 @@ import { useHotkeys } from "~utils/use-hotkeys";
 
 import { DevMenuAddManySessions } from "./AddManySessions";
 import { DevMenuAddSession } from "./AddSession";
+import { DevMenuDeleteSessions } from "./DeleteSessions";
 
 export function DevMenu() {
 	const { closeModal, isModalOpen, openModal } = useModal();
@@ -16,6 +17,8 @@ export function DevMenu() {
 					<DevMenuAddSession />
 
 					<DevMenuAddManySessions />
+
+					<DevMenuDeleteSessions />
 				</div>
 			</Modal>
 		</>

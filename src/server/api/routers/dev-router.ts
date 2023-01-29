@@ -74,6 +74,12 @@ export const devRouter = router({
 
 		await ctx.mongo.sessions.insertMany(sessions);
 	}),
+
+	deleteSessions: devProcedure.mutation(async ({ ctx }) => {
+		await ctx.mongo.sessions.deleteMany({
+			userId: ctx.auth.userId,
+		});
+	}),
 });
 
 const generateSessions = ({
