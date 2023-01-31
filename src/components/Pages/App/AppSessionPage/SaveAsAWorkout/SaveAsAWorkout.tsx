@@ -38,9 +38,7 @@ export function SaveAsAWorkout({ session }: Props) {
 
 	return (
 		<>
-			<Button onClick={openModal} disabled={session.saved}>
-				Save as a workout
-			</Button>
+			<Button onClick={openModal}>Save as a workout</Button>
 
 			<Modal title="Save as a workout" isOpen={isModalOpen} closeModal={closeModal}>
 				<div className="flex flex-col gap-3 px-4 pb-4 pt-3">

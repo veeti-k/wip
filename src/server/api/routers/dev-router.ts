@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { eachDayOfInterval, isWednesday, isWeekend, setHours, subMonths } from "date-fns";
 
-import type { DbExerciseSet, DbModelExercise } from "~server/db/types";
+import type { DbExerciseSet, DbModelExercise, DbSession } from "~server/db/types";
 import { getOneRepMax } from "~server/serverUtils/getOneRepMax";
 import { uuid } from "~server/serverUtils/uuid";
 
@@ -80,6 +80,66 @@ export const devRouter = router({
 			userId: ctx.auth.userId,
 		});
 	}),
+
+	addManySquats: devProcedure.mutation(async ({ ctx }) => {
+		const squatModelExercise = await ctx.mongo.modelExercises.findOne({
+			userId: ctx.auth.userId,
+			name: "Squat",
+		});
+
+		if (!squatModelExercise) {
+			throw new TRPCError({
+				code: "BAD_REQUEST",
+				message: "No squat model exercise found",
+			});
+		}
+
+		const yearsDays = eachDayOfInterval({
+			start: subMonths(new Date(), 12),
+			end: new Date(),
+		});
+
+		const filteredDays = yearsDays.filter((d) => !isWeekend(d) && !isWednesday(d));
+
+		const sessions: DbSession[] = filteredDays.map((d, dayIndex) => ({
+			userId: ctx.auth.userId,
+			id: uuid(),
+			saved: false,
+			name: `Dev session ${Math.floor(Math.random() * 100)}`,
+			bodyWeight: null,
+			notes: null,
+			startedAt: setHours(d, 12),
+			stoppedAt: setHours(d, 14),
+			exercises: [
+				{
+					userId: ctx.auth.userId,
+					id: uuid(),
+					notes: null,
+					modelExercise: squatModelExercise,
+					sets: Array.from({ length: 5 }).map((_, i) => {
+						const set: DbExerciseSet = {
+							id: uuid(),
+							count: 1,
+							type: 1,
+							weight: dayIndex * 0.5 + i * 5,
+							reps: 10,
+							oneRepMax: null,
+							assistedWeight: null,
+							distance: null,
+							kcal: null,
+							time: null,
+						};
+
+						set.oneRepMax = getOneRepMax(set);
+
+						return set;
+					}),
+				},
+			],
+		}));
+
+		await ctx.mongo.sessions.insertMany(sessions);
+	}),
 });
 
 const generateSessions = ({
@@ -97,8 +157,6 @@ const generateSessions = ({
 	const filteredDays = days.filter((d) => !isWeekend(d) && !isWednesday(d));
 
 	const chunkedModelExercises = [...chunks(modelExercises, 5)];
-
-	console.log({ chunkedModelExercises });
 
 	return filteredDays.map((d, i) =>
 		generateSession({

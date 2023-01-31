@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useRef } from "react";
 
 import { AppLayout } from "~components/Layouts/AppLayout/AppLayout";
-import { Button } from "~components/Ui/Button";
 import { Card } from "~components/Ui/Cards/Card";
 import { ErrorCard } from "~components/Ui/Cards/ErrorCard";
 import { LoadingCard } from "~components/Ui/Cards/LoadingCard";
@@ -13,6 +12,7 @@ import { trpc } from "~utils/trpc";
 import { AddWorkoutExerciseModal } from "./AddWorkoutExercise/AddWorkoutExercise";
 import { AddWorkoutExerciseProvider } from "./AddWorkoutExercise/AddWorkoutExerciseContext";
 import { DeleteWorkout } from "./DeleteWorkout/DeleteWorkout";
+import { StartSession } from "./StartSession/StartSession";
 import { WorkoutExercise } from "./WorkoutExercise/WorkoutExercise";
 
 export default function AppWorkoutPage() {
@@ -48,7 +48,7 @@ export default function AppWorkoutPage() {
 					</Card>
 
 					<Card className="flex flex-col gap-3 rounded-xl p-3">
-						<Button>Start a new session</Button>
+						<StartSession workout={workout} />
 						<DeleteWorkout workout={workout} />
 					</Card>
 

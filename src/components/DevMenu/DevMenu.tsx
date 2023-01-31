@@ -2,6 +2,7 @@ import { Modal, useModal } from "~components/Ui/Modal";
 import { useHotkeys } from "~utils/use-hotkeys";
 
 import { DevMenuAddManySessions } from "./AddManySessions";
+import { DevMenuAddManySquats } from "./AddManySquats";
 import { DevMenuAddSession } from "./AddSession";
 import { DevMenuDeleteSessions } from "./DeleteSessions";
 
@@ -19,6 +20,8 @@ export function DevMenu() {
 					<DevMenuAddManySessions />
 
 					<DevMenuDeleteSessions />
+
+					<DevMenuAddManySquats />
 				</div>
 			</Modal>
 		</>

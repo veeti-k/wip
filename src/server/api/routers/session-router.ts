@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { subMonths } from "date-fns";
 import { z } from "zod";
 
-import { DbExerciseSet, DbExerciseSetType } from "~server/db/types";
+import { DbExercise, DbExerciseSet, DbExerciseSetType, DbSession } from "~server/db/types";
 import { getOneRepMax } from "~server/serverUtils/getOneRepMax";
 import { uuid } from "~server/serverUtils/uuid";
 import { editSessionInputSchema } from "~validation/session/editSession";
@@ -72,6 +72,61 @@ export const sessionRouter = router({
 				notes: null,
 				stoppedAt: null,
 			});
+		}),
+
+	createFromWorkout: protectedProcedure
+		.input(z.object({ workoutId: z.string() }))
+		.mutation(async ({ ctx, input }) => {
+			const workout = await ctx.mongo.workouts.findOne({
+				id: input.workoutId,
+				userId: ctx.auth.userId,
+			});
+
+			if (!workout) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "Workout not found",
+				});
+			}
+
+			const exercises: DbExercise[] = workout.exercises.map((exercise) => {
+				const sets: DbExerciseSet[] = exercise.sets.map((set) => ({
+					id: uuid(),
+					reps: set.reps,
+					type: set.type,
+					count: set.count,
+					assistedWeight: null,
+					distance: null,
+					kcal: null,
+					time: null,
+					weight: null,
+					oneRepMax: null,
+				}));
+
+				return {
+					id: uuid(),
+					modelExercise: exercise.modelExercise,
+					notes: null,
+					userId: ctx.auth.userId,
+					sets,
+				};
+			});
+
+			const session: DbSession = {
+				id: uuid(),
+				name: workout.name,
+				userId: ctx.auth.userId,
+				exercises,
+				startedAt: new Date(),
+				stoppedAt: null,
+				saved: false,
+				bodyWeight: null,
+				notes: null,
+			};
+
+			const insertResult = await ctx.mongo.sessions.insertOne(session);
+
+			return { _id: insertResult.insertedId, ...session };
 		}),
 
 	edit: protectedProcedure.input(editSessionInputSchema).mutation(async ({ ctx, input }) => {

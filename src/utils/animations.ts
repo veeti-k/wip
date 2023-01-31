@@ -12,6 +12,13 @@ export const animateOpacityProps = {
 	transition: { duration: 0.2 },
 };
 
+export const animateOpacityPropsFast = {
+	initial: { opacity: 0 },
+	animate: { opacity: 1 },
+	exit: { opacity: 0 },
+	transition: { duration: 0.08 },
+};
+
 export const animateListItemProps = {
 	initial: { opacity: 0, height: 0 },
 	animate: {

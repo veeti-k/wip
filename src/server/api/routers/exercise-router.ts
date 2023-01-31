@@ -69,7 +69,34 @@ export const exerciseRouter = router({
 	}),
 
 	getOne: protectedProcedure
-		.input(z.object({ modelExerciseId: z.string() }))
+		.input(
+			z.object({
+				modelExerciseId: z.string(),
+			})
+		)
+		.query(async ({ ctx, input }) => {
+			const modelExercise = await ctx.mongo.modelExercises.findOne({
+				id: input.modelExerciseId,
+				userId: ctx.auth.userId,
+			});
+
+			if (!modelExercise) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "Model exercise not found",
+				});
+			}
+
+			return modelExercise;
+		}),
+
+	getOneRepMax: protectedProcedure
+		.input(
+			z.object({
+				modelExerciseId: z.string(),
+				date: z.date(),
+			})
+		)
 		.query(async ({ ctx, input }) => {
 			const modelExercise = await ctx.mongo.modelExercises.findOne({
 				id: input.modelExerciseId,
@@ -85,27 +112,51 @@ export const exerciseRouter = router({
 
 			const sessions = await ctx.mongo.sessions
 				.find({
-					startedAt: { $gte: subMonths(new Date(), 12) },
+					startedAt: {
+						$gte: subMonths(input.date, 2),
+						$lt: input.date,
+					},
 					userId: ctx.auth.userId,
 					"exercises.modelExercise.id": modelExercise.id,
 				})
+				.sort({ startedAt: 1 })
 				.toArray();
+
+			const latestSession = sessions.at(-1);
+
+			const latestOneRepMax = latestSession?.exercises
+				.reverse()
+				.find((e) => e.modelExercise.id === modelExercise.id)
+				?.sets.find((s) => s.oneRepMax !== null)?.oneRepMax;
 
 			const oneRepMaxPossible =
 				modelExercise.enabledFields.includes("weight") &&
 				modelExercise.enabledFields.includes("reps");
 
 			const oneRepMaxes = oneRepMaxPossible
-				? sessions.flatMap((s) => ({
-						startedAt: s.startedAt,
-						oneRepMax: s.exercises
-							.find((e) => e.modelExercise.id === modelExercise.id)
-							?.sets.filter((s) => !!s.oneRepMax)
-							.at(-1)?.oneRepMax,
-				  }))
+				? sessions
+						.map((s) => {
+							const exercise = s.exercises.find(
+								(e) => e.modelExercise.id === modelExercise.id
+							);
+
+							return {
+								startedAt: s.startedAt,
+								oneRepMax:
+									exercise?.sets.at(-1)?.oneRepMax ??
+									exercise?.sets.find((s) => s.oneRepMax !== null)?.oneRepMax,
+								maxSetWeight: exercise?.sets
+									.sort((a, b) => a.weight! - b.weight!)
+									.pop()?.weight,
+							};
+						})
+						.filter((o) => o.oneRepMax !== null && o.maxSetWeight !== null)
 				: null;
 
-			return { modelExercise, oneRepMaxes, hasSessions: !!sessions.length };
+			return {
+				oneRepMaxes: oneRepMaxes?.length ? oneRepMaxes : null,
+				latestOneRepMax,
+			};
 		}),
 });
 
