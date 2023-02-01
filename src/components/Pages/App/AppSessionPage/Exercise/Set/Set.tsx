@@ -126,8 +126,6 @@ export function Set({ set, exercise, session, setRef, isLast }: Props) {
 									</Button>
 								</div>
 							</div>
-
-							<div>{set.oneRepMax?.brzycki}</div>
 						</div>
 					</AnimatePresence>
 
