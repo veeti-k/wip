@@ -33,7 +33,7 @@
 		"react-dom": "18.2.0",
 		"react-hook-form": "^7.41.5",
 		"react-hot-toast": "^2.4.0",
-		"superjson": "1.12.1",
+		"superjson": "1.12.3",
 		"tabler-icons-react": "^1.56.0",
 		"zod": "^3.20.2"
 	},
