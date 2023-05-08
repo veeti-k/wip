@@ -438,7 +438,7 @@ export const sessionRouter = router({
 
 			const newSetIndex = exercise.sets.length;
 			// TODO: Should be the last set of the same type, when multiple set types are supported
-			let lastSet = lastExercise?.sets.at(newSetIndex === 0 ? 0 : newSetIndex - 1);
+			let lastSet = lastExercise?.sets.at(newSetIndex);
 			if (lastSet?.weight === null) {
 				const setWithWeight = lastExercise?.sets.find((set) => set.weight !== null);
 				setWithWeight && (lastSet = setWithWeight);
