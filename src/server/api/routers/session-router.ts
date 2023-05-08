@@ -431,16 +431,18 @@ export const sessionRouter = router({
 			}
 
 			const lastExercise = sessions
+				.filter((session) => session.id !== input.sessionId)
 				.flatMap((session) => session.exercises)
-				.filter((e) => e.modelExercise.name === exercise.modelExercise.name)
 				.filter((e) => e.sets.length > 0)
-				.at(0);
+				.find((e) => e.modelExercise.id === exercise.modelExercise.id);
 
 			const newSetIndex = exercise.sets.length;
 			// TODO: Should be the last set of the same type, when multiple set types are supported
-			const lastSet =
-				lastExercise?.sets.at(newSetIndex === 0 ? 0 : newSetIndex - 1) ??
-				lastExercise?.sets.at(-1);
+			let lastSet = lastExercise?.sets.at(newSetIndex === 0 ? 0 : newSetIndex - 1);
+			if (lastSet?.weight === null) {
+				const setWithWeight = lastExercise?.sets.find((set) => set.weight !== null);
+				setWithWeight && (lastSet = setWithWeight);
+			}
 
 			const lastSetIsInSameExercise = lastSet && lastExercise?.id === exercise.id;
 
