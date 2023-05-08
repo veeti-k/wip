@@ -438,7 +438,9 @@ export const sessionRouter = router({
 
 			const newSetIndex = exercise.sets.length;
 			// TODO: Should be the last set of the same type, when multiple set types are supported
-			const lastSet = lastExercise?.sets.at(newSetIndex) ?? lastExercise?.sets.at(-1);
+			const lastSet =
+				lastExercise?.sets.at(newSetIndex === 0 ? 0 : newSetIndex - 1) ??
+				lastExercise?.sets.at(-1);
 
 			const lastSetIsInSameExercise = lastSet && lastExercise?.id === exercise.id;
 
