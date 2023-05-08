@@ -434,7 +434,7 @@ export const sessionRouter = router({
 				.flatMap((session) => session.exercises)
 				.filter((e) => e.modelExercise.name === exercise.modelExercise.name)
 				.filter((e) => e.sets.length > 0)
-				.at(-1);
+				.at(0);
 
 			const newSetIndex = exercise.sets.length;
 			// TODO: Should be the last set of the same type, when multiple set types are supported
