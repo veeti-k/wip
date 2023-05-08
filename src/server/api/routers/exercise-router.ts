@@ -124,10 +124,12 @@ export const exerciseRouter = router({
 
 			const latestSession = sessions.at(-1);
 
-			const latestOneRepMax = latestSession?.exercises
+			const latestExercise = latestSession?.exercises
 				.reverse()
-				.find((e) => e.modelExercise.id === modelExercise.id)
-				?.sets.find((s) => s.oneRepMax !== null)?.oneRepMax;
+				.find((e) => e.modelExercise.id === modelExercise.id);
+
+			let latestOneRepMax = latestExercise?.sets.at(-1)?.oneRepMax;
+			latestOneRepMax ??= latestExercise?.sets.find((s) => s.oneRepMax !== null)?.oneRepMax;
 
 			const oneRepMaxPossible =
 				modelExercise.enabledFields.includes("weight") &&
