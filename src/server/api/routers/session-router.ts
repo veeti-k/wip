@@ -432,7 +432,9 @@ export const sessionRouter = router({
 
 			const lastExercise = sessions
 				.flatMap((session) => session.exercises)
-				.find((e) => e.modelExercise.name === exercise.modelExercise.name);
+				.filter((e) => e.modelExercise.name === exercise.modelExercise.name)
+				.filter((e) => e.sets.length > 0)
+				.at(-1);
 
 			const newSetIndex = exercise.sets.length;
 			// TODO: Should be the last set of the same type, when multiple set types are supported
