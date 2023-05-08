@@ -409,6 +409,7 @@ export const sessionRouter = router({
 					userId: ctx.auth.userId,
 					startedAt: { $gte: subMonths(new Date(), 2) },
 				})
+				.sort({ startedAt: -1 })
 				.toArray();
 
 			const session = sessions.find((session) => session.id === input.sessionId);
@@ -435,7 +436,7 @@ export const sessionRouter = router({
 
 			const newSetIndex = exercise.sets.length;
 			// TODO: Should be the last set of the same type, when multiple set types are supported
-			const lastSet = lastExercise?.sets.at(newSetIndex - 1) ?? lastExercise?.sets.at(-1);
+			const lastSet = lastExercise?.sets.at(newSetIndex) ?? lastExercise?.sets.at(-1);
 
 			const lastSetIsInSameExercise = lastSet && lastExercise?.id === exercise.id;
 
