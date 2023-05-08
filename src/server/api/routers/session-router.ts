@@ -440,6 +440,8 @@ export const sessionRouter = router({
 
 			const lastSetIsInSameExercise = lastSet && lastExercise?.id === exercise.id;
 
+			console.log({ newSetIndex, lastExercise, exercise, lastSetIsInSameExercise, lastSet });
+
 			const newSet: DbExerciseSet = {
 				id: uuid(),
 				type: DbExerciseSetType.Normal,
