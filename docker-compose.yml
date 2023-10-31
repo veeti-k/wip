@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:6.2.5-alpine
+    volumes:
+      - redis-data:/data
+
+  auth:
+    depends_on:
+      - redis
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    environment:
+      REDIS_URL: redis://redis:6379
+      AUTH: secret
+      GIN_MODE: release
+
+volumes:
+  redis-data:
