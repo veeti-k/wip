@@ -1,11 +1,11 @@
+import { DialogWrapper } from '@/components/start-session/DialogWrapper';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
-import { DialogWrapper } from './DialogWrapper';
 
 export default function Page() {
-	console.log('start-session page');
+	console.log('modal page');
 
 	async function startSession(formData: FormData) {
 		'use server';

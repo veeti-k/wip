@@ -1,8 +1,8 @@
 'use client';
 
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useRouter } from 'next/navigation';
 import { type ReactNode } from 'react';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 
 export function DialogWrapper({ children }: { children: ReactNode }) {
 	const router = useRouter();
@@ -11,9 +11,7 @@ export function DialogWrapper({ children }: { children: ReactNode }) {
 		<Dialog
 			open
 			onOpenChange={() => {
-				console.log('closing');
-
-				router.push('/app');
+				router.back();
 			}}
 		>
 			<DialogContent>

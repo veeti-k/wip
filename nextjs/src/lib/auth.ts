@@ -154,15 +154,15 @@ async function putSession(sessionId: string, userId: string) {
 	}
 }
 
-async function deleteSession(sessionId: string) {
-	const res = await fetch(env.AUTH_SV_URL + '/session/' + sessionId, {
-		method: 'DELETE',
-		headers: { Authorization: env.AUTH_SV_AUTH },
-	});
+// async function deleteSession(sessionId: string) {
+// 	const res = await fetch(env.AUTH_SV_URL + '/session/' + sessionId, {
+// 		method: 'DELETE',
+// 		headers: { Authorization: env.AUTH_SV_AUTH },
+// 	});
 
-	if (!res.ok) {
-		throw new Error(
-			`error deleting session: ${res.status} ${res.statusText}`,
-		);
-	}
-}
+// 	if (!res.ok) {
+// 		throw new Error(
+// 			`error deleting session: ${res.status} ${res.statusText}`,
+// 		);
+// 	}
+// }

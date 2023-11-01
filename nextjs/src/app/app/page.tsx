@@ -31,9 +31,7 @@ export default async function Page() {
 	);
 }
 
-export async function OnGoingSessions() {
-	await new Promise((resolve) => setTimeout(resolve, 1000));
-
+async function OnGoingSessions() {
 	const userId = await getUserId();
 	const onGoingSessions = await unstable_cache(
 		() =>

@@ -34,7 +34,10 @@ const DialogContent = React.forwardRef<
 	React.ElementRef<typeof DialogPrimitive.Content>,
 	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
-	<DialogPortal forceMount container={document.body}>
+	<DialogPortal
+		forceMount
+		container={typeof document === 'undefined' ? undefined : document.body}
+	>
 		<DialogOverlay />
 		<DialogPrimitive.Content
 			forceMount

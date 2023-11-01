@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
-import { DialogWrapper } from '../../start-session/DialogWrapper';
+import { DialogWrapper } from '../../../../components/start-session/DialogWrapper';
 
 export default function Page() {
 	console.log('modal page');
