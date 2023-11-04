@@ -71,7 +71,7 @@ export const env = new Proxy(parsed.output as Env, {
 	},
 });
 
-function formatValidationErrors(issues: Issues) {
+export function formatValidationErrors(issues: Issues) {
 	return JSON.stringify(
 		issues.map((issue) => ({
 			message: issue.message,

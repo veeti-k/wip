@@ -3,7 +3,7 @@
 import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { db } from './db/db';
-import { user } from './db/schema';
+import { dbUser } from './db/schema';
 import { env } from './env';
 import { createId } from './id';
 import { getRedirectUrl } from './redirectUrl';
@@ -23,7 +23,7 @@ export async function authenticateWithCode(
 	let userId = null;
 
 	const existingUser = await db.query.user.findFirst({
-		where: eq(user.email, email),
+		where: eq(dbUser.email, email),
 	});
 
 	if (existingUser) {
@@ -31,7 +31,7 @@ export async function authenticateWithCode(
 	} else {
 		const newUserId = createId();
 
-		await db.insert(user).values({
+		await db.insert(dbUser).values({
 			id: newUserId,
 			email,
 			createdAt: new Date(),

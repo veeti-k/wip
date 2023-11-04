@@ -1,33 +1,34 @@
-import { Button } from '@/components/ui/button';
+import { StartSession } from '@/components/start-session/start-session';
 import { getUserId } from '@/lib/auth';
 import { db } from '@/lib/db/db';
-import { session } from '@/lib/db/schema';
+import { dbSession } from '@/lib/db/schema';
 import { and, eq, isNull, lte } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
-import Link from 'next/link';
 import { Suspense } from 'react';
 
 export default async function Page() {
 	return (
-		<>
-			<div className="h-15 pl-4 pr-3 border-b flex justify-between items-center">
+		<div className="flex flex-col h-full">
+			<div className="px-4 py-4 border-b flex justify-between items-center">
 				<h1 className="text-lg font-medium">home</h1>
-
-				<Button asChild>
-					<Link href={'/app/start-session'}>start session</Link>
-				</Button>
 			</div>
 
-			<Suspense
-				fallback={
-					<p className="py-2 px-4 border-b">
-						getting on going sessions...
-					</p>
-				}
-			>
-				<OnGoingSessions />
-			</Suspense>
-		</>
+			<div className="h-full overflow-auto">
+				<Suspense
+					fallback={
+						<p className="py-2 px-4 border-b">
+							getting on going sessions...
+						</p>
+					}
+				>
+					<OnGoingSessions />
+				</Suspense>
+			</div>
+
+			<div className="border-t gap-3 py-3 px-3 flex items-center">
+				<StartSession />
+			</div>
+		</div>
 	);
 }
 
@@ -35,25 +36,34 @@ async function OnGoingSessions() {
 	const userId = await getUserId();
 	const onGoingSessions = await unstable_cache(
 		() =>
-			db.query.session.findMany({
+			db.query.dbSession.findMany({
 				where: and(
-					eq(session.userId, userId),
-					lte(session.startedAt, new Date()),
-					isNull(session.stoppedAt),
+					eq(dbSession.userId, userId),
+					lte(dbSession.startedAt, new Date()),
+					isNull(dbSession.stoppedAt),
 				),
 			}),
-		['onGoingSessions', 'sessions'],
+		['onGoingSessions', userId],
+		{ tags: ['sessions'] },
 	)();
+
+	console.log(onGoingSessions);
 
 	return !onGoingSessions.length ? (
 		<p className="px-4 py-2 border-b w-full">no on going sessions</p>
 	) : (
-		onGoingSessions.map((session) => (
-			<div key={session.id} className="p-2 bg-white rounded-md shadow-md">
-				<div className="flex justify-between">
-					<h2 className="text-lg font-light">{session.id}</h2>
-				</div>
-			</div>
-		))
+		<ul className="divide-y border-b">
+			{onGoingSessions.map((session) => (
+				<li key={session.id}>
+					<a
+						href={`/app/sessions/${session.id}`}
+						className="py-2 px-4 w-full flex justify-between"
+					>
+						<h2>{session.name}</h2>
+						<span>00:00</span>
+					</a>
+				</li>
+			))}
+		</ul>
 	);
 }

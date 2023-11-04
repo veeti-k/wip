@@ -13,23 +13,23 @@ import {
 
 const idLength = 26;
 
-export const user = mysqlTable('users', {
+export const dbUser = mysqlTable('users', {
 	id: varchar('id', { length: idLength }).primaryKey(),
 	email: varchar('email', { length: 255 }).unique().notNull(),
 	createdAt: datetime('created_at').notNull(),
 });
-export type User = InferSelectModel<typeof user>;
+export type DbUser = InferSelectModel<typeof dbUser>;
 
-export const usersRelations = relations(user, ({ many }) => ({
-	modelExercises: many(modelExercise),
-	exercises: many(exercise),
-	exerciseSets: many(exerciseSet),
-	workouts: many(workout),
-	workoutExercises: many(workoutExercise),
-	workoutExerciseSets: many(workoutExerciseSet),
+export const dbUserRelations = relations(dbUser, ({ many }) => ({
+	modelExercises: many(dbModelExercise),
+	exercises: many(dbExercise),
+	exerciseSets: many(dbExerciseSet),
+	workouts: many(dbWorkout),
+	workoutExercises: many(dbWorkoutExercise),
+	workoutExerciseSets: many(dbWorkoutExerciseSet),
 }));
 
-export const modelExercise = mysqlTable(
+export const dbModelExercise = mysqlTable(
 	'model_exercises',
 	{
 		id: varchar('id', { length: idLength }).primaryKey(),
@@ -43,11 +43,22 @@ export const modelExercise = mysqlTable(
 	}),
 );
 
-export const session = mysqlTable(
+export const dbModelExerciseRelations = relations(
+	dbModelExercise,
+	({ one }) => ({
+		user: one(dbUser, {
+			fields: [dbModelExercise.userId],
+			references: [dbUser.id],
+		}),
+	}),
+);
+
+export const dbSession = mysqlTable(
 	'sessions',
 	{
 		id: varchar('id', { length: idLength }).primaryKey(),
 		userId: varchar('user_id', { length: idLength }).notNull(),
+		name: varchar('name', { length: 255 }).notNull(),
 		createdAt: datetime('created_at').notNull(),
 		startedAt: datetime('started_at').notNull(),
 		stoppedAt: datetime('stopped_at'),
@@ -56,16 +67,17 @@ export const session = mysqlTable(
 		userIdIdx: index('sessions_user_id_idx').on(table.userId),
 	}),
 );
+export type DbSession = InferSelectModel<typeof dbSession>;
 
-export const sessionRelations = relations(session, ({ one, many }) => ({
-	user: one(user, {
-		fields: [session.userId],
-		references: [user.id],
+export const dbSessionsRelations = relations(dbSession, ({ one, many }) => ({
+	user: one(dbUser, {
+		fields: [dbSession.userId],
+		references: [dbUser.id],
 	}),
-	exercises: many(exercise),
+	exercises: many(dbExercise),
 }));
 
-export const exercise = mysqlTable(
+export const dbExercise = mysqlTable(
 	'exercises',
 	{
 		id: varchar('id', { length: idLength }).primaryKey(),
@@ -82,15 +94,19 @@ export const exercise = mysqlTable(
 	}),
 );
 
-export const exerciseRelations = relations(exercise, ({ many, one }) => ({
-	exerciseSets: many(exerciseSet),
-	session: one(session, {
-		fields: [exercise.sessionId],
-		references: [session.id],
+export const dbExerciseRelations = relations(dbExercise, ({ many, one }) => ({
+	exerciseSets: many(dbExerciseSet),
+	session: one(dbSession, {
+		fields: [dbExercise.sessionId],
+		references: [dbSession.id],
+	}),
+	user: one(dbUser, {
+		fields: [dbExercise.userId],
+		references: [dbUser.id],
 	}),
 }));
 
-export const exerciseSet = mysqlTable(
+export const dbExerciseSet = mysqlTable(
 	'exercise_sets',
 	{
 		id: varchar('id', { length: idLength }).primaryKey(),
@@ -112,14 +128,18 @@ export const exerciseSet = mysqlTable(
 	}),
 );
 
-export const exerciseSetRelations = relations(exerciseSet, ({ one }) => ({
-	exercise: one(exercise, {
-		fields: [exerciseSet.exerciseId],
-		references: [exercise.id],
+export const dbExerciseSetRelations = relations(dbExerciseSet, ({ one }) => ({
+	exercise: one(dbExercise, {
+		fields: [dbExerciseSet.exerciseId],
+		references: [dbExercise.id],
+	}),
+	user: one(dbUser, {
+		fields: [dbExerciseSet.userId],
+		references: [dbUser.id],
 	}),
 }));
 
-export const workout = mysqlTable(
+export const dbWorkout = mysqlTable(
 	'workouts',
 	{
 		id: varchar('id', { length: idLength }).primaryKey(),
@@ -133,11 +153,15 @@ export const workout = mysqlTable(
 	}),
 );
 
-export const workoutRelations = relations(workout, ({ many }) => ({
-	workoutExercises: many(workoutExercise),
+export const dbWorkoutRelations = relations(dbWorkout, ({ many, one }) => ({
+	workoutExercises: many(dbWorkoutExercise),
+	user: one(dbUser, {
+		fields: [dbWorkout.userId],
+		references: [dbUser.id],
+	}),
 }));
 
-export const workoutExercise = mysqlTable(
+export const dbWorkoutExercise = mysqlTable(
 	'workout_exercises',
 	{
 		id: varchar('id', { length: idLength }).primaryKey(),
@@ -153,18 +177,22 @@ export const workoutExercise = mysqlTable(
 	}),
 );
 
-export const workoutExerciseRelations = relations(
-	workoutExercise,
+export const dbWorkoutExerciseRelations = relations(
+	dbWorkoutExercise,
 	({ one, many }) => ({
-		workout: one(workout, {
-			fields: [workoutExercise.workoutId],
-			references: [workout.id],
+		workout: one(dbWorkout, {
+			fields: [dbWorkoutExercise.workoutId],
+			references: [dbWorkout.id],
 		}),
-		workoutExerciseSets: many(workoutExerciseSet),
+		workoutExerciseSets: many(dbWorkoutExerciseSet),
+		user: one(dbUser, {
+			fields: [dbWorkoutExercise.userId],
+			references: [dbUser.id],
+		}),
 	}),
 );
 
-export const workoutExerciseSet = mysqlTable(
+export const dbWorkoutExerciseSet = mysqlTable(
 	'workout_exercise_sets',
 	{
 		id: varchar('id', { length: idLength }).primaryKey(),
@@ -188,12 +216,16 @@ export const workoutExerciseSet = mysqlTable(
 	}),
 );
 
-export const workoutExerciseSetRelations = relations(
-	workoutExerciseSet,
+export const dbWorkoutExerciseSetRelations = relations(
+	dbWorkoutExerciseSet,
 	({ one }) => ({
-		workoutExercise: one(workoutExercise, {
-			fields: [workoutExerciseSet.workoutExerciseId],
-			references: [workoutExercise.id],
+		workoutExercise: one(dbWorkoutExercise, {
+			fields: [dbWorkoutExerciseSet.workoutExerciseId],
+			references: [dbWorkoutExercise.id],
+		}),
+		user: one(dbUser, {
+			fields: [dbWorkoutExerciseSet.userId],
+			references: [dbUser.id],
 		}),
 	}),
 );
