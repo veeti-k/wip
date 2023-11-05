@@ -2,7 +2,7 @@
 module.exports = {
 	root: true,
 	parser: '@typescript-eslint/parser',
-	parserOptions: { project: ['./nextjs/tsconfig.json'] },
+	parserOptions: { project: ['./tsconfig.json'] },
 	plugins: ['@typescript-eslint'],
 	extends: [
 		'eslint:recommended',

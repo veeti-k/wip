@@ -18,14 +18,15 @@ type SessionPutBody struct {
 func auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authorization := c.GetHeader("Authorization")
+		fmt.Println(authorization, config.Config.Auth)
+
 		if authorization == "" {
 			c.AbortWithStatus(401)
 			return
 		}
 
-		fmt.Println(authorization, config.Config.Auth)
-
 		if subtle.ConstantTimeCompare([]byte(authorization), []byte(config.Config.Auth)) != 1 {
+
 			c.AbortWithStatus(403)
 			return
 		}
@@ -40,6 +41,7 @@ func main() {
 		panic(err)
 	}
 	redisClient := redis.NewClient(opt)
+	redisClient.Ping(context.Background())
 
 	router := gin.Default()
 

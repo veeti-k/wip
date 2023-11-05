@@ -7,10 +7,9 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { type DbSession } from '@/lib/db/schema';
 import { useDialog } from '@/lib/use-dialog';
 
-export function AddExercise({ session }: { session: DbSession }) {
+export function AddExercise() {
 	const dialog = useDialog();
 
 	return (

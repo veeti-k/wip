@@ -1,4 +1,5 @@
 import { ThemeProvider } from '@/components/theme-provider';
+import { cn } from '@/lib/utils';
 import { GeistSans } from 'geist/font';
 import './globals.css';
 
@@ -11,7 +12,12 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body className={GeistSans.className}>
+			<body
+				className={cn(
+					GeistSans.className,
+					'bg-background text-foreground select-none',
+				)}
+			>
 				<ThemeProvider>{children}</ThemeProvider>
 			</body>
 		</html>

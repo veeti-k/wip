@@ -7,10 +7,9 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { type DbSession } from '@/lib/db/schema';
 import { MenuIcon } from 'lucide-react';
 
-export function SessionActions({ session }: { session: DbSession }) {
+export function SessionActions() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>

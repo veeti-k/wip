@@ -22,7 +22,7 @@ export async function authenticateWithCode(
 
 	let userId = null;
 
-	const existingUser = await db.query.user.findFirst({
+	const existingUser = await db.query.dbUser.findFirst({
 		where: eq(dbUser.email, email),
 	});
 
@@ -73,9 +73,12 @@ async function googleAuth(code: string) {
 	}
 
 	const accessToken = accessTokenJson.access_token;
-
 	if (!accessToken) {
-		console.error('no access token');
+		console.error(
+			'no access token',
+			accessTokenJson,
+			accessTokenRes.statusText,
+		);
 		return null;
 	}
 
@@ -94,7 +97,7 @@ async function googleAuth(code: string) {
 	}
 
 	if (!userInfoJson.email) {
-		console.error('no email');
+		console.error('no email', userInfoJson, userInfoRes.statusText);
 		return null;
 	}
 
@@ -141,7 +144,9 @@ async function getSession(sessionId: string) {
 }
 
 async function putSession(sessionId: string, userId: string) {
-	const res = await fetch(env.AUTH_SV_URL + '/session/' + sessionId, {
+	const url = env.AUTH_SV_URL + '/session/' + sessionId;
+
+	const res = await fetch(url, {
 		method: 'PUT',
 		headers: { Authorization: env.AUTH_SV_AUTH },
 		body: JSON.stringify({ userId }),

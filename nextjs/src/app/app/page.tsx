@@ -1,4 +1,5 @@
 import { StartSession } from '@/components/start-session/start-session';
+import { TimeSince } from '@/components/timer';
 import { getUserId } from '@/lib/auth';
 import { db } from '@/lib/db/db';
 import { dbSession } from '@/lib/db/schema';
@@ -47,8 +48,6 @@ async function OnGoingSessions() {
 		{ tags: ['sessions'] },
 	)();
 
-	console.log(onGoingSessions);
-
 	return !onGoingSessions.length ? (
 		<p className="px-4 py-2 border-b w-full">no on going sessions</p>
 	) : (
@@ -57,10 +56,10 @@ async function OnGoingSessions() {
 				<li key={session.id}>
 					<a
 						href={`/app/sessions/${session.id}`}
-						className="py-2 px-4 w-full flex justify-between"
+						className="py-2 px-4 w-full flex justify-between gap-4"
 					>
-						<h2>{session.name}</h2>
-						<span>00:00</span>
+						<h2 className="truncate">{session.name}</h2>
+						<TimeSince date={new Date(session.startedAt)} />
 					</a>
 				</li>
 			))}
