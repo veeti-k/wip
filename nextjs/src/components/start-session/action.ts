@@ -36,5 +36,4 @@ export async function startSession(
 	});
 
 	revalidateTag('sessions');
-	revalidateTag('onGoingSessions');
 }
