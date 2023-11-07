@@ -1,4 +1,3 @@
-import { StartSession } from '@/components/start-session/start-session';
 import { TimeSince } from '@/components/timer';
 import { getUserId } from '@/lib/auth';
 import { db } from '@/lib/db/db';
@@ -6,6 +5,7 @@ import { dbSession } from '@/lib/db/schema';
 import { and, eq, isNull, lte } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
 import { Suspense } from 'react';
+import { StartSession } from '../start-session';
 
 export default async function Page() {
 	return (
