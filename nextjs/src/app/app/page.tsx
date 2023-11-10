@@ -5,7 +5,7 @@ import { dbSession } from '@/lib/db/schema';
 import { and, eq, isNull, lte } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
 import { Suspense } from 'react';
-import { StartSession } from '../start-session';
+import { StartSession } from './start-session';
 
 export default async function Page() {
 	return (

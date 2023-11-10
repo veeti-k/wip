@@ -7,11 +7,13 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { type DbSession } from '@/lib/db/schema';
 import { MenuIcon } from 'lucide-react';
+import { DeleteSession } from './delete-session';
 
-export function SessionActions() {
+export function SessionActions(props: { session: DbSession }) {
 	return (
-		<DropdownMenu>
+		<DropdownMenu modal={false}>
 			<DropdownMenuTrigger asChild>
 				<Button
 					title="actions"
@@ -24,7 +26,7 @@ export function SessionActions() {
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent>
-				<DropdownMenuItem>delete</DropdownMenuItem>
+				<DeleteSession session={props.session} />
 				<DropdownMenuItem>edit</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

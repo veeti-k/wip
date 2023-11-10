@@ -1,21 +1,20 @@
+import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getOptionalUserId } from './lib/auth';
 
 export async function middleware(request: NextRequest) {
-	const userId = await getOptionalUserId();
+	const sessionIdCookie = cookies().get('auth');
 
 	const path = request.nextUrl.pathname;
 	const url = request.nextUrl.clone();
 
-	if (!userId && path.startsWith('/app' || !path.startsWith('/auth'))) {
-		console.log('redirecting to auth');
-
+	if (
+		!sessionIdCookie &&
+		path.startsWith('/app' || !path.startsWith('/auth'))
+	) {
 		url.pathname = '/auth';
 		return NextResponse.redirect(url);
-	} else if (userId && !path.startsWith('/app')) {
-		console.log('redirecting to app');
-
+	} else if (sessionIdCookie && !path.startsWith('/app')) {
 		url.pathname = '/app';
 		return NextResponse.redirect(url);
 	}

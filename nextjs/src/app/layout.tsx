@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@/components/theme-provider';
+import { Providers } from '@/components/providers/providers';
 import { cn } from '@/lib/utils';
 import { GeistSans } from 'geist/font';
 import './globals.css';
@@ -18,7 +18,7 @@ export default function RootLayout({
 					'bg-background text-foreground select-none',
 				)}
 			>
-				<ThemeProvider>{children}</ThemeProvider>
+				<Providers>{children}</Providers>
 			</body>
 		</html>
 	);

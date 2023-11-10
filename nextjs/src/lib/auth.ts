@@ -2,6 +2,8 @@
 
 import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { createAuthSession, getAuthSession } from './db/actions/auth';
 import { db } from './db/db';
 import { dbUser } from './db/schema';
 import { env } from './env';
@@ -40,9 +42,7 @@ export async function authenticateWithCode(
 		userId = newUserId;
 	}
 
-	const sessionId = createId();
-
-	await putSession(sessionId, userId);
+	const sessionId = await createAuthSession(userId);
 
 	cookies().set('auth', btoa(sessionId));
 
@@ -106,9 +106,9 @@ async function googleAuth(code: string) {
 
 export async function getUserId() {
 	const userId = await getOptionalUserId();
-
 	if (!userId) {
-		throw new Error('no userId');
+		cookies().delete('auth');
+		redirect('/auth');
 	}
 
 	return userId;
@@ -116,58 +116,12 @@ export async function getUserId() {
 
 export async function getOptionalUserId() {
 	const encodedSessionId = cookies().get('auth');
-
 	if (!encodedSessionId?.value) {
-		return null;
+		return undefined;
 	}
 
 	const sessionId = atob(encodedSessionId.value);
-	const session = await getSession(sessionId);
+	const session = await getAuthSession(sessionId);
 
-	return session.userId;
+	return session?.userId;
 }
-
-async function getSession(sessionId: string) {
-	const res = await fetch(env.AUTH_SV_URL + '/session/' + sessionId, {
-		headers: { Authorization: env.AUTH_SV_AUTH },
-	});
-
-	if (!res.ok) {
-		throw new Error(
-			`error getting session: ${res.status} ${res.statusText}`,
-		);
-	}
-
-	const session = await res.json();
-
-	return session as { userId: string };
-}
-
-async function putSession(sessionId: string, userId: string) {
-	const url = env.AUTH_SV_URL + '/session/' + sessionId;
-
-	const res = await fetch(url, {
-		method: 'PUT',
-		headers: { Authorization: env.AUTH_SV_AUTH },
-		body: JSON.stringify({ userId }),
-	});
-
-	if (!res.ok) {
-		throw new Error(
-			`error putting session: ${res.status} ${res.statusText}`,
-		);
-	}
-}
-
-// async function deleteSession(sessionId: string) {
-// 	const res = await fetch(env.AUTH_SV_URL + '/session/' + sessionId, {
-// 		method: 'DELETE',
-// 		headers: { Authorization: env.AUTH_SV_AUTH },
-// 	});
-
-// 	if (!res.ok) {
-// 		throw new Error(
-// 			`error deleting session: ${res.status} ${res.statusText}`,
-// 		);
-// 	}
-// }

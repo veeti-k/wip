@@ -1,23 +1,16 @@
 'use server';
 
-import { safeParseAsync } from 'valibot';
-import { formatValidationErrors } from './env';
+import { is, type BaseSchema, type Output } from 'valibot';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function validateFormData(formData: FormData, schema: any) {
+export async function validateFormData<TSchema extends BaseSchema>(
+	formData: FormData,
+	schema: TSchema,
+): Promise<Output<TSchema>> {
 	const data = Object.fromEntries(formData.entries());
 
-	const res = await safeParseAsync(schema, data);
-
-	if (!res.success) {
-		return {
-			success: false,
-			errors: formatValidationErrors(res.issues),
-		};
+	if (!is(schema, data)) {
+		throw new Error('Invalid form data');
 	}
 
-	return {
-		success: true,
-		data: res.output,
-	};
+	return data;
 }

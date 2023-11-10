@@ -21,12 +21,26 @@ export const dbUser = mysqlTable('users', {
 export type DbUser = InferSelectModel<typeof dbUser>;
 
 export const dbUserRelations = relations(dbUser, ({ many }) => ({
+	authSessions: many(dbAuthSession),
 	modelExercises: many(dbModelExercise),
 	exercises: many(dbExercise),
 	exerciseSets: many(dbExerciseSet),
 	workouts: many(dbWorkout),
 	workoutExercises: many(dbWorkoutExercise),
 	workoutExerciseSets: many(dbWorkoutExerciseSet),
+}));
+
+export const dbAuthSession = mysqlTable('auth_sessions', {
+	id: varchar('id', { length: idLength }).primaryKey(),
+	userId: varchar('user_id', { length: idLength }).notNull(),
+	createdAt: datetime('created_at').notNull(),
+});
+
+export const dbAuthSessionRelations = relations(dbAuthSession, ({ one }) => ({
+	user: one(dbUser, {
+		fields: [dbAuthSession.userId],
+		references: [dbUser.id],
+	}),
 }));
 
 export const dbModelExercise = mysqlTable(

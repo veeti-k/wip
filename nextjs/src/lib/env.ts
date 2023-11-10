@@ -13,8 +13,6 @@ const clientPrefix = 'NEXT_PUBLIC_';
 const runtimeEnv = {
 	NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
 	GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET!,
-	AUTH_SV_URL: process.env.AUTH_SV_URL!,
-	AUTH_SV_AUTH: process.env.AUTH_SV_AUTH!,
 	FRONT_URL: process.env.FRONT_URL!,
 	DB_URL: process.env.DB_URL!,
 };
@@ -25,8 +23,6 @@ const clientEnvSchema = object({
 
 const serverEnvSchema = object({
 	GOOGLE_CLIENT_SECRET: string(),
-	AUTH_SV_URL: string(),
-	AUTH_SV_AUTH: string(),
 	FRONT_URL: string(),
 	DB_URL: string(),
 });

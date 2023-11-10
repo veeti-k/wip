@@ -6,5 +6,5 @@ export function Fieldset(
 ) {
 	const { pending } = useFormStatus();
 
-	return <fieldset disabled={pending} aria-disabled={pending} {...props} />;
+	return <fieldset disabled={pending} {...props} />;
 }

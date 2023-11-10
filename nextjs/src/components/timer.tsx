@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import { differenceInSeconds } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { useInterval } from './use-interval';
+import { useInterval } from '../lib/use-interval';
 
 export function TimeSince({
 	date,
