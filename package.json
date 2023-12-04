@@ -22,7 +22,7 @@
 		"@trpc/server": "^10.9.0",
 		"class-variance-authority": "^0.4.0",
 		"date-fns": "^2.29.3",
-		"framer-motion": "^8.4.2",
+		"framer-motion": "^10.16.12",
 		"jose": "^4.11.2",
 		"lodash.debounce": "^4.0.8",
 		"mongodb": "^4.13.0",
