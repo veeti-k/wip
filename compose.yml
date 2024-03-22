@@ -1,0 +1,18 @@
+services:
+  nextjs:
+    image: veetik/wip
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wip.entrypoints=https"
+      - "traefik.http.routers.wip.tls=true"
+      - "traefik.http.routers.wip.service=wip"
+      - "traefik.http.routers.wip.rule=Host(`h.veetik.com`)"
+      - "traefik.http.services.wip.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy"
+    networks:
+      - proxy
+    env_file: .env
+
+networks:
+  proxy:
+    external: true

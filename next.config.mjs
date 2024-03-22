@@ -8,6 +8,7 @@ import withPWA from "next-pwa";
 const config = {
 	reactStrictMode: true,
 	swcMinify: true,
+	output: "standalone",
 };
 
 export default withPWA({
